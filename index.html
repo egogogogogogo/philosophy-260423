@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>시간의 광장: 현자의 방 | 나만의 철학자 MBTI 찾기</title>
+    <meta name="description" content="시공간을 넘어 32인의 현자와 조우하세요. 당신의 사유와 가장 닮은 철학자를 찾는 깊이 있는 MBTI 테스트.">
+    <meta name="keywords" content="철학자 MBTI, 심리테스트, 인문학 테스트, 시간의 광장, 철학 테스트">
+    <meta property="og:title" content="시간의 광장: 현자의 방">
+    <meta property="og:description" content="당신은 어떤 성악가인가요? 32인의 철학자 중 당신과 닮은 현자를 찾아보세요.">
+    <meta property="og:type" content="website">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="app">
+        <!-- 1. Landing Screen -->
+        <section id="screen-landing" class="screen active">
+            <div class="content">
+                <h1 class="title-font">시간의 광장</h1>
+                <p class="subtitle" id="landingSubtitle">시공간을 넘어 당신의 영혼과 닮은 현자를 조우하세요.</p>
+                <div class="btn-group">
+                    <button class="btn primary" onclick="goTo('screen-era')">심층 테스트 시작</button>
+                    <button class="btn" onclick="openGallery()">현자의 전당</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Era Selection Screen -->
+        <section id="screen-era" class="screen">
+            <div class="content">
+                <h2 class="title-font">시대의 문</h2>
+                <p class="subtitle">탐험할 시공간을 선택하십시오.</p>
+                <div class="era-grid">
+                    <div class="era-card ancient" onclick="startQuest('ancient')">
+                        <span class="era-title">고대 그리스</span>
+                        <span class="era-desc">지혜의 태동과 이성</span>
+                    </div>
+                    <div class="era-card medieval" onclick="startQuest('medieval')">
+                        <span class="era-title">중세 유럽</span>
+                        <span class="era-desc">신앙과 철학의 조화</span>
+                    </div>
+                    <div class="era-card modern_early" onclick="startQuest('modern_early')">
+                        <span class="era-title">근대 살롱</span>
+                        <span class="era-desc">주체의 발견과 계몽</span>
+                    </div>
+                    <div class="era-card modern_late" onclick="startQuest('modern_late')">
+                        <span class="era-title">현대 도시</span>
+                        <span class="era-desc">실존과 부조리의 고찰</span>
+                    </div>
+                </div>
+                <button class="btn" style="margin-top: 2rem;" onclick="goTo('screen-landing')">되돌아가기</button>
+            </div>
+        </section>
+
+        <!-- 3. Quest Screen -->
+        <section id="screen-quest" class="screen">
+            <div class="content">
+                <div class="quest-header">
+                    <div class="progress-container">
+                        <div id="progressBar"></div>
+                    </div>
+                    <span id="stepLabel">STEP 01 / 12</span>
+                </div>
+                <div class="typewriter-container" id="typewriterText"></div>
+                <div class="options-wrap" id="optionsWrap"></div>
+            </div>
+        </section>
+
+        <!-- 4. Loading Screen -->
+        <section id="screen-loading" class="screen">
+            <div class="content">
+                <div class="loader-vortex"></div>
+                <h2 class="title-font">영혼의 결 분석 중...</h2>
+                <div id="loadingLogs"></div>
+            </div>
+        </section>
+
+        <!-- 5. Result Screen -->
+        <section id="screen-result" class="screen">
+            <div class="content">
+                <div class="result-card">
+                    <span class="mbti-badge" id="resultMBTI"></span>
+                    <h2 class="phil-name" id="resultName"></h2>
+                    <p class="phil-desc" id="resultDesc"></p>
+                    <p class="phil-quote" id="resultQuote"></p>
+                    <div class="btn-group">
+                        <button class="btn primary" onclick="goTo('screen-era')">다시하기</button>
+                        <button class="btn" onclick="shareResult()">공유하기</button>
+                        <button class="btn" onclick="openGallery()">현자의 전당</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Sages' Hall (Gallery) -->
+        <section id="screen-hall" class="screen">
+            <div class="content hall-content">
+                <h2 class="title-font">현자의 전당</h2>
+                <p class="subtitle">32인의 현자와 그들의 지혜</p>
+                <div class="hall-grid" id="hallGrid">
+                    <!-- 5x6+2 Grid injected by JS -->
+                </div>
+                <button class="btn" style="margin-top: 2rem;" onclick="goTo('screen-landing')">메인으로</button>
+            </div>
+        </section>
+
+        <!-- Profile Modal -->
+        <div id="modal-profile" class="modal">
+            <div class="modal-content result-card">
+                <button class="close-btn" onclick="closeProfile()">&times;</button>
+                <div class="prof-layout">
+                    <div class="prof-img" id="profImg"></div>
+                    <div class="prof-info">
+                        <span class="mbti-badge" id="profMBTI"></span>
+                        <h2 class="phil-name" id="profName" style="font-size: 2rem;"></h2>
+                        <p class="phil-quote" id="profQuote" style="margin-bottom: 1rem;"></p>
+                        <div class="prof-section">
+                            <h3>주요 업적</h3>
+                            <p id="profAchievements"></p>
+                        </div>
+                        <div class="prof-section">
+                            <h3>성향 및 특징</h3>
+                            <p id="profTraits"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Share Modal -->
+        <div id="modal-share" class="modal">
+            <div class="modal-content glass-confirm">
+                <h3>결과 공유하기</h3>
+                <p>아래 링크를 복사하여 공유하세요.</p>
+                <div class="share-box">
+                    <input type="text" id="shareUrlInput" readonly>
+                    <button class="btn primary" onclick="copyUrlFromModal()">URL 복사</button>
+                </div>
+                <button class="btn" onclick="closeShare()">닫기</button>
+            </div>
+        </div>
+
+        <!-- Toast Notification -->
+        <div id="toast" class="toast"></div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+
+</html>
