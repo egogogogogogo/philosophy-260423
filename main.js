@@ -6,6 +6,7 @@ const App = {
     currentStep: 0,
     userScores: { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 },
     isTypewriting: false,
+    typewriterTimeout: null,
     audio: null,
     
     init() {
@@ -178,6 +179,7 @@ function updateLoadingLogs() {
 }
 
 function typewrite(el, text, callback) {
+    if (App.typewriterTimeout) clearTimeout(App.typewriterTimeout);
     el.textContent = '';
     let i = 0;
     App.isTypewriting = true;
@@ -186,15 +188,14 @@ function typewrite(el, text, callback) {
         if (i < text.length) {
             el.textContent += text[i];
             i++;
-            // Subtle rhythmic variation
             const delay = (text[i-1] === ' ' || text[i-1] === ',' || text[i-1] === '.') ? 150 : 35 + Math.random() * 20;
             
-            // Audio Trigger (to be implemented)
             if (i % 2 === 0) App.playFX('type');
             
-            setTimeout(next, delay);
+            App.typewriterTimeout = setTimeout(next, delay);
         } else {
             App.isTypewriting = false;
+            App.typewriterTimeout = null;
             if (callback) callback();
         }
     }
