@@ -126,6 +126,7 @@ function startQuest(era) {
 }
 
 function renderQuestion() {
+    if (App.audio) App.audio.resume(); // Ensure audio is active for every question
     const data = QUEST_DATA[App.currentEra][App.currentStep];
     const textEl = document.getElementById('typewriterText');
     const optionsWrap = document.getElementById('optionsWrap');
