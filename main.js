@@ -195,6 +195,7 @@ function typewrite(el, text, callback) {
             
             App.typewriterTimeout = setTimeout(next, delay);
         } else {
+            console.log(`Typewriter: Finished step ${App.currentStep}`);
             App.isTypewriting = false;
             App.typewriterTimeout = null;
             if (callback) callback();
@@ -270,10 +271,10 @@ class AudioManager {
         const gainNode = this.context.createGain();
         
         if (name === 'type') {
-            const duration = 0.12;
+            const duration = 0.08; // Even shorter to prevent overlap
             const offset = Math.random() * (this.buffers[name].duration - duration);
             source.playbackRate.value = 0.85 + Math.random() * 0.3;
-            gainNode.gain.value = 0.35;
+            gainNode.gain.value = 0.3;
             source.connect(gainNode);
             gainNode.connect(this.context.destination);
             source.start(0, offset, duration);
