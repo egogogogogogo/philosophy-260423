@@ -140,7 +140,7 @@ function renderQuestion() {
             btn.className = 'option-btn';
             btn.textContent = opt.text;
             btn.onclick = () => {
-                this.playFX('click');
+                App.playFX('click');
                 handleAnswer(opt.val);
             };
             optionsWrap.appendChild(btn);
