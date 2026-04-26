@@ -6,11 +6,17 @@ const App = {
     currentStep: 0,
     userScores: { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 },
     isTypewriting: false,
+    audio: null,
     
     init() {
+        this.initAudio();
         this.bindEvents();
         this.initFX();
         this.loadInitialScreen();
+    },
+
+    initAudio() {
+        this.audio = new AudioManager();
     },
 
     bindEvents() {
@@ -110,6 +116,7 @@ const App = {
 function goTo(id) { App.goTo(id); }
 
 function startQuest(era) {
+    if (App.audio) App.audio.resume(); // Browser interaction unlock
     App.currentEra = era;
     App.currentStep = 0;
     App.userScores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
@@ -132,26 +139,149 @@ function renderQuestion() {
             const btn = document.createElement('button');
             btn.className = 'option-btn';
             btn.textContent = opt.text;
-            btn.onclick = () => handleAnswer(opt.val);
+            btn.onclick = () => {
+                this.playFX('click');
+                handleAnswer(opt.val);
+            };
             optionsWrap.appendChild(btn);
-            setTimeout(() => btn.classList.add('show'), idx * 200 + 100);
+            setTimeout(() => btn.classList.add('show'), idx * 250 + 200);
         });
     });
+}
+
+const LOADING_LOGS = [
+    "시공간의 궤적을 동기화하는 중...",
+    "당신의 무의식 속에 잠든 현자를 찾는 중...",
+    "아카데메이아의 기록을 열람하고 있습니다...",
+    "별들의 정렬 상태를 분석 중...",
+    "형이상학적 좌표를 계산하고 있습니다...",
+    "진리의 파동을 감지하고 있습니다...",
+    "영혼의 공명 지점을 탐색 중..."
+];
+
+function updateLoadingLogs() {
+    const logEl = document.getElementById('loadingLogs');
+    if (!logEl) return;
+    let i = 0;
+    const interval = setInterval(() => {
+        if (document.getElementById('screen-loading').classList.contains('active')) {
+            logEl.style.opacity = 0;
+            setTimeout(() => {
+                logEl.textContent = LOADING_LOGS[i % LOADING_LOGS.length];
+                logEl.style.opacity = 1;
+                i++;
+            }, 500);
+        } else {
+            clearInterval(interval);
+        }
+    }, 1200);
 }
 
 function typewrite(el, text, callback) {
     el.textContent = '';
     let i = 0;
     App.isTypewriting = true;
-    const interval = setInterval(() => {
-        el.textContent += text[i];
-        i++;
-        if (i >= text.length) {
-            clearInterval(interval);
+    
+    function next() {
+        if (i < text.length) {
+            el.textContent += text[i];
+            i++;
+            // Subtle rhythmic variation
+            const delay = (text[i-1] === ' ' || text[i-1] === ',' || text[i-1] === '.') ? 150 : 35 + Math.random() * 20;
+            
+            // Audio Trigger (to be implemented)
+            if (i % 2 === 0) App.playFX('type');
+            
+            setTimeout(next, delay);
+        } else {
             App.isTypewriting = false;
             if (callback) callback();
         }
-    }, 40);
+    }
+    next();
+}
+
+App.playFX = function(type) {
+    if (this.audio) {
+        this.audio.play(type);
+    }
+};
+
+/* ===================== AUDIO MANAGER (WEB AUDIO API) ===================== */
+class AudioManager {
+    constructor() {
+        this.context = null;
+        this.buffers = {};
+        this.urls = {
+            type: 'sound/kakaist-typewriter-sound-effect-312919.mp3',
+            click: 'sound/dragon-studio-keyboard-typing-sound-effect-335503.mp3'
+        };
+        this.initialized = false;
+        this.isLoading = false;
+    }
+
+    async init() {
+        if (this.initialized || this.isLoading) return;
+        this.isLoading = true;
+        
+        console.log("Audio: Initializing context...");
+        this.context = new (window.AudioContext || window.webkitAudioContext)();
+        
+        const load = async (name, url) => {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const arrayBuffer = await response.arrayBuffer();
+                this.buffers[name] = await this.context.decodeAudioData(arrayBuffer);
+                console.log(`Audio: Loaded ${name}`);
+            } catch (e) {
+                console.error(`Audio: Failed to load ${url}. 만약 로컬 파일을 직접 더블 클릭해 열었다면 보안 정책(CORS)으로 인해 오디오가 작동하지 않을 수 있습니다. 라이브 서버를 사용해 주세요.`, e);
+            }
+        };
+
+        await Promise.all([
+            load('type', this.urls.type),
+            load('click', this.urls.click)
+        ]);
+        
+        this.initialized = true;
+        this.isLoading = false;
+        console.log("Audio: System Ready");
+    }
+
+    async resume() {
+        if (!this.context) {
+            await this.init();
+        }
+        if (this.context && this.context.state === 'suspended') {
+            await this.context.resume();
+            console.log("Audio: Context Resumed");
+        }
+    }
+
+    play(name) {
+        if (!this.initialized || !this.buffers[name] || !this.context) return;
+        
+        const source = this.context.createBufferSource();
+        source.buffer = this.buffers[name];
+        
+        const gainNode = this.context.createGain();
+        
+        if (name === 'type') {
+            const duration = 0.12;
+            const offset = Math.random() * (this.buffers[name].duration - duration);
+            source.playbackRate.value = 0.85 + Math.random() * 0.3;
+            gainNode.gain.value = 0.35;
+            source.connect(gainNode);
+            gainNode.connect(this.context.destination);
+            source.start(0, offset, duration);
+        } else {
+            gainNode.gain.value = 0.5;
+            source.connect(gainNode);
+            gainNode.connect(this.context.destination);
+            source.start(0);
+        }
+    }
 }
 
 function handleAnswer(choice) {
@@ -170,6 +300,7 @@ function handleAnswer(choice) {
 
 function processResult() {
     App.goTo('screen-loading');
+    updateLoadingLogs();
     setTimeout(() => {
         const scores = App.userScores;
         const mbti = [
@@ -205,7 +336,7 @@ function showResult(phil, mbti) {
 }
 
 function openGallery() {
-    // Default to ancient
+    if (App.audio) App.audio.resume();
     const firstTab = document.querySelector('.tab-btn');
     filterGallery('ancient', firstTab);
     App.goTo('screen-hall');

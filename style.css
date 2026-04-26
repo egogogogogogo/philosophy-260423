@@ -12,6 +12,23 @@
     --font-title: 'Cinzel', serif;
     --font-body: 'Outfit', sans-serif;
     --transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    --glass-heavy: rgba(255, 255, 255, 0.05);
+}
+
+/* Entrance Animations */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInScale {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
 }
 
 /* ===================== GLOBAL ===================== */
@@ -131,6 +148,7 @@ body { background-color: var(--bg-dark); color: var(--text-main); font-family: v
     box-shadow: 0 0 30px var(--primary-glow);
     transform: translateY(-5px);
     color: var(--primary);
+    background: rgba(201, 160, 80, 0.05);
 }
 
 .btn.primary { background: var(--primary); color: #000; border: none; }
@@ -161,8 +179,17 @@ body { background-color: var(--bg-dark); color: var(--text-main); font-family: v
     background-position: center;
 }
 
-.era-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to right, rgba(0,0,0,0.8), transparent); z-index: 1; }
-.era-card:hover { transform: scale(1.03) translateY(-5px); border-color: var(--primary); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+.era-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to right, rgba(0,0,0,0.9), rgba(0,0,0,0.3)); z-index: 1; }
+.era-card:hover { transform: scale(1.03) translateY(-8px); border-color: var(--primary); box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 20px var(--primary-glow); }
+.era-card:hover::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+    z-index: 1;
+}
 
 .era-title {
     position: relative;
@@ -450,6 +477,7 @@ body { background-color: var(--bg-dark); color: var(--text-main); font-family: v
     border: 2px solid var(--primary);
     box-shadow: 0 0 40px var(--primary-glow), inset 0 0 20px rgba(0,0,0,0.5);
     position: relative;
+    animation: fadeInScale 1.2s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .phil-portrait-large::after {
@@ -474,6 +502,7 @@ body { background-color: var(--bg-dark); color: var(--text-main); font-family: v
     color: #fff;
     margin: 1rem 0;
     letter-spacing: 5px;
+    animation: fadeInUp 1s ease 0.3s backwards;
 }
 
 .phil-quote {
@@ -482,6 +511,7 @@ body { background-color: var(--bg-dark); color: var(--text-main); font-family: v
     color: var(--primary);
     margin: 2.5rem 0;
     line-height: 1.8;
+    animation: fadeInUp 1s ease 0.6s backwards;
 }
 
 /* Statistics Table */
