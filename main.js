@@ -23,9 +23,19 @@ const App = {
 
     initAudio() {
         this.audio = new SatieAudioManager();
+        this.audio.init(); // Initialize and start preloading immediately
     },
 
     bindEvents() {
+        // ... (Cursor logic)
+        
+        // GLOBAL TRIGGER: Start audio on ANY first click to unlock browser policy early
+        const unlockAudio = async () => {
+            if (this.audio) await this.audio.resume();
+            document.removeEventListener('click', unlockAudio);
+        };
+        document.addEventListener('click', unlockAudio);
+
         const dot = document.querySelector('.cursor-dot');
         const outline = document.querySelector('.cursor-outline');
         const constellations = document.querySelectorAll('.constellation');
@@ -105,7 +115,8 @@ class SatieAudioManager {
         if (this.initialized) return;
         this.bgm = new Audio('sound/Erik Satie - Gymnop_ies & Gnossiennes - RX rx.mp3');
         this.bgm.loop = true;
-        this.bgm.volume = 0.4; // Perfect background level
+        this.bgm.volume = 0.4;
+        this.bgm.preload = 'auto'; // Force browser to start downloading immediately
         this.initialized = true;
     }
 
