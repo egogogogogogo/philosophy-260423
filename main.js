@@ -1,4 +1,4 @@
-/* ===================== THE TIME-TRAVELER'S AGORA: AMBIENT ENGINE ===================== */
+/* ===================== THE TIME-TRAVELER'S AGORA: SATIE AMBIENT ENGINE ===================== */
 
 // Supabase Configuration
 const SUPABASE_URL = (typeof CONFIG !== 'undefined') ? CONFIG.SUPABASE_URL : '';
@@ -22,7 +22,7 @@ const App = {
     },
 
     initAudio() {
-        this.audio = new AmbientAudioManager();
+        this.audio = new SatieAudioManager();
     },
 
     bindEvents() {
@@ -94,66 +94,30 @@ const App = {
     }
 };
 
-/* ===================== AMBIENT AUDIO ENGINE (BGM ONLY) ===================== */
-class AmbientAudioManager {
+/* ===================== SATIE AUDIO ENGINE (BGM STREAMING) ===================== */
+class SatieAudioManager {
     constructor() {
-        this.context = null;
+        this.bgm = null;
         this.initialized = false;
-        this.bgmNode = null;
-        this.bgmGain = null;
     }
 
     init() {
         if (this.initialized) return;
-        try {
-            this.context = new (window.AudioContext || window.webkitAudioContext)();
-            this.initialized = true;
-        } catch(e) { console.error("Audio init error", e); }
+        this.bgm = new Audio('sound/Erik Satie - Gymnop_ies & Gnossiennes - RX rx.mp3');
+        this.bgm.loop = true;
+        this.bgm.volume = 0.4; // Perfect background level
+        this.initialized = true;
     }
 
     async resume() {
         if (!this.initialized) this.init();
-        if (this.context && this.context.state === 'suspended') await this.context.resume();
-        this.startBGM();
+        try {
+            await this.bgm.play();
+        } catch(e) { console.warn("BGM Play failed (User interaction required)", e); }
     }
 
-    startBGM() {
-        if (this.bgmNode) return;
-        
-        // Lush, evolving ambient pad synthesis
-        this.bgmGain = this.context.createGain();
-        this.bgmGain.gain.setValueAtTime(0, this.context.currentTime);
-        this.bgmGain.gain.linearRampToValueAtTime(0.08, this.context.currentTime + 3.0); // Gentle fade in
-        this.bgmGain.connect(this.context.destination);
-
-        const createDrone = (freq, detune) => {
-            const osc = this.context.createOscillator();
-            const filter = this.context.createBiquadFilter();
-            osc.type = 'sine';
-            osc.frequency.value = freq;
-            osc.detune.value = detune;
-            
-            filter.type = 'lowpass';
-            filter.frequency.value = 400;
-            
-            osc.connect(filter);
-            filter.connect(this.bgmGain);
-            osc.start();
-        };
-
-        // Create a rich chordal drone
-        createDrone(130.81, 0);   // C3
-        createDrone(130.81, 5);   // C3 detuned
-        createDrone(164.81, -5);  // E3
-        createDrone(196.00, 0);   // G3
-        createDrone(261.63, 2);   // C4
-        
-        this.bgmNode = true;
-    }
-
-    // Effect sounds are now silent for better immersion
-    play(name) { /* Silent */ }
-    scheduleTypewriter(textLength, interval = 85) { /* Silent */ }
+    play(name) { /* Silent for maximum immersion */ }
+    scheduleTypewriter() { /* Silent for maximum immersion */ }
 }
 
 // Global Handlers
@@ -195,9 +159,6 @@ function typewrite(el, text, callback) {
     el.textContent = '';
     let i = 0;
     const interval = 85;
-    if (App.audio) {
-        App.audio.scheduleTypewriter(text.replace(/ /g, '').length, interval);
-    }
     function next() {
         if (i < text.length) {
             el.textContent += text[i];
