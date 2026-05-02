@@ -1,9 +1,9 @@
 /* ===================== THE TIME-TRAVELER'S AGORA: MODULAR ENGINE ===================== */
 
-// Supabase Configuration
-const SUPABASE_URL = 'https://aoaobmxfzwwdztjmirpz.supabase.co';
-const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY'; // Settings -> API -> anon (public) 키를 여기에 입력하세요.
-const supabaseClient = (typeof supabase !== 'undefined') ? supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+// Supabase Configuration (Loaded from config.js generated during build)
+const SUPABASE_URL = (typeof CONFIG !== 'undefined') ? CONFIG.SUPABASE_URL : '';
+const SUPABASE_KEY = (typeof CONFIG !== 'undefined') ? CONFIG.SUPABASE_KEY : '';
+const supabaseClient = (typeof supabase !== 'undefined' && SUPABASE_URL && SUPABASE_KEY) ? supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
 
 // App State
