@@ -20,6 +20,8 @@ const App = {
         this.bindEvents();
         this.initFX();
         this.loadInitialScreen();
+        // Pre-load audio immediately on land
+        if (this.audio) this.audio.init();
     },
 
     initAudio() {
@@ -27,6 +29,7 @@ const App = {
     },
 
     bindEvents() {
+        // ... (existing cursor/constellation logic)
         const dot = document.querySelector('.cursor-dot');
         const outline = document.querySelector('.cursor-outline');
         
@@ -285,24 +288,25 @@ class AudioManager {
     play(name) {
         if (!this.initialized || !this.buffers[name] || !this.context) return;
         
-        // Explicitly stop previous typewriter sound to prevent dragging
-        if (name === 'type' && this.currentTypeSource) {
-            try { this.currentTypeSource.stop(); } catch(e) {}
-        }
-
         const source = this.context.createBufferSource();
         source.buffer = this.buffers[name];
         const gainNode = this.context.createGain();
         
         if (name === 'type') {
+            // Kill any lingering type sounds
+            if (this.currentTypeSource) {
+                try { this.currentTypeSource.stop(); } catch(e) {}
+            }
             this.currentTypeSource = source;
-            const duration = 0.08; 
+            
+            const duration = 0.05; // Sharper and cleaner
             source.playbackRate.value = 1.0 + (Math.random() * 0.1);
             gainNode.gain.value = 0.6;
             source.connect(gainNode);
             gainNode.connect(this.context.destination);
+            
             source.start(0, 0);
-            source.stop(this.context.currentTime + duration); // Force stop after 0.08s
+            source.stop(this.context.currentTime + duration);
         } else {
             gainNode.gain.value = 0.5;
             source.connect(gainNode);
@@ -314,12 +318,23 @@ class AudioManager {
 
 function handleAnswer(choice) {
     if (App.isTypewriting) return;
-    const weights = QUEST_DATA[App.currentEra][App.currentStep].weight[choice];
-    for (const [key, val] of Object.entries(weights)) {
-        App.userScores[key] += val;
+    
+    // Safety check for currentStep and QUEST_DATA
+    const eraData = QUEST_DATA[App.currentEra];
+    if (!eraData || !eraData[App.currentStep]) {
+        console.error("Error: Question data missing for step", App.currentStep);
+        return;
     }
-    if (App.currentStep < 11) {
-        App.currentStep++;
+
+    const weights = eraData[App.currentStep].weight[choice];
+    if (weights) {
+        for (const [key, val] of Object.entries(weights)) {
+            App.userScores[key] += val;
+        }
+    }
+    
+    App.currentStep++;
+    if (App.currentStep < 12) {
         renderQuestion();
     } else {
         processResult();
@@ -333,7 +348,7 @@ function processResult() {
         const scores = App.userScores;
         const mbti = [
             scores.E >= scores.I ? 'E' : 'I',
-            scores.N >= scores.S ? 'N' : 'S',
+            scores.S >= scores.N ? 'S' : 'N',
             scores.T >= scores.F ? 'T' : 'F',
             scores.J >= scores.P ? 'J' : 'P'
         ].join('');
