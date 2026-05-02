@@ -1,4 +1,4 @@
-/* ===================== THE TIME-TRAVELER'S AGORA: HYBRID SOUND ENGINE ===================== */
+/* ===================== THE TIME-TRAVELER'S AGORA: MEDITATION ENGINE ===================== */
 
 // Supabase Configuration
 const SUPABASE_URL = (typeof CONFIG !== 'undefined') ? CONFIG.SUPABASE_URL : '';
@@ -22,10 +22,7 @@ const App = {
     },
 
     initAudio() {
-        this.audio = new HybridAudioManager();
-        // Load real samples as priority
-        this.audio.load('type', 'sound/kakaist-typewriter-sound-effect-312919.mp3');
-        this.audio.load('click', 'sound/dragon-studio-keyboard-typing-sound-effect-335503.mp3');
+        this.audio = new MeditationAudioManager();
     },
 
     bindEvents() {
@@ -97,23 +94,19 @@ const App = {
     }
 };
 
-/* ===================== HYBRID AUDIO ENGINE (SAMPLING + SYNTHESIS) ===================== */
-class HybridAudioManager {
+/* ===================== MEDITATION AUDIO ENGINE (ATMOSPHERIC) ===================== */
+class MeditationAudioManager {
     constructor() {
         this.context = null;
-        this.buffers = {};
         this.initialized = false;
-        this.noiseBuffer = null;
+        this.bgmNode = null;
+        this.bgmGain = null;
     }
 
     init() {
         if (this.initialized) return;
         try {
             this.context = new (window.AudioContext || window.webkitAudioContext)();
-            const bufferSize = this.context.sampleRate * 0.2;
-            this.noiseBuffer = this.context.createBuffer(1, bufferSize, this.context.sampleRate);
-            const data = this.noiseBuffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
             this.initialized = true;
         } catch(e) { console.error("Audio init error", e); }
     }
@@ -121,68 +114,68 @@ class HybridAudioManager {
     async resume() {
         if (!this.initialized) this.init();
         if (this.context && this.context.state === 'suspended') await this.context.resume();
+        this.startBGM();
     }
 
-    async load(name, url) {
-        try {
-            const resp = await fetch(url);
-            const arrayBuffer = await resp.arrayBuffer();
-            if (!this.initialized) this.init();
-            this.context.decodeAudioData(arrayBuffer, (buffer) => {
-                this.buffers[name] = buffer;
-                console.log(`[Audio] Loaded: ${name}`);
-            });
-        } catch(e) { console.warn(`Failed to load sound: ${name}`, e); }
-    }
+    startBGM() {
+        if (this.bgmNode) return;
+        // Synthesize a very subtle ambient drone (No external file needed)
+        this.bgmGain = this.context.createGain();
+        this.bgmGain.gain.value = 0.05; // Extremely subtle
+        this.bgmGain.connect(this.context.destination);
 
-    // High-quality synthesis fallback
-    playSynth(time, type = 'type') {
-        const now = time || this.context.currentTime;
-        if (type === 'type') {
-            const body = this.context.createOscillator();
-            const bodyGain = this.context.createGain();
-            body.type = 'triangle';
-            body.frequency.setValueAtTime(180 + Math.random() * 20, now);
-            bodyGain.gain.setValueAtTime(0, now);
-            bodyGain.gain.linearRampToValueAtTime(0.2, now + 0.005);
-            bodyGain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-            body.connect(bodyGain); bodyGain.connect(this.context.destination);
-            body.start(now); body.stop(now + 0.1);
-        } else {
+        const createOsc = (freq) => {
             const osc = this.context.createOscillator();
-            const gain = this.context.createGain();
-            osc.frequency.setValueAtTime(150, now);
-            gain.gain.setValueAtTime(0.3, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
-            osc.connect(gain); gain.connect(this.context.destination);
-            osc.start(now); osc.stop(now + 0.1);
-        }
+            osc.type = 'sine';
+            osc.frequency.value = freq;
+            osc.connect(this.bgmGain);
+            osc.start();
+        };
+
+        // Harmonic drone (C, G, E notes)
+        createOsc(130.81); // C3
+        createOsc(196.00); // G3
+        createOsc(329.63); // E4
+        this.bgmNode = true;
     }
 
-    play(name, time = 0, duration = 0.8) { // Increased duration to avoid cutting off
-        if (!this.initialized) this.init();
-        const startTime = time || this.context.currentTime;
-
-        // Play Sample if available
-        if (this.buffers[name]) {
-            const source = this.context.createBufferSource();
-            source.buffer = this.buffers[name];
-            const gain = this.context.createGain();
-            gain.gain.value = name === 'type' ? 0.3 : 0.5;
-            source.connect(gain); gain.connect(this.context.destination);
-            source.start(startTime, 0, duration);
-        }
+    // Meditation Bowl Clang
+    playBowl(time, volume = 0.1) {
+        const now = time || this.context.currentTime;
         
-        // Always play a subtle synth layer as a safety net/body
-        this.playSynth(startTime, name);
+        const osc = this.context.createOscillator();
+        const gain = this.context.createGain();
+        
+        osc.type = 'sine';
+        // Base frequency 330Hz (E4), slightly randomized
+        osc.frequency.setValueAtTime(330 + (Math.random() - 0.5) * 5, now);
+        
+        gain.gain.setValueAtTime(0, now);
+        gain.gain.linearRampToValueAtTime(volume, now + 0.05); // Slow attack
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8); // Long meditative tail
+        
+        osc.connect(gain);
+        gain.connect(this.context.destination);
+        
+        osc.start(now);
+        osc.stop(now + 1.0);
+    }
+
+    play(name) {
+        if (!this.initialized) this.init();
+        const now = this.context.currentTime;
+        if (name === 'click') {
+            this.playBowl(now, 0.15); // Button click as a gentle bowl hit
+        }
     }
 
     scheduleTypewriter(textLength, interval = 85) {
         if (!this.initialized) this.init();
         const now = this.context.currentTime;
-        console.log(`[Audio] Scheduling ${textLength} chars...`);
         for (let i = 0; i < textLength; i++) {
-            this.play('type', now + (i * (interval / 1000)), 0.8);
+            // Very subtle bowl resonance for each character
+            // Overlapping will create a beautiful pad effect
+            this.playBowl(now + (i * (interval / 1000)), 0.03);
         }
     }
 }
