@@ -1,5 +1,11 @@
 /* ===================== THE TIME-TRAVELER'S AGORA: MODULAR ENGINE ===================== */
 
+// Supabase Configuration
+const SUPABASE_URL = 'https://aoaobmxfzwwdztjmirpz.supabase.co';
+const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY'; // Settings -> API -> anon (public) 키를 여기에 입력하세요.
+const supabaseClient = (typeof supabase !== 'undefined') ? supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+
+
 // App State
 const App = {
     currentEra: 'ancient',
@@ -322,9 +328,26 @@ function processResult() {
             if (score > maxScore) { maxScore = score; match = p; }
         });
         
+        // Save Result to Supabase (Async)
+        saveResultToSupabase(match.id, mbti, App.currentEra);
+        
         showResult(match, mbti);
-    }, 4000);
+    }, 5000);
 }
+
+async function saveResultToSupabase(philId, mbti, era) {
+    if (!supabaseClient) return;
+    try {
+        const { error } = await supabaseClient
+            .from('results')
+            .insert([{ phil_id: philId, mbti: mbti, era: era }]);
+        if (error) throw error;
+        console.log("Stats: Result saved successfully");
+    } catch (e) {
+        console.error("Stats: Failed to save result", e);
+    }
+}
+
 
 function showResult(phil, mbti) {
     document.getElementById('resultMBTI').textContent = mbti;
@@ -332,11 +355,58 @@ function showResult(phil, mbti) {
     document.getElementById('resultQuote').textContent = phil.quote;
     document.getElementById('resultDesc').textContent = phil.modifier;
     document.getElementById('resultPortrait').style.backgroundImage = `url('${phil.portrait}')`;
-    document.getElementById('totalParticipants').textContent = (12482 + Math.floor(Math.random() * 100)).toLocaleString();
-    document.getElementById('matchRateBar').style.width = "8%";
-    document.getElementById('matchRateText').textContent = "8%";
+    
+    // Initial UI state (Loading...)
+    document.getElementById('totalParticipants').textContent = "...";
+    document.getElementById('matchRateText').textContent = "0%";
+    document.getElementById('matchRateBar').style.width = "0%";
+
+    // Fetch Real Statistics
+    updateRealStatistics(phil.id);
+
     App.goTo('screen-result');
 }
+
+async function updateRealStatistics(philId) {
+    if (!supabaseClient) {
+        // Fallback to random dummy if supabase is not initialized
+        document.getElementById('totalParticipants').textContent = (12482 + Math.floor(Math.random() * 100)).toLocaleString();
+        document.getElementById('matchRateBar').style.width = "8%";
+        document.getElementById('matchRateText').textContent = "8%";
+        return;
+    }
+
+    try {
+        // 1. Get total participants
+        const { count: totalCount, error: totalErr } = await supabaseClient
+            .from('results')
+            .select('*', { count: 'exact', head: true });
+        
+        if (totalErr) throw totalErr;
+
+        // 2. Get match count for this philosopher
+        const { count: matchCount, error: matchErr } = await supabaseClient
+            .from('results')
+            .select('*', { count: 'exact', head: true })
+            .eq('phil_id', philId);
+
+        if (matchErr) throw matchErr;
+
+        // Update UI
+        const displayTotal = totalCount || 0;
+        const rate = displayTotal > 0 ? Math.round((matchCount / displayTotal) * 100) : 0;
+
+        document.getElementById('totalParticipants').textContent = displayTotal.toLocaleString();
+        document.getElementById('matchRateText').textContent = `${rate}%`;
+        document.getElementById('matchRateBar').style.width = `${rate}%`;
+
+    } catch (e) {
+        console.error("Stats: Failed to fetch statistics", e);
+        // Silent fallback
+        document.getElementById('totalParticipants').textContent = "10,000+";
+    }
+}
+
 
 function openGallery() {
     if (App.audio) App.audio.resume();
