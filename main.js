@@ -123,55 +123,53 @@ class ProceduralAudioManager {
         if (this.context && this.context.state === 'suspended') await this.context.resume();
     }
 
-    // Synthesize a deep, resonant luxury vintage typewriter strike
+    // Synthesize a complex, realistic mechanical typewriter strike (Physical Modeling)
     createClickNode(time, volume = 0.25) {
         if (!this.initialized) return;
 
         const now = time;
         
-        // Layer 1: Heavy Metallic Strike (Lowered frequencies)
-        const osc1 = this.context.createOscillator();
-        const osc2 = this.context.createOscillator();
-        const oscGain = this.context.createGain();
+        // Layer 1: The Impact Impulse (High-frequency grit)
+        const impulse = this.context.createBufferSource();
+        impulse.buffer = this.noiseBuffer;
+        const impulseFilter = this.context.createBiquadFilter();
+        const impulseGain = this.context.createGain();
         
-        osc1.type = 'sine';
-        osc2.type = 'sine';
-        osc1.frequency.setValueAtTime(1200 + Math.random() * 100, now);
-        osc2.frequency.setValueAtTime(2400 + Math.random() * 200, now);
+        impulseFilter.type = 'highpass';
+        impulseFilter.frequency.value = 4000;
         
-        oscGain.gain.setValueAtTime(0.001, now);
-        oscGain.gain.exponentialRampToValueAtTime(volume * 0.4, now + 0.004);
-        oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.03); // Slightly longer than before
+        impulseGain.gain.setValueAtTime(0.001, now);
+        impulseGain.gain.exponentialRampToValueAtTime(volume * 0.5, now + 0.002);
+        impulseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.01);
         
-        osc1.connect(oscGain);
-        osc2.connect(oscGain);
-        oscGain.connect(this.context.destination);
-        
-        osc1.start(now);
-        osc2.start(now);
-        osc1.stop(now + 0.05);
-        osc2.stop(now + 0.05);
+        impulse.connect(impulseFilter);
+        impulseFilter.connect(impulseGain);
+        impulseGain.connect(this.context.destination);
+        impulse.start(now);
+        impulse.stop(now + 0.02);
 
-        // Layer 2: Deep Body Resonance (High Q for "ringing" resonance)
-        const noise = this.context.createBufferSource();
-        noise.buffer = this.noiseBuffer;
-        const filter = this.context.createBiquadFilter();
-        const noiseGain = this.context.createGain();
+        // Layer 2: Mechanical Body & Resonance (Multi-band noise)
+        const body = this.context.createBufferSource();
+        body.buffer = this.noiseBuffer;
+        const bodyFilter = this.context.createBiquadFilter();
+        const bodyGain = this.context.createGain();
         
-        filter.type = 'bandpass';
-        filter.frequency.value = 500 + Math.random() * 100; // Lowered from 750Hz
-        filter.Q.value = 6; // High resonance for that "hollow body" feel
+        bodyFilter.type = 'bandpass';
+        bodyFilter.frequency.value = 600 + Math.random() * 300;
+        bodyFilter.Q.value = 8; // High resonance for mechanical ring
         
-        noiseGain.gain.setValueAtTime(0.001, now);
-        noiseGain.gain.exponentialRampToValueAtTime(volume * 0.7, now + 0.008);
-        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.12); // Longer decay for resonance
+        bodyGain.gain.setValueAtTime(0.001, now);
+        // Non-linear, shaky envelope for realism
+        bodyGain.gain.exponentialRampToValueAtTime(volume, now + 0.005);
+        bodyGain.gain.exponentialRampToValueAtTime(volume * 0.3, now + 0.02);
+        bodyGain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
         
-        noise.connect(filter);
-        filter.connect(noiseGain);
-        noiseGain.connect(this.context.destination);
+        body.connect(bodyFilter);
+        bodyFilter.connect(bodyGain);
+        bodyGain.connect(this.context.destination);
         
-        noise.start(now);
-        noise.stop(now + 0.15);
+        body.start(now);
+        body.stop(now + 0.15);
     }
 
     scheduleTypewriter(textLength, interval = 85) {
