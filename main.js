@@ -193,13 +193,19 @@ function typewrite(el, text, callback) {
     
     function next() {
         if (i < text.length) {
-            el.textContent += text[i];
-            i++;
-            const char = text[i-1];
-            const delay = (char === ' ' || char === ',' || char === '.') ? 150 : 40 + Math.random() * 15;
+            const char = text[i];
             
-            // Play sound for every letter except space
+            // 1. Play sound first for better perceptual sync
             if (char !== ' ') App.playFX('type');
+            
+            // 2. Then update text
+            el.textContent += char;
+            i++;
+            
+            // 3. Standardized delay for mechanical feel (snappy but human)
+            let delay = 75;
+            if (char === ',' || char === '.') delay = 200;
+            if (char === ' ') delay = 50;
             
             App.typewriterTimeout = setTimeout(next, delay);
         } else {
@@ -282,10 +288,10 @@ class AudioManager {
         const gainNode = this.context.createGain();
         
         if (name === 'type') {
-            const duration = 0.08; // Even shorter to prevent overlap
+            const duration = 0.06; // Sharper click
             const offset = Math.random() * (this.buffers[name].duration - duration);
-            source.playbackRate.value = 0.85 + Math.random() * 0.3;
-            gainNode.gain.value = 0.3;
+            source.playbackRate.value = 0.9 + Math.random() * 0.2;
+            gainNode.gain.value = 0.5; // Slightly louder
             source.connect(gainNode);
             gainNode.connect(this.context.destination);
             source.start(0, offset, duration);
