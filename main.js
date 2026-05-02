@@ -222,93 +222,101 @@ App.playFX = function(type) {
     }
 };
 
-/* ===================== AUDIO MANAGER (STRICT SYNC POOL) ===================== */
+/* ===================== AUDIO MANAGER (PROFESSIONAL SCHEDULER) ===================== */
 class AudioManager {
     constructor() {
+        this.context = null;
+        this.buffers = {};
+        this.urls = {
+            type: 'sound/kakaist-typewriter-sound-effect-312919.mp3',
+            click: 'sound/dragon-studio-keyboard-typing-sound-effect-335503.mp3'
+        };
         this.initialized = false;
-        this.poolSize = 10;
-        this.typePool = [];
-        this.poolIndex = 0;
-        this.clickAudio = null;
-        this.isLoaded = false;
+        this.activeSources = [];
     }
 
     async init() {
-        if (this.isLoaded) return;
+        if (this.initialized) return;
+        this.context = new (window.AudioContext || window.webkitAudioContext)();
         
-        console.log("[Audio] Strict Preloading Started...");
-        
-        // Pre-load typewriter pool
-        for (let i = 0; i < this.poolSize; i++) {
-            const audio = new Audio('sound/kakaist-typewriter-sound-effect-312919.mp3');
-            audio.volume = 0.5;
-            this.typePool.push(audio);
-        }
-        
-        this.clickAudio = new Audio('sound/dragon-studio-keyboard-typing-sound-effect-335503.mp3');
-        this.clickAudio.volume = 0.5;
-
-        // Simple promise to check if at least one is ready
-        this.typePool[0].oncanplaythrough = () => {
-            this.isLoaded = true;
-            this.initialized = true;
-            console.log("[Audio] System Ready (All assets cached)");
+        const load = async (name, url) => {
+            const response = await fetch(url);
+            const arrayBuffer = await response.arrayBuffer();
+            this.buffers[name] = await this.context.decodeAudioData(arrayBuffer);
         };
-        
-        // Force load
-        this.typePool[0].load();
-        this.clickAudio.load();
+
+        await Promise.all([load('type', this.urls.type), load('click', this.urls.click)]);
+        this.initialized = true;
     }
 
     async resume() {
-        // Just a dummy for compatibility, init handles it
-        if (!this.isLoaded) await this.init();
+        if (!this.context) await this.init();
+        if (this.context.state === 'suspended') await this.context.resume();
+    }
+
+    // New: Schedule an entire sequence of clicks
+    scheduleTypewriter(textLength, interval = 80) {
+        this.stopAll();
+        const now = this.context.currentTime;
+        
+        for (let i = 0; i < textLength; i++) {
+            const source = this.context.createBufferSource();
+            source.buffer = this.buffers['type'];
+            const gain = this.context.createGain();
+            
+            gain.gain.value = 0.5;
+            source.playbackRate.value = 0.95 + Math.random() * 0.1;
+            
+            source.connect(gain);
+            gain.connect(this.context.destination);
+            
+            // Precise scheduling on the audio clock
+            const startTime = now + (i * (interval / 1000));
+            source.start(startTime, 0, 0.08);
+            this.activeSources.push(source);
+        }
+    }
+
+    stopAll() {
+        this.activeSources.forEach(s => { try { s.stop(); } catch(e) {} });
+        this.activeSources = [];
     }
 
     play(name) {
-        if (!this.initialized) return;
-
-        if (name === 'type') {
-            const audio = this.typePool[this.poolIndex];
-            audio.currentTime = 0; 
-            audio.play().catch(() => {});
-            
-            // Limit duration to 0.1s for crisp sync
-            setTimeout(() => {
-                audio.pause();
-                audio.currentTime = 0;
-            }, 100);
-
-            this.poolIndex = (this.poolIndex + 1) % this.poolSize;
-        } else if (name === 'click') {
-            if (this.clickAudio) {
-                this.clickAudio.currentTime = 0;
-                this.clickAudio.play().catch(() => {});
-            }
-        }
+        if (!this.initialized || !this.buffers[name]) return;
+        const source = this.context.createBufferSource();
+        source.buffer = this.buffers[name];
+        source.connect(this.context.destination);
+        source.start(0);
     }
 }
 
-async function startQuest(era) {
-    App.currentEra = era;
-    App.currentStep = 0;
-    App.userScores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+function typewrite(el, text, callback) {
+    if (App.typewriterTimeout) clearTimeout(App.typewriterTimeout);
+    if (App.audio) App.audio.stopAll();
 
-    // Strict Wait for Audio Ready
-    if (App.audio) {
-        if (!App.audio.isLoaded) {
-            console.log("[Audio] Waiting for assets before start...");
-            await App.audio.init();
-            let timeout = 0;
-            while (!App.audio.isLoaded && timeout < 30) {
-                await new Promise(r => setTimeout(r, 100));
-                timeout++;
-            }
-        }
+    el.textContent = '';
+    let i = 0;
+    App.isTypewriting = true;
+
+    const interval = 85; // Fixed interval for perfect sync
+    
+    // 1. Schedule all sounds at once on the audio clock (Immune to JS lag)
+    if (App.audio && App.audio.initialized) {
+        App.audio.scheduleTypewriter(text.replace(/ /g, '').length, interval);
     }
     
-    App.goTo('screen-quest');
-    renderQuestion();
+    function next() {
+        if (i < text.length) {
+            el.textContent += text[i];
+            i++;
+            App.typewriterTimeout = setTimeout(next, text[i-1] === ' ' ? 20 : interval);
+        } else {
+            App.isTypewriting = false;
+            if (callback) callback();
+        }
+    }
+    next();
 }
 
 function handleAnswer(choice) {
