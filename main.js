@@ -123,25 +123,25 @@ class ProceduralAudioManager {
         if (this.context && this.context.state === 'suspended') await this.context.resume();
     }
 
-    // Synthesize a premium luxury vintage typewriter strike (Enhanced Layering)
+    // Synthesize a deep, resonant luxury vintage typewriter strike
     createClickNode(time, volume = 0.25) {
         if (!this.initialized) return;
 
         const now = time;
         
-        // Layer 1: High-end Metallic "Tink" (Harmonic sines)
+        // Layer 1: Heavy Metallic Strike (Lowered frequencies)
         const osc1 = this.context.createOscillator();
         const osc2 = this.context.createOscillator();
         const oscGain = this.context.createGain();
         
         osc1.type = 'sine';
         osc2.type = 'sine';
-        osc1.frequency.setValueAtTime(2200 + Math.random() * 200, now);
-        osc2.frequency.setValueAtTime(4600 + Math.random() * 400, now); // Rich harmonic
+        osc1.frequency.setValueAtTime(1200 + Math.random() * 100, now);
+        osc2.frequency.setValueAtTime(2400 + Math.random() * 200, now);
         
         oscGain.gain.setValueAtTime(0.001, now);
-        oscGain.gain.exponentialRampToValueAtTime(volume * 0.4, now + 0.003);
-        oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
+        oscGain.gain.exponentialRampToValueAtTime(volume * 0.4, now + 0.004);
+        oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.03); // Slightly longer than before
         
         osc1.connect(oscGain);
         osc2.connect(oscGain);
@@ -149,29 +149,29 @@ class ProceduralAudioManager {
         
         osc1.start(now);
         osc2.start(now);
-        osc1.stop(now + 0.03);
-        osc2.stop(now + 0.03);
+        osc1.stop(now + 0.05);
+        osc2.stop(now + 0.05);
 
-        // Layer 2: Deep Mechanical Body (Polished Noise)
+        // Layer 2: Deep Body Resonance (High Q for "ringing" resonance)
         const noise = this.context.createBufferSource();
         noise.buffer = this.noiseBuffer;
         const filter = this.context.createBiquadFilter();
         const noiseGain = this.context.createGain();
         
         filter.type = 'bandpass';
-        filter.frequency.value = 750 + Math.random() * 150;
-        filter.Q.value = 2.5;
+        filter.frequency.value = 500 + Math.random() * 100; // Lowered from 750Hz
+        filter.Q.value = 6; // High resonance for that "hollow body" feel
         
         noiseGain.gain.setValueAtTime(0.001, now);
-        noiseGain.gain.exponentialRampToValueAtTime(volume * 0.6, now + 0.006);
-        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+        noiseGain.gain.exponentialRampToValueAtTime(volume * 0.7, now + 0.008);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.12); // Longer decay for resonance
         
         noise.connect(filter);
         filter.connect(noiseGain);
         noiseGain.connect(this.context.destination);
         
         noise.start(now);
-        noise.stop(now + 0.07);
+        noise.stop(now + 0.15);
     }
 
     scheduleTypewriter(textLength, interval = 85) {
