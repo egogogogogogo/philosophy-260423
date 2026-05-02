@@ -123,39 +123,52 @@ class ProceduralAudioManager {
         if (this.context && this.context.state === 'suspended') await this.context.resume();
     }
 
-    // Synthesize a sophisticated, airy modern UI "ink" sound (Multi-grain)
-    createClickNode(time, volume = 0.15) {
+    // Synthesize a pure, high-end mechanical typewriter "clink" (No bass thud)
+    createClickNode(time, volume = 0.2) {
         if (!this.initialized) return;
 
         const now = time;
         
-        // Multi-grain approach: 3 layers for organic variation
-        const grains = 3;
-        for (let g = 0; g < grains; g++) {
-            const noise = this.context.createBufferSource();
-            noise.buffer = this.noiseBuffer;
-            const filter = this.context.createBiquadFilter();
-            const gain = this.context.createGain();
-            
-            // Randomized parameters for each grain
-            filter.type = 'bandpass';
-            filter.frequency.value = 2500 + Math.random() * 2000; // High-end airy freq
-            filter.Q.value = 10 + Math.random() * 5;
-            
-            const grainDelay = Math.random() * 0.01;
-            const startTime = now + grainDelay;
-            
-            gain.gain.setValueAtTime(0.001, startTime);
-            gain.gain.exponentialRampToValueAtTime(volume / grains, startTime + 0.002);
-            gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.02 + Math.random() * 0.02);
-            
-            noise.connect(filter);
-            filter.connect(gain);
-            gain.connect(this.context.destination);
-            
-            noise.start(startTime);
-            noise.stop(startTime + 0.05);
-        }
+        // Layer 1: High-frequency metallic impact
+        const osc = this.context.createOscillator();
+        const oscGain = this.context.createGain();
+        osc.type = 'triangle'; // Richer than sine but cleaner than square
+        osc.frequency.setValueAtTime(3500 + Math.random() * 500, now);
+        
+        oscGain.gain.setValueAtTime(0, now);
+        oscGain.gain.linearRampToValueAtTime(volume * 0.5, now + 0.003); // Soft attack to avoid "thud"
+        oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
+        
+        osc.connect(oscGain);
+        oscGain.connect(this.context.destination);
+        osc.start(now);
+        osc.stop(now + 0.03);
+
+        // Layer 2: Mechanical "Clink" (Filtered high-pass noise)
+        const noise = this.context.createBufferSource();
+        noise.buffer = this.noiseBuffer;
+        const filter = this.context.createBiquadFilter();
+        const noiseGain = this.context.createGain();
+        
+        filter.type = 'highpass';
+        filter.frequency.value = 2500; // Strictly cut all bass/mid "thud"
+        
+        const resFilter = this.context.createBiquadFilter();
+        resFilter.type = 'bandpass';
+        resFilter.frequency.value = 4000;
+        resFilter.Q.value = 5; // Resonant metallic peak
+        
+        noiseGain.gain.setValueAtTime(0, now);
+        noiseGain.gain.linearRampToValueAtTime(volume, now + 0.005);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+        
+        noise.connect(filter);
+        filter.connect(resFilter);
+        resFilter.connect(noiseGain);
+        noiseGain.connect(this.context.destination);
+        
+        noise.start(now);
+        noise.stop(now + 0.08);
     }
 
     scheduleTypewriter(textLength, interval = 85) {
