@@ -1,4 +1,4 @@
-/* ===================== THE TIME-TRAVELER'S AGORA: FINAL SAMPLING ENGINE ===================== */
+/* ===================== THE TIME-TRAVELER'S AGORA: HYBRID SOUND ENGINE ===================== */
 
 // Supabase Configuration
 const SUPABASE_URL = (typeof CONFIG !== 'undefined') ? CONFIG.SUPABASE_URL : '';
@@ -22,8 +22,8 @@ const App = {
     },
 
     initAudio() {
-        this.audio = new SamplingAudioManager();
-        // Load real samples
+        this.audio = new HybridAudioManager();
+        // Load real samples as priority
         this.audio.load('type', 'sound/kakaist-typewriter-sound-effect-312919.mp3');
         this.audio.load('click', 'sound/dragon-studio-keyboard-typing-sound-effect-335503.mp3');
     },
@@ -97,31 +97,30 @@ const App = {
     }
 };
 
-/* ===================== SAMPLING AUDIO ENGINE (REAL RECORDINGS) ===================== */
-class SamplingAudioManager {
+/* ===================== HYBRID AUDIO ENGINE (SAMPLING + SYNTHESIS) ===================== */
+class HybridAudioManager {
     constructor() {
         this.context = null;
         this.buffers = {};
         this.initialized = false;
+        this.noiseBuffer = null;
     }
 
     init() {
         if (this.initialized) return;
-        this.context = new (window.AudioContext || window.webkitAudioContext)();
-        this.initialized = true;
+        try {
+            this.context = new (window.AudioContext || window.webkitAudioContext)();
+            const bufferSize = this.context.sampleRate * 0.2;
+            this.noiseBuffer = this.context.createBuffer(1, bufferSize, this.context.sampleRate);
+            const data = this.noiseBuffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+            this.initialized = true;
+        } catch(e) { console.error("Audio init error", e); }
     }
 
     async resume() {
         if (!this.initialized) this.init();
         if (this.context && this.context.state === 'suspended') await this.context.resume();
-        // Pre-warm silence
-        const osc = this.context.createOscillator();
-        const gain = this.context.createGain();
-        gain.gain.value = 0;
-        osc.connect(gain);
-        gain.connect(this.context.destination);
-        osc.start(0);
-        osc.stop(0.1);
     }
 
     async load(name, url) {
@@ -131,32 +130,57 @@ class SamplingAudioManager {
             if (!this.initialized) this.init();
             this.context.decodeAudioData(arrayBuffer, (buffer) => {
                 this.buffers[name] = buffer;
+                console.log(`[Audio] Loaded: ${name}`);
             });
         } catch(e) { console.warn(`Failed to load sound: ${name}`, e); }
     }
 
+    // High-quality synthesis fallback
+    playSynth(time, type = 'type') {
+        const now = time || this.context.currentTime;
+        if (type === 'type') {
+            const body = this.context.createOscillator();
+            const bodyGain = this.context.createGain();
+            body.type = 'triangle';
+            body.frequency.setValueAtTime(180 + Math.random() * 20, now);
+            bodyGain.gain.setValueAtTime(0, now);
+            bodyGain.gain.linearRampToValueAtTime(0.2, now + 0.005);
+            bodyGain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+            body.connect(bodyGain); bodyGain.connect(this.context.destination);
+            body.start(now); body.stop(now + 0.1);
+        } else {
+            const osc = this.context.createOscillator();
+            const gain = this.context.createGain();
+            osc.frequency.setValueAtTime(150, now);
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+            osc.connect(gain); gain.connect(this.context.destination);
+            osc.start(now); osc.stop(now + 0.1);
+        }
+    }
+
     play(name, time = 0, duration = 0.12) {
-        if (!this.initialized || !this.buffers[name]) return;
-        const source = this.context.createBufferSource();
-        source.buffer = this.buffers[name];
-        
-        const gain = this.context.createGain();
-        gain.gain.value = name === 'type' ? 0.35 : 0.5;
-        
-        source.connect(gain);
-        gain.connect(this.context.destination);
-        
+        if (!this.initialized) this.init();
         const startTime = time || this.context.currentTime;
-        // Use Micro-Slicing: only play the first part of the recording
-        source.start(startTime, 0, duration);
+
+        // Use sample if available, otherwise fallback to synth
+        if (this.buffers[name]) {
+            const source = this.context.createBufferSource();
+            source.buffer = this.buffers[name];
+            const gain = this.context.createGain();
+            gain.gain.value = name === 'type' ? 0.4 : 0.6;
+            source.connect(gain); gain.connect(this.context.destination);
+            source.start(startTime, 0, duration);
+        } else {
+            this.playSynth(startTime, name);
+        }
     }
 
     scheduleTypewriter(textLength, interval = 85) {
-        if (!this.initialized || !this.buffers['type']) return;
+        if (!this.initialized) this.init();
         const now = this.context.currentTime;
-        const duration = 0.12; // Strictly slice the real recording
         for (let i = 0; i < textLength; i++) {
-            this.play('type', now + (i * (interval / 1000)), duration);
+            this.play('type', now + (i * (interval / 1000)), 0.12);
         }
     }
 }
@@ -200,7 +224,7 @@ function typewrite(el, text, callback) {
     el.textContent = '';
     let i = 0;
     const interval = 85;
-    if (App.audio && App.audio.initialized) {
+    if (App.audio) {
         App.audio.scheduleTypewriter(text.replace(/ /g, '').length, interval);
     }
     function next() {
