@@ -288,13 +288,13 @@ class AudioManager {
         const gainNode = this.context.createGain();
         
         if (name === 'type') {
-            const duration = 0.06; // Sharper click
-            const offset = Math.random() * (this.buffers[name].duration - duration);
-            source.playbackRate.value = 0.9 + Math.random() * 0.2;
-            gainNode.gain.value = 0.5; // Slightly louder
+            const duration = 0.1; // Slightly longer for more body
+            // Remove random offset to ensure sound starts exactly at the 'click'
+            source.playbackRate.value = 0.95 + Math.random() * 0.1;
+            gainNode.gain.value = 0.6;
             source.connect(gainNode);
             gainNode.connect(this.context.destination);
-            source.start(0, offset, duration);
+            source.start(0, 0, duration); // Start from 0 for consistent sync
         } else {
             gainNode.gain.value = 0.5;
             source.connect(gainNode);
