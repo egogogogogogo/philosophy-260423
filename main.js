@@ -1,4 +1,4 @@
-/* ===================== THE TIME-TRAVELER'S AGORA: MEDITATION ENGINE ===================== */
+/* ===================== THE TIME-TRAVELER'S AGORA: AMBIENT ENGINE ===================== */
 
 // Supabase Configuration
 const SUPABASE_URL = (typeof CONFIG !== 'undefined') ? CONFIG.SUPABASE_URL : '';
@@ -22,7 +22,7 @@ const App = {
     },
 
     initAudio() {
-        this.audio = new MeditationAudioManager();
+        this.audio = new AmbientAudioManager();
     },
 
     bindEvents() {
@@ -94,8 +94,8 @@ const App = {
     }
 };
 
-/* ===================== MEDITATION AUDIO ENGINE (ATMOSPHERIC) ===================== */
-class MeditationAudioManager {
+/* ===================== AMBIENT AUDIO ENGINE (BGM ONLY) ===================== */
+class AmbientAudioManager {
     constructor() {
         this.context = null;
         this.initialized = false;
@@ -119,64 +119,41 @@ class MeditationAudioManager {
 
     startBGM() {
         if (this.bgmNode) return;
-        // Synthesize a very subtle ambient drone (No external file needed)
+        
+        // Lush, evolving ambient pad synthesis
         this.bgmGain = this.context.createGain();
-        this.bgmGain.gain.value = 0.05; // Extremely subtle
+        this.bgmGain.gain.setValueAtTime(0, this.context.currentTime);
+        this.bgmGain.gain.linearRampToValueAtTime(0.08, this.context.currentTime + 3.0); // Gentle fade in
         this.bgmGain.connect(this.context.destination);
 
-        const createOsc = (freq) => {
+        const createDrone = (freq, detune) => {
             const osc = this.context.createOscillator();
+            const filter = this.context.createBiquadFilter();
             osc.type = 'sine';
             osc.frequency.value = freq;
-            osc.connect(this.bgmGain);
+            osc.detune.value = detune;
+            
+            filter.type = 'lowpass';
+            filter.frequency.value = 400;
+            
+            osc.connect(filter);
+            filter.connect(this.bgmGain);
             osc.start();
         };
 
-        // Harmonic drone (C, G, E notes)
-        createOsc(130.81); // C3
-        createOsc(196.00); // G3
-        createOsc(329.63); // E4
+        // Create a rich chordal drone
+        createDrone(130.81, 0);   // C3
+        createDrone(130.81, 5);   // C3 detuned
+        createDrone(164.81, -5);  // E3
+        createDrone(196.00, 0);   // G3
+        createDrone(261.63, 2);   // C4
+        
         this.bgmNode = true;
     }
 
-    // Meditation Bowl Clang with Faster Fade-out
-    playBowl(time, volume = 0.1) {
-        const now = time || this.context.currentTime;
-        
-        const osc = this.context.createOscillator();
-        const gain = this.context.createGain();
-        
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(330 + (Math.random() - 0.5) * 5, now);
-        
-        gain.gain.setValueAtTime(0, now);
-        gain.gain.linearRampToValueAtTime(volume, now + 0.03); // Slightly faster attack
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4); // Faster meditative fade-out
-        
-        osc.connect(gain);
-        gain.connect(this.context.destination);
-        
-        osc.start(now);
-        osc.stop(now + 0.5);
-    }
-
-    play(name) {
-        if (!this.initialized) this.init();
-        const now = this.context.currentTime;
-        if (name === 'click') {
-            this.playBowl(now, 0.15); // Button click as a gentle bowl hit
-        }
-    }
-
-    scheduleTypewriter(textLength, interval = 85) {
-        if (!this.initialized) this.init();
-        const now = this.context.currentTime;
-        for (let i = 0; i < textLength; i++) {
-            // Very subtle bowl resonance for each character
-            // Overlapping will create a beautiful pad effect
-            this.playBowl(now + (i * (interval / 1000)), 0.03);
-        }
-    }
+    // Effect sounds are now silent for better immersion
+    play(name) { /* Silent */ }
+    scheduleTypewriter(textLength, interval = 85) { /* Silent */ }
 }
 
 // Global Handlers
