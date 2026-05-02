@@ -195,13 +195,14 @@ function typewrite(el, text, callback) {
         if (i < text.length) {
             el.textContent += text[i];
             i++;
-            const delay = (text[i-1] === ' ' || text[i-1] === ',' || text[i-1] === '.') ? 150 : 35 + Math.random() * 20;
+            const char = text[i-1];
+            const delay = (char === ' ' || char === ',' || char === '.') ? 150 : 40 + Math.random() * 15;
             
-            if (i % 2 === 0) App.playFX('type');
+            // Play sound for every letter except space
+            if (char !== ' ') App.playFX('type');
             
             App.typewriterTimeout = setTimeout(next, delay);
         } else {
-            console.log(`Typewriter: Finished step ${App.currentStep}`);
             App.isTypewriting = false;
             App.typewriterTimeout = null;
             if (callback) callback();
@@ -209,6 +210,10 @@ function typewrite(el, text, callback) {
     }
     next();
 }
+
+// Supabase Debug Log
+console.log("Supabase URL Loaded:", SUPABASE_URL ? "Yes" : "No (Check Vercel Env Vars)");
+console.log("Supabase Client Status:", supabaseClient ? "Initialized" : "Null (Check config.js)");
 
 App.playFX = function(type) {
     if (this.audio) {
