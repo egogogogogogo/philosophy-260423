@@ -123,29 +123,31 @@ class ProceduralAudioManager {
         if (this.context && this.context.state === 'suspended') await this.context.resume();
     }
 
-    // Synthesize a clear, ethereal crystal glass tap sound
-    createClickNode(time, volume = 0.15) {
+    // Synthesize a futuristic digital data blip sound
+    createClickNode(time, volume = 0.1) {
         if (!this.initialized) return;
 
         const now = time;
         
-        // Pure sine wave for the crystal ring
         const osc = this.context.createOscillator();
         const gain = this.context.createGain();
         
-        osc.type = 'sine';
-        // Random slight pitch variation for organic feel
-        osc.frequency.setValueAtTime(3200 + Math.random() * 800, now);
+        // Triangle wave for a clean digital feel
+        osc.type = 'triangle';
+        
+        // Fast pitch sweep (chirp)
+        osc.frequency.setValueAtTime(1500, now);
+        osc.frequency.exponentialRampToValueAtTime(3000, now + 0.03);
         
         gain.gain.setValueAtTime(0.001, now);
-        gain.gain.exponentialRampToValueAtTime(volume, now + 0.002);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06); // Quick but resonant decay
+        gain.gain.linearRampToValueAtTime(volume, now + 0.005);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
         
         osc.connect(gain);
         gain.connect(this.context.destination);
         
         osc.start(now);
-        osc.stop(now + 0.1);
+        osc.stop(now + 0.05);
     }
 
     scheduleTypewriter(textLength, interval = 85) {
