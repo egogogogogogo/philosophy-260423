@@ -29,20 +29,22 @@ const App = {
     },
 
     bindEvents() {
-        // ... (existing cursor/constellation logic)
         const dot = document.querySelector('.cursor-dot');
         const outline = document.querySelector('.cursor-outline');
-        
         const constellations = document.querySelectorAll('.constellation');
         
         window.addEventListener('mousemove', (e) => {
             const posX = e.clientX;
             const posY = e.clientY;
             
-            dot.style.left = `${posX}px`;
-            dot.style.top = `${posY}px`;
-            outline.style.left = `${posX}px`;
-            outline.style.top = `${posY}px`;
+            if (dot) {
+                dot.style.left = `${posX}px`;
+                dot.style.top = `${posY}px`;
+            }
+            if (outline) {
+                outline.style.left = `${posX}px`;
+                outline.style.top = `${posY}px`;
+            }
             
             // Constellation Proximity Check
             constellations.forEach(constEl => {
@@ -61,13 +63,13 @@ const App = {
         
         // Button/Card Hover FX
         document.addEventListener('mouseover', (e) => {
-            if (e.target.tagName === 'BUTTON' || e.target.closest('.era-card') || e.target.closest('.hall-card')) {
+            if (outline && (e.target.tagName === 'BUTTON' || e.target.closest('.era-card') || e.target.closest('.hall-card'))) {
                 outline.style.transform = 'translate(-50%, -50%) scale(1.5)';
                 outline.style.backgroundColor = 'rgba(201, 160, 80, 0.1)';
             }
         });
         document.addEventListener('mouseout', (e) => {
-            if (e.target.tagName === 'BUTTON' || e.target.closest('.era-card') || e.target.closest('.hall-card')) {
+            if (outline && (e.target.tagName === 'BUTTON' || e.target.closest('.era-card') || e.target.closest('.hall-card'))) {
                 outline.style.transform = 'translate(-50%, -50%) scale(1)';
                 outline.style.backgroundColor = 'transparent';
             }
