@@ -195,17 +195,16 @@ function typewrite(el, text, callback) {
         if (i < text.length) {
             const char = text[i];
             
-            // 1. Play sound first for better perceptual sync
-            if (char !== ' ') App.playFX('type');
+            if (char !== ' ') {
+                App.playFX('type');
+            }
             
-            // 2. Then update text
             el.textContent += char;
             i++;
             
-            // 3. Standardized delay for mechanical feel (snappy but human)
-            let delay = 75;
-            if (char === ',' || char === '.') delay = 200;
-            if (char === ' ') delay = 50;
+            let delay = 80;
+            if (char === ',' || char === '.') delay = 250;
+            if (char === ' ') delay = 40;
             
             App.typewriterTimeout = setTimeout(next, delay);
         } else {
@@ -218,8 +217,8 @@ function typewrite(el, text, callback) {
 }
 
 // Supabase Debug Log
-console.log("Supabase URL Loaded:", SUPABASE_URL ? "Yes" : "No (Check Vercel Env Vars)");
-console.log("Supabase Client Status:", supabaseClient ? "Initialized" : "Null (Check config.js)");
+console.log("%c[Supabase] URL:", "color: blue; font-weight: bold", SUPABASE_URL || "Empty");
+console.log("%c[Supabase] Client:", "color: blue; font-weight: bold", supabaseClient ? "Initialized" : "Null");
 
 App.playFX = function(type) {
     if (this.audio) {
@@ -288,13 +287,12 @@ class AudioManager {
         const gainNode = this.context.createGain();
         
         if (name === 'type') {
-            const duration = 0.1; // Slightly longer for more body
-            // Remove random offset to ensure sound starts exactly at the 'click'
+            const duration = 0.05; // Very short for crisp sync
             source.playbackRate.value = 0.95 + Math.random() * 0.1;
             gainNode.gain.value = 0.6;
             source.connect(gainNode);
             gainNode.connect(this.context.destination);
-            source.start(0, 0, duration); // Start from 0 for consistent sync
+            source.start(0, 0, duration);
         } else {
             gainNode.gain.value = 0.5;
             source.connect(gainNode);
@@ -347,15 +345,19 @@ function processResult() {
 }
 
 async function saveResultToSupabase(philId, mbti, era) {
-    if (!supabaseClient) return;
+    if (!supabaseClient) {
+        console.warn("[DB] Client not initialized, skipping save.");
+        return;
+    }
     try {
+        console.log("%c[DB] Saving result for:", "color: green", philId);
         const { error } = await supabaseClient
             .from('results')
             .insert([{ phil_id: philId, mbti: mbti, era: era }]);
         if (error) throw error;
-        console.log("Stats: Result saved successfully");
+        console.log("%c✅ [DB] Save Successful", "color: green; font-weight: bold");
     } catch (e) {
-        console.error("Stats: Failed to save result", e);
+        console.error("%c❌ [DB] Save Failed", "color: red; font-weight: bold", e);
     }
 }
 
@@ -367,20 +369,17 @@ function showResult(phil, mbti) {
     document.getElementById('resultDesc').textContent = phil.modifier;
     document.getElementById('resultPortrait').style.backgroundImage = `url('${phil.portrait}')`;
     
-    // Initial UI state (Loading...)
     document.getElementById('totalParticipants').textContent = "...";
     document.getElementById('matchRateText').textContent = "0%";
     document.getElementById('matchRateBar').style.width = "0%";
 
-    // Fetch Real Statistics
     updateRealStatistics(phil.id);
-
     App.goTo('screen-result');
 }
 
 async function updateRealStatistics(philId) {
     if (!supabaseClient) {
-        // Fallback to random dummy if supabase is not initialized
+        console.warn("[DB] Client not initialized, showing fallback stats.");
         document.getElementById('totalParticipants').textContent = (12482 + Math.floor(Math.random() * 100)).toLocaleString();
         document.getElementById('matchRateBar').style.width = "8%";
         document.getElementById('matchRateText').textContent = "8%";
@@ -388,22 +387,23 @@ async function updateRealStatistics(philId) {
     }
 
     try {
-        // 1. Get total participants
+        console.log("[DB] Fetching total count...");
         const { count: totalCount, error: totalErr } = await supabaseClient
             .from('results')
             .select('*', { count: 'exact', head: true });
         
         if (totalErr) throw totalErr;
+        console.log("[DB] Total participants:", totalCount);
 
-        // 2. Get match count for this philosopher
+        console.log("[DB] Fetching match count for:", philId);
         const { count: matchCount, error: matchErr } = await supabaseClient
             .from('results')
             .select('*', { count: 'exact', head: true })
             .eq('phil_id', philId);
 
         if (matchErr) throw matchErr;
+        console.log("[DB] Match count:", matchCount);
 
-        // Update UI
         const displayTotal = totalCount || 0;
         const rate = displayTotal > 0 ? Math.round((matchCount / displayTotal) * 100) : 0;
 
@@ -412,8 +412,7 @@ async function updateRealStatistics(philId) {
         document.getElementById('matchRateBar').style.width = `${rate}%`;
 
     } catch (e) {
-        console.error("Stats: Failed to fetch statistics", e);
-        // Silent fallback
+        console.error("%c❌ [DB] Stats Fetch Failed", "color: red; font-weight: bold", e);
         document.getElementById('totalParticipants').textContent = "10,000+";
     }
 }
