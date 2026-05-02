@@ -123,45 +123,45 @@ class ProceduralAudioManager {
         if (this.context && this.context.state === 'suspended') await this.context.resume();
     }
 
-    // Synthesize a heavy 1920s vintage typewriter strike (Layered)
-    createClickNode(time, volume = 0.25) {
+    // Synthesize a deep, premium mechanical keyboard "thock" sound
+    createClickNode(time, volume = 0.2) {
         if (!this.initialized) return;
 
         const now = time;
         
-        // Layer 1: Metallic "Tink" (High frequency sine)
-        const osc = this.context.createOscillator();
-        const oscGain = this.context.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(2500 + Math.random() * 500, now);
-        oscGain.gain.setValueAtTime(0.001, now);
-        oscGain.gain.exponentialRampToValueAtTime(volume * 0.4, now + 0.002);
-        oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.015);
-        osc.connect(oscGain);
-        oscGain.connect(this.context.destination);
-        osc.start(now);
-        osc.stop(now + 0.02);
+        // Layer 1: The "Thump" (Low frequency sine for body)
+        const body = this.context.createOscillator();
+        const bodyGain = this.context.createGain();
+        body.type = 'sine';
+        body.frequency.setValueAtTime(120 + Math.random() * 20, now);
+        bodyGain.gain.setValueAtTime(0.001, now);
+        bodyGain.gain.exponentialRampToValueAtTime(volume * 0.8, now + 0.005);
+        bodyGain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+        body.connect(bodyGain);
+        bodyGain.connect(this.context.destination);
+        body.start(now);
+        body.stop(now + 0.1);
 
-        // Layer 2: Mechanical "Clack" (Filtered noise)
+        // Layer 2: The "Clack" (Mid-low filtered noise)
         const noise = this.context.createBufferSource();
         noise.buffer = this.noiseBuffer;
         const filter = this.context.createBiquadFilter();
         const noiseGain = this.context.createGain();
         
         filter.type = 'bandpass';
-        filter.frequency.value = 800 + Math.random() * 200;
-        filter.Q.value = 2;
+        filter.frequency.value = 600 + Math.random() * 100;
+        filter.Q.value = 3;
         
         noiseGain.gain.setValueAtTime(0.001, now);
-        noiseGain.gain.exponentialRampToValueAtTime(volume, now + 0.005);
-        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+        noiseGain.gain.exponentialRampToValueAtTime(volume * 0.4, now + 0.002);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
         
         noise.connect(filter);
         filter.connect(noiseGain);
         noiseGain.connect(this.context.destination);
         
         noise.start(now);
-        noise.stop(now + 0.06);
+        noise.stop(now + 0.05);
     }
 
     scheduleTypewriter(textLength, interval = 85) {
