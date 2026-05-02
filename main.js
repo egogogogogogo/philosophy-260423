@@ -123,36 +123,39 @@ class ProceduralAudioManager {
         if (this.context && this.context.state === 'suspended') await this.context.resume();
     }
 
-    // Synthesize a mechanical click
-    createClickNode(time, volume = 0.3) {
+    // Synthesize a soft quill scratch on parchment
+    createClickNode(time, volume = 0.15) {
         if (!this.initialized) return;
 
         const noise = this.context.createBufferSource();
         noise.buffer = this.noiseBuffer;
 
         const filter = this.context.createBiquadFilter();
-        filter.type = 'bandpass';
-        filter.frequency.value = 1200 + Math.random() * 400; // Mechanical clack frequency
-        filter.Q.value = 1;
+        filter.type = 'lowpass';
+        filter.frequency.value = 1500; // Softer than click
+        filter.Q.value = 0.5;
 
         const gain = this.context.createGain();
+        // Softer envelope for "scratch" feel
         gain.gain.setValueAtTime(0.001, time);
-        gain.gain.exponentialRampToValueAtTime(volume, time + 0.005);
-        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.04); // Cut off very fast
+        gain.gain.linearRampToValueAtTime(volume, time + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.08); 
 
         noise.connect(filter);
         filter.connect(gain);
         gain.connect(this.context.destination);
 
         noise.start(time);
-        noise.stop(time + 0.05);
+        noise.stop(time + 0.1);
     }
 
     scheduleTypewriter(textLength, interval = 85) {
         if (!this.initialized) return;
         const now = this.context.currentTime;
         for (let i = 0; i < textLength; i++) {
-            this.createClickNode(now + (i * (interval / 1000)), 0.25);
+            // Add slight random timing jitter for natural handwriting feel
+            const jitter = (Math.random() - 0.5) * 0.02;
+            this.createClickNode(now + (i * (interval / 1000)) + jitter, 0.12);
         }
     }
 
