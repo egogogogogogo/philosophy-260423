@@ -15,23 +15,15 @@ const App = {
     audio: null,
     
     init() {
-        // 1. Bind events first so buttons work immediately
         this.bindEvents();
-        // 2. Init background FX
         this.initFX();
-        // 3. Init audio in background
         this.initAudio();
-        // 4. Load screen
         this.loadInitialScreen();
     },
 
     initAudio() {
-        try {
-            this.audio = new AudioManager();
-            this.audio.init();
-        } catch(e) {
-            console.error("Audio Init Failed:", e);
-        }
+        this.audio = new ProceduralAudioManager();
+        // No loading wait needed anymore
     },
 
     bindEvents() {
@@ -42,17 +34,8 @@ const App = {
         window.addEventListener('mousemove', (e) => {
             const posX = e.clientX;
             const posY = e.clientY;
-            
-            if (dot) {
-                dot.style.left = `${posX}px`;
-                dot.style.top = `${posY}px`;
-                dot.style.opacity = '1';
-            }
-            if (outline) {
-                outline.style.left = `${posX}px`;
-                outline.style.top = `${posY}px`;
-                outline.style.opacity = '1';
-            }
+            if (dot) { dot.style.left = `${posX}px`; dot.style.top = `${posY}px`; dot.style.opacity = '1'; }
+            if (outline) { outline.style.left = `${posX}px`; outline.style.top = `${posY}px`; outline.style.opacity = '1'; }
             
             constellations.forEach(constEl => {
                 const rect = constEl.getBoundingClientRect();
@@ -82,12 +65,12 @@ const App = {
         if (window.particlesJS) {
             particlesJS('particles-js', {
                 "particles": {
-                    "number": { "value": 70, "density": { "enable": true, "value_area": 800 } },
+                    "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
                     "color": { "value": "#ffd700" },
-                    "opacity": { "value": 0.5, "random": true },
+                    "opacity": { "value": 0.4, "random": true },
                     "size": { "value": 2, "random": true },
-                    "line_linked": { "enable": true, "distance": 150, "color": "#ffd700", "opacity": 0.15, "width": 1 },
-                    "move": { "enable": true, "speed": 0.6, "direction": "none", "random": true, "straight": false, "out_mode": "out" }
+                    "line_linked": { "enable": true, "distance": 150, "color": "#ffd700", "opacity": 0.1, "width": 1 },
+                    "move": { "enable": true, "speed": 0.5, "direction": "none", "random": true, "straight": false, "out_mode": "out" }
                 }
             });
         }
@@ -99,17 +82,11 @@ const App = {
 
     goTo(screenId) {
         const screens = document.querySelectorAll('.screen');
-        screens.forEach(s => {
-            s.classList.remove('active');
-            s.style.display = 'none';
-        });
+        screens.forEach(s => { s.classList.remove('active'); s.style.display = 'none'; });
         const target = document.getElementById(screenId);
         if (target) {
             target.style.display = 'flex';
-            setTimeout(() => {
-                target.classList.add('active');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }, 50);
+            setTimeout(() => { target.classList.add('active'); window.scrollTo({ top: 0, behavior: 'smooth' }); }, 50);
         }
     },
 
@@ -118,70 +95,83 @@ const App = {
     }
 };
 
-/* ===================== AUDIO MANAGER (PROFESSIONAL SCHEDULER) ===================== */
-class AudioManager {
+/* ===================== PROCEDURAL AUDIO ENGINE (SYNTHESIS) ===================== */
+class ProceduralAudioManager {
     constructor() {
         this.context = null;
-        this.buffers = {};
-        this.urls = {
-            type: 'sound/kakaist-typewriter-sound-effect-312919.mp3',
-            click: 'sound/dragon-studio-keyboard-typing-sound-effect-335503.mp3'
-        };
         this.initialized = false;
-        this.activeSources = [];
+        this.noiseBuffer = null;
     }
 
-    async init() {
+    init() {
         if (this.initialized) return;
-        try {
-            this.context = new (window.AudioContext || window.webkitAudioContext)();
-            const load = async (name, url) => {
-                const response = await fetch(url);
-                if (!response.ok) return;
-                const arrayBuffer = await response.arrayBuffer();
-                this.buffers[name] = await this.context.decodeAudioData(arrayBuffer);
-            };
-            await Promise.all([load('type', this.urls.type), load('click', this.urls.click)]);
-            this.initialized = true;
-        } catch(e) { console.warn("Audio Context init failed:", e); }
+        this.context = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // Generate a 0.2s white noise buffer once
+        const bufferSize = this.context.sampleRate * 0.2;
+        this.noiseBuffer = this.context.createBuffer(1, bufferSize, this.context.sampleRate);
+        const data = this.noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1;
+        }
+        
+        this.initialized = true;
     }
 
     async resume() {
-        if (!this.context) await this.init();
+        if (!this.initialized) this.init();
         if (this.context && this.context.state === 'suspended') await this.context.resume();
     }
 
+    // Synthesize a mechanical click
+    createClickNode(time, volume = 0.3) {
+        if (!this.initialized) return;
+
+        const noise = this.context.createBufferSource();
+        noise.buffer = this.noiseBuffer;
+
+        const filter = this.context.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.value = 1200 + Math.random() * 400; // Mechanical clack frequency
+        filter.Q.value = 1;
+
+        const gain = this.context.createGain();
+        gain.gain.setValueAtTime(0.001, time);
+        gain.gain.exponentialRampToValueAtTime(volume, time + 0.005);
+        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.04); // Cut off very fast
+
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(this.context.destination);
+
+        noise.start(time);
+        noise.stop(time + 0.05);
+    }
+
     scheduleTypewriter(textLength, interval = 85) {
-        if (!this.initialized || !this.buffers['type']) return;
-        this.stopAll();
+        if (!this.initialized) return;
         const now = this.context.currentTime;
         for (let i = 0; i < textLength; i++) {
-            const source = this.context.createBufferSource();
-            source.buffer = this.buffers['type'];
-            const gain = this.context.createGain();
-            gain.gain.value = 0.4;
-            source.playbackRate.value = 0.95 + Math.random() * 0.1;
-            source.connect(gain);
-            gain.connect(this.context.destination);
-            const startTime = now + (i * (interval / 1000));
-            source.start(startTime, 0, 0.08);
-            this.activeSources.push(source);
+            this.createClickNode(now + (i * (interval / 1000)), 0.25);
         }
     }
 
-    stopAll() {
-        this.activeSources.forEach(s => { try { s.stop(); } catch(e) {} });
-        this.activeSources = [];
-    }
-
     play(name) {
-        if (!this.initialized || !this.buffers[name]) return;
-        try {
-            const source = this.context.createBufferSource();
-            source.buffer = this.buffers[name];
-            source.connect(this.context.destination);
-            source.start(0);
-        } catch(e) {}
+        if (!this.initialized) return;
+        const now = this.context.currentTime;
+        if (name === 'click') {
+            // Lower frequency "thump" for buttons
+            const osc = this.context.createOscillator();
+            const gain = this.context.createGain();
+            osc.frequency.setValueAtTime(150, now);
+            osc.frequency.exponentialRampToValueAtTime(50, now + 0.1);
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+            osc.connect(gain);
+            gain.connect(this.context.destination);
+            osc.start(now);
+            osc.stop(now + 0.1);
+        }
     }
 }
 
@@ -212,10 +202,7 @@ function renderQuestion() {
             const btn = document.createElement('button');
             btn.className = 'option-btn';
             btn.textContent = opt.text;
-            btn.onclick = () => {
-                App.playFX('click');
-                handleAnswer(opt.val);
-            };
+            btn.onclick = () => { App.playFX('click'); handleAnswer(opt.val); };
             optionsWrap.appendChild(btn);
             setTimeout(() => btn.classList.add('show'), idx * 250 + 200);
         });
@@ -224,7 +211,6 @@ function renderQuestion() {
 
 function typewrite(el, text, callback) {
     if (App.typewriterTimeout) clearTimeout(App.typewriterTimeout);
-    if (App.audio) App.audio.stopAll();
     el.textContent = '';
     let i = 0;
     const interval = 85;
@@ -246,9 +232,7 @@ function typewrite(el, text, callback) {
 function handleAnswer(choice) {
     const eraData = QUEST_DATA[App.currentEra];
     const weights = eraData[App.currentStep].weight[choice];
-    if (weights) {
-        for (const [key, val] of Object.entries(weights)) App.userScores[key] += val;
-    }
+    if (weights) { for (const [key, val] of Object.entries(weights)) App.userScores[key] += val; }
     App.currentStep++;
     if (App.currentStep < 12) renderQuestion();
     else processResult();
@@ -274,9 +258,7 @@ function processResult() {
 
 async function saveResultToSupabase(philId, mbti, era) {
     if (!supabaseClient) return;
-    try {
-        await supabaseClient.from('results').insert([{ phil_id: philId, mbti: mbti, era: era }]);
-    } catch (e) {}
+    try { await supabaseClient.from('results').insert([{ phil_id: philId, mbti: mbti, era: era }]); } catch (e) {}
 }
 
 function showResult(phil, mbti) {
