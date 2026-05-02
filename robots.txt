@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://agora-philosophy.com/sitemap.xml
+Sitemap: https://agora-philosophy.vercel.app/sitemap.xml

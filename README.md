@@ -3,7 +3,7 @@
 역사 속 철학자들과 대화하며 나의 철학적 성향을 찾아가는 탐험형 MBTI 테스트입니다.
 
 ## 🚀 배포 주소
-- [https://egogogogogogo.github.io/philosophy-260423/](https://egogogogogogo.github.io/philosophy-260423/)
+- [https://agora-philosophy.vercel.app/](https://agora-philosophy.vercel.app/)
 
 ## 🛠 사용 기술
 - HTML5, CSS3, JavaScript (Vanilla JS)
