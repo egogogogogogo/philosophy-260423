@@ -159,28 +159,30 @@ class HybridAudioManager {
         }
     }
 
-    play(name, time = 0, duration = 0.12) {
+    play(name, time = 0, duration = 0.8) { // Increased duration to avoid cutting off
         if (!this.initialized) this.init();
         const startTime = time || this.context.currentTime;
 
-        // Use sample if available, otherwise fallback to synth
+        // Play Sample if available
         if (this.buffers[name]) {
             const source = this.context.createBufferSource();
             source.buffer = this.buffers[name];
             const gain = this.context.createGain();
-            gain.gain.value = name === 'type' ? 0.4 : 0.6;
+            gain.gain.value = name === 'type' ? 0.3 : 0.5;
             source.connect(gain); gain.connect(this.context.destination);
             source.start(startTime, 0, duration);
-        } else {
-            this.playSynth(startTime, name);
         }
+        
+        // Always play a subtle synth layer as a safety net/body
+        this.playSynth(startTime, name);
     }
 
     scheduleTypewriter(textLength, interval = 85) {
         if (!this.initialized) this.init();
         const now = this.context.currentTime;
+        console.log(`[Audio] Scheduling ${textLength} chars...`);
         for (let i = 0; i < textLength; i++) {
-            this.play('type', now + (i * (interval / 1000)), 0.12);
+            this.play('type', now + (i * (interval / 1000)), 0.8);
         }
     }
 }
