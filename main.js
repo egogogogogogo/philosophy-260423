@@ -123,53 +123,39 @@ class ProceduralAudioManager {
         if (this.context && this.context.state === 'suspended') await this.context.resume();
     }
 
-    // Synthesize a complex, realistic mechanical typewriter strike (Physical Modeling)
-    createClickNode(time, volume = 0.25) {
+    // Synthesize a sophisticated, airy modern UI "ink" sound (Multi-grain)
+    createClickNode(time, volume = 0.15) {
         if (!this.initialized) return;
 
         const now = time;
         
-        // Layer 1: The Impact Impulse (High-frequency grit)
-        const impulse = this.context.createBufferSource();
-        impulse.buffer = this.noiseBuffer;
-        const impulseFilter = this.context.createBiquadFilter();
-        const impulseGain = this.context.createGain();
-        
-        impulseFilter.type = 'highpass';
-        impulseFilter.frequency.value = 4000;
-        
-        impulseGain.gain.setValueAtTime(0.001, now);
-        impulseGain.gain.exponentialRampToValueAtTime(volume * 0.5, now + 0.002);
-        impulseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.01);
-        
-        impulse.connect(impulseFilter);
-        impulseFilter.connect(impulseGain);
-        impulseGain.connect(this.context.destination);
-        impulse.start(now);
-        impulse.stop(now + 0.02);
-
-        // Layer 2: Mechanical Body & Resonance (Multi-band noise)
-        const body = this.context.createBufferSource();
-        body.buffer = this.noiseBuffer;
-        const bodyFilter = this.context.createBiquadFilter();
-        const bodyGain = this.context.createGain();
-        
-        bodyFilter.type = 'bandpass';
-        bodyFilter.frequency.value = 600 + Math.random() * 300;
-        bodyFilter.Q.value = 8; // High resonance for mechanical ring
-        
-        bodyGain.gain.setValueAtTime(0.001, now);
-        // Non-linear, shaky envelope for realism
-        bodyGain.gain.exponentialRampToValueAtTime(volume, now + 0.005);
-        bodyGain.gain.exponentialRampToValueAtTime(volume * 0.3, now + 0.02);
-        bodyGain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
-        
-        body.connect(bodyFilter);
-        bodyFilter.connect(bodyGain);
-        bodyGain.connect(this.context.destination);
-        
-        body.start(now);
-        body.stop(now + 0.15);
+        // Multi-grain approach: 3 layers for organic variation
+        const grains = 3;
+        for (let g = 0; g < grains; g++) {
+            const noise = this.context.createBufferSource();
+            noise.buffer = this.noiseBuffer;
+            const filter = this.context.createBiquadFilter();
+            const gain = this.context.createGain();
+            
+            // Randomized parameters for each grain
+            filter.type = 'bandpass';
+            filter.frequency.value = 2500 + Math.random() * 2000; // High-end airy freq
+            filter.Q.value = 10 + Math.random() * 5;
+            
+            const grainDelay = Math.random() * 0.01;
+            const startTime = now + grainDelay;
+            
+            gain.gain.setValueAtTime(0.001, startTime);
+            gain.gain.exponentialRampToValueAtTime(volume / grains, startTime + 0.002);
+            gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.02 + Math.random() * 0.02);
+            
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(this.context.destination);
+            
+            noise.start(startTime);
+            noise.stop(startTime + 0.05);
+        }
     }
 
     scheduleTypewriter(textLength, interval = 85) {
