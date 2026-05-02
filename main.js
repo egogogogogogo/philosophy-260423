@@ -139,7 +139,7 @@ class MeditationAudioManager {
         this.bgmNode = true;
     }
 
-    // Meditation Bowl Clang
+    // Meditation Bowl Clang with Faster Fade-out
     playBowl(time, volume = 0.1) {
         const now = time || this.context.currentTime;
         
@@ -147,18 +147,17 @@ class MeditationAudioManager {
         const gain = this.context.createGain();
         
         osc.type = 'sine';
-        // Base frequency 330Hz (E4), slightly randomized
         osc.frequency.setValueAtTime(330 + (Math.random() - 0.5) * 5, now);
         
         gain.gain.setValueAtTime(0, now);
-        gain.gain.linearRampToValueAtTime(volume, now + 0.05); // Slow attack
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8); // Long meditative tail
+        gain.gain.linearRampToValueAtTime(volume, now + 0.03); // Slightly faster attack
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4); // Faster meditative fade-out
         
         osc.connect(gain);
         gain.connect(this.context.destination);
         
         osc.start(now);
-        osc.stop(now + 1.0);
+        osc.stop(now + 0.5);
     }
 
     play(name) {
