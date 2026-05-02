@@ -123,39 +123,52 @@ class ProceduralAudioManager {
         if (this.context && this.context.state === 'suspended') await this.context.resume();
     }
 
-    // Synthesize a soft quill scratch on parchment
-    createClickNode(time, volume = 0.15) {
+    // Synthesize a heavy 1920s vintage typewriter strike (Layered)
+    createClickNode(time, volume = 0.25) {
         if (!this.initialized) return;
 
+        const now = time;
+        
+        // Layer 1: Metallic "Tink" (High frequency sine)
+        const osc = this.context.createOscillator();
+        const oscGain = this.context.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(2500 + Math.random() * 500, now);
+        oscGain.gain.setValueAtTime(0.001, now);
+        oscGain.gain.exponentialRampToValueAtTime(volume * 0.4, now + 0.002);
+        oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.015);
+        osc.connect(oscGain);
+        oscGain.connect(this.context.destination);
+        osc.start(now);
+        osc.stop(now + 0.02);
+
+        // Layer 2: Mechanical "Clack" (Filtered noise)
         const noise = this.context.createBufferSource();
         noise.buffer = this.noiseBuffer;
-
         const filter = this.context.createBiquadFilter();
-        filter.type = 'lowpass';
-        filter.frequency.value = 1500; // Softer than click
-        filter.Q.value = 0.5;
-
-        const gain = this.context.createGain();
-        // Softer envelope for "scratch" feel
-        gain.gain.setValueAtTime(0.001, time);
-        gain.gain.linearRampToValueAtTime(volume, time + 0.02);
-        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.08); 
-
+        const noiseGain = this.context.createGain();
+        
+        filter.type = 'bandpass';
+        filter.frequency.value = 800 + Math.random() * 200;
+        filter.Q.value = 2;
+        
+        noiseGain.gain.setValueAtTime(0.001, now);
+        noiseGain.gain.exponentialRampToValueAtTime(volume, now + 0.005);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+        
         noise.connect(filter);
-        filter.connect(gain);
-        gain.connect(this.context.destination);
-
-        noise.start(time);
-        noise.stop(time + 0.1);
+        filter.connect(noiseGain);
+        noiseGain.connect(this.context.destination);
+        
+        noise.start(now);
+        noise.stop(now + 0.06);
     }
 
     scheduleTypewriter(textLength, interval = 85) {
         if (!this.initialized) return;
         const now = this.context.currentTime;
         for (let i = 0; i < textLength; i++) {
-            // Add slight random timing jitter for natural handwriting feel
-            const jitter = (Math.random() - 0.5) * 0.02;
-            this.createClickNode(now + (i * (interval / 1000)) + jitter, 0.12);
+            this.createClickNode(now + (i * (interval / 1000)), 0.3);
         }
     }
 
