@@ -122,8 +122,22 @@ const App = {
     }
 };
 
-// Global Handlers (for HTML onclicks)
-function goTo(id) { App.goTo(id); }
+async function startQuest(era) {
+    App.currentEra = era;
+    App.currentStep = 0;
+    App.userScores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+
+    // Strict Wait for Audio Ready before starting
+    if (App.audio) {
+        await App.audio.resume();
+    }
+    
+    App.goTo('screen-quest');
+    renderQuestion();
+}
+
+function renderQuestion() {
+    if (App.audio) App.audio.resume();
 
 
 
@@ -181,36 +195,7 @@ function updateLoadingLogs() {
     }, 1200);
 }
 
-function typewrite(el, text, callback) {
-    if (App.typewriterTimeout) clearTimeout(App.typewriterTimeout);
-    el.textContent = '';
-    let i = 0;
-    App.isTypewriting = true;
-    
-    function next() {
-        if (i < text.length) {
-            const char = text[i];
-            
-            if (char !== ' ') {
-                App.playFX('type');
-            }
-            
-            el.textContent += char;
-            i++;
-            
-            let delay = 80;
-            if (char === ',' || char === '.') delay = 250;
-            if (char === ' ') delay = 40;
-            
-            App.typewriterTimeout = setTimeout(next, delay);
-        } else {
-            App.isTypewriting = false;
-            App.typewriterTimeout = null;
-            if (callback) callback();
-        }
-    }
-    next();
-}
+// Typewrite helper was duplicated, removing the old one from here.
 
 // Supabase Debug Log
 console.log("%c[Supabase] URL:", "color: blue; font-weight: bold", SUPABASE_URL || "Empty");
