@@ -1,4 +1,4 @@
-/* ===================== THE TIME-TRAVELER'S AGORA: MODULAR ENGINE ===================== */
+/* ===================== THE TIME-TRAVELER'S AGORA: FINAL SAMPLING ENGINE ===================== */
 
 // Supabase Configuration
 const SUPABASE_URL = (typeof CONFIG !== 'undefined') ? CONFIG.SUPABASE_URL : '';
@@ -22,8 +22,10 @@ const App = {
     },
 
     initAudio() {
-        this.audio = new ProceduralAudioManager();
-        // No loading wait needed anymore
+        this.audio = new SamplingAudioManager();
+        // Load real samples
+        this.audio.load('type', 'sound/kakaist-typewriter-sound-effect-312919.mp3');
+        this.audio.load('click', 'sound/dragon-studio-keyboard-typing-sound-effect-335503.mp3');
     },
 
     bindEvents() {
@@ -95,100 +97,66 @@ const App = {
     }
 };
 
-/* ===================== PROCEDURAL AUDIO ENGINE (SYNTHESIS) ===================== */
-class ProceduralAudioManager {
+/* ===================== SAMPLING AUDIO ENGINE (REAL RECORDINGS) ===================== */
+class SamplingAudioManager {
     constructor() {
         this.context = null;
+        this.buffers = {};
         this.initialized = false;
-        this.noiseBuffer = null;
     }
 
     init() {
         if (this.initialized) return;
         this.context = new (window.AudioContext || window.webkitAudioContext)();
-        
-        // Generate a 0.2s white noise buffer once
-        const bufferSize = this.context.sampleRate * 0.2;
-        this.noiseBuffer = this.context.createBuffer(1, bufferSize, this.context.sampleRate);
-        const data = this.noiseBuffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-            data[i] = Math.random() * 2 - 1;
-        }
-        
         this.initialized = true;
     }
 
     async resume() {
         if (!this.initialized) this.init();
         if (this.context && this.context.state === 'suspended') await this.context.resume();
+        // Pre-warm silence
+        const osc = this.context.createOscillator();
+        const gain = this.context.createGain();
+        gain.gain.value = 0;
+        osc.connect(gain);
+        gain.connect(this.context.destination);
+        osc.start(0);
+        osc.stop(0.1);
     }
 
-    // Synthesize a heavy, solid mechanical typewriter strike (Solid Iron)
-    createClickNode(time, volume = 0.3) {
-        if (!this.initialized) return;
+    async load(name, url) {
+        try {
+            const resp = await fetch(url);
+            const arrayBuffer = await resp.arrayBuffer();
+            if (!this.initialized) this.init();
+            this.context.decodeAudioData(arrayBuffer, (buffer) => {
+                this.buffers[name] = buffer;
+            });
+        } catch(e) { console.warn(`Failed to load sound: ${name}`, e); }
+    }
 
-        const now = time;
+    play(name, time = 0, duration = 0.12) {
+        if (!this.initialized || !this.buffers[name]) return;
+        const source = this.context.createBufferSource();
+        source.buffer = this.buffers[name];
         
-        // Layer 1: The Heavy Thump (Lower frequency triangle for body)
-        const body = this.context.createOscillator();
-        const bodyGain = this.context.createGain();
-        body.type = 'triangle';
-        body.frequency.setValueAtTime(180 + Math.random() * 20, now);
+        const gain = this.context.createGain();
+        gain.gain.value = name === 'type' ? 0.35 : 0.5;
         
-        bodyGain.gain.setValueAtTime(0, now);
-        bodyGain.gain.linearRampToValueAtTime(volume * 0.7, now + 0.005);
-        bodyGain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+        source.connect(gain);
+        gain.connect(this.context.destination);
         
-        body.connect(bodyGain);
-        bodyGain.connect(this.context.destination);
-        body.start(now);
-        body.stop(now + 0.1);
-
-        // Layer 2: Mechanical Resonance (Mid-low filtered noise)
-        const noise = this.context.createBufferSource();
-        noise.buffer = this.noiseBuffer;
-        const filter = this.context.createBiquadFilter();
-        const noiseGain = this.context.createGain();
-        
-        filter.type = 'bandpass';
-        filter.frequency.value = 550 + Math.random() * 100;
-        filter.Q.value = 4; // Solid mechanical resonance
-        
-        noiseGain.gain.setValueAtTime(0, now);
-        noiseGain.gain.linearRampToValueAtTime(volume * 0.4, now + 0.003);
-        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
-        
-        noise.connect(filter);
-        filter.connect(noiseGain);
-        noiseGain.connect(this.context.destination);
-        
-        noise.start(now);
-        noise.stop(now + 0.06);
+        const startTime = time || this.context.currentTime;
+        // Use Micro-Slicing: only play the first part of the recording
+        source.start(startTime, 0, duration);
     }
 
     scheduleTypewriter(textLength, interval = 85) {
-        if (!this.initialized) return;
+        if (!this.initialized || !this.buffers['type']) return;
         const now = this.context.currentTime;
+        const duration = 0.12; // Strictly slice the real recording
         for (let i = 0; i < textLength; i++) {
-            this.createClickNode(now + (i * (interval / 1000)), 0.3);
-        }
-    }
-
-    play(name) {
-        if (!this.initialized) return;
-        const now = this.context.currentTime;
-        if (name === 'click') {
-            // Lower frequency "thump" for buttons
-            const osc = this.context.createOscillator();
-            const gain = this.context.createGain();
-            osc.frequency.setValueAtTime(150, now);
-            osc.frequency.exponentialRampToValueAtTime(50, now + 0.1);
-            gain.gain.setValueAtTime(0.3, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
-            osc.connect(gain);
-            gain.connect(this.context.destination);
-            osc.start(now);
-            osc.stop(now + 0.1);
+            this.play('type', now + (i * (interval / 1000)), duration);
         }
     }
 }
