@@ -123,52 +123,47 @@ class ProceduralAudioManager {
         if (this.context && this.context.state === 'suspended') await this.context.resume();
     }
 
-    // Synthesize a pure, high-end mechanical typewriter "clink" (No bass thud)
-    createClickNode(time, volume = 0.2) {
+    // Synthesize a heavy, solid mechanical typewriter strike (Solid Iron)
+    createClickNode(time, volume = 0.3) {
         if (!this.initialized) return;
 
         const now = time;
         
-        // Layer 1: High-frequency metallic impact
-        const osc = this.context.createOscillator();
-        const oscGain = this.context.createGain();
-        osc.type = 'triangle'; // Richer than sine but cleaner than square
-        osc.frequency.setValueAtTime(3500 + Math.random() * 500, now);
+        // Layer 1: The Heavy Thump (Lower frequency triangle for body)
+        const body = this.context.createOscillator();
+        const bodyGain = this.context.createGain();
+        body.type = 'triangle';
+        body.frequency.setValueAtTime(180 + Math.random() * 20, now);
         
-        oscGain.gain.setValueAtTime(0, now);
-        oscGain.gain.linearRampToValueAtTime(volume * 0.5, now + 0.003); // Soft attack to avoid "thud"
-        oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
+        bodyGain.gain.setValueAtTime(0, now);
+        bodyGain.gain.linearRampToValueAtTime(volume * 0.7, now + 0.005);
+        bodyGain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
         
-        osc.connect(oscGain);
-        oscGain.connect(this.context.destination);
-        osc.start(now);
-        osc.stop(now + 0.03);
+        body.connect(bodyGain);
+        bodyGain.connect(this.context.destination);
+        body.start(now);
+        body.stop(now + 0.1);
 
-        // Layer 2: Mechanical "Clink" (Filtered high-pass noise)
+        // Layer 2: Mechanical Resonance (Mid-low filtered noise)
         const noise = this.context.createBufferSource();
         noise.buffer = this.noiseBuffer;
         const filter = this.context.createBiquadFilter();
         const noiseGain = this.context.createGain();
         
-        filter.type = 'highpass';
-        filter.frequency.value = 2500; // Strictly cut all bass/mid "thud"
-        
-        const resFilter = this.context.createBiquadFilter();
-        resFilter.type = 'bandpass';
-        resFilter.frequency.value = 4000;
-        resFilter.Q.value = 5; // Resonant metallic peak
+        filter.type = 'bandpass';
+        filter.frequency.value = 550 + Math.random() * 100;
+        filter.Q.value = 4; // Solid mechanical resonance
         
         noiseGain.gain.setValueAtTime(0, now);
-        noiseGain.gain.linearRampToValueAtTime(volume, now + 0.005);
-        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+        noiseGain.gain.linearRampToValueAtTime(volume * 0.4, now + 0.003);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
         
         noise.connect(filter);
-        filter.connect(resFilter);
-        resFilter.connect(noiseGain);
+        filter.connect(noiseGain);
         noiseGain.connect(this.context.destination);
         
         noise.start(now);
-        noise.stop(now + 0.08);
+        noise.stop(now + 0.06);
     }
 
     scheduleTypewriter(textLength, interval = 85) {
