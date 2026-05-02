@@ -122,8 +122,12 @@ const App = {
 // Global Handlers (for HTML onclicks)
 function goTo(id) { App.goTo(id); }
 
-function startQuest(era) {
-    if (App.audio) App.audio.resume(); // Browser interaction unlock
+async function startQuest(era) {
+    // 1. Ensure audio is initialized and resumed first
+    if (App.audio) {
+        await App.audio.resume();
+    }
+    
     App.currentEra = era;
     App.currentStep = 0;
     App.userScores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
@@ -281,18 +285,24 @@ class AudioManager {
     play(name) {
         if (!this.initialized || !this.buffers[name] || !this.context) return;
         
+        // Explicitly stop previous typewriter sound to prevent dragging
+        if (name === 'type' && this.currentTypeSource) {
+            try { this.currentTypeSource.stop(); } catch(e) {}
+        }
+
         const source = this.context.createBufferSource();
         source.buffer = this.buffers[name];
-        
         const gainNode = this.context.createGain();
         
         if (name === 'type') {
-            const duration = 0.05; // Very short for crisp sync
-            source.playbackRate.value = 0.95 + Math.random() * 0.1;
+            this.currentTypeSource = source;
+            const duration = 0.08; 
+            source.playbackRate.value = 1.0 + (Math.random() * 0.1);
             gainNode.gain.value = 0.6;
             source.connect(gainNode);
             gainNode.connect(this.context.destination);
-            source.start(0, 0, duration);
+            source.start(0, 0);
+            source.stop(this.context.currentTime + duration); // Force stop after 0.08s
         } else {
             gainNode.gain.value = 0.5;
             source.connect(gainNode);
