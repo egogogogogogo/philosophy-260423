@@ -123,45 +123,55 @@ class ProceduralAudioManager {
         if (this.context && this.context.state === 'suspended') await this.context.resume();
     }
 
-    // Synthesize a deep, premium mechanical keyboard "thock" sound
-    createClickNode(time, volume = 0.2) {
+    // Synthesize a premium luxury vintage typewriter strike (Enhanced Layering)
+    createClickNode(time, volume = 0.25) {
         if (!this.initialized) return;
 
         const now = time;
         
-        // Layer 1: The "Thump" (Low frequency sine for body)
-        const body = this.context.createOscillator();
-        const bodyGain = this.context.createGain();
-        body.type = 'sine';
-        body.frequency.setValueAtTime(120 + Math.random() * 20, now);
-        bodyGain.gain.setValueAtTime(0.001, now);
-        bodyGain.gain.exponentialRampToValueAtTime(volume * 0.8, now + 0.005);
-        bodyGain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-        body.connect(bodyGain);
-        bodyGain.connect(this.context.destination);
-        body.start(now);
-        body.stop(now + 0.1);
+        // Layer 1: High-end Metallic "Tink" (Harmonic sines)
+        const osc1 = this.context.createOscillator();
+        const osc2 = this.context.createOscillator();
+        const oscGain = this.context.createGain();
+        
+        osc1.type = 'sine';
+        osc2.type = 'sine';
+        osc1.frequency.setValueAtTime(2200 + Math.random() * 200, now);
+        osc2.frequency.setValueAtTime(4600 + Math.random() * 400, now); // Rich harmonic
+        
+        oscGain.gain.setValueAtTime(0.001, now);
+        oscGain.gain.exponentialRampToValueAtTime(volume * 0.4, now + 0.003);
+        oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
+        
+        osc1.connect(oscGain);
+        osc2.connect(oscGain);
+        oscGain.connect(this.context.destination);
+        
+        osc1.start(now);
+        osc2.start(now);
+        osc1.stop(now + 0.03);
+        osc2.stop(now + 0.03);
 
-        // Layer 2: The "Clack" (Mid-low filtered noise)
+        // Layer 2: Deep Mechanical Body (Polished Noise)
         const noise = this.context.createBufferSource();
         noise.buffer = this.noiseBuffer;
         const filter = this.context.createBiquadFilter();
         const noiseGain = this.context.createGain();
         
         filter.type = 'bandpass';
-        filter.frequency.value = 600 + Math.random() * 100;
-        filter.Q.value = 3;
+        filter.frequency.value = 750 + Math.random() * 150;
+        filter.Q.value = 2.5;
         
         noiseGain.gain.setValueAtTime(0.001, now);
-        noiseGain.gain.exponentialRampToValueAtTime(volume * 0.4, now + 0.002);
-        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+        noiseGain.gain.exponentialRampToValueAtTime(volume * 0.6, now + 0.006);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
         
         noise.connect(filter);
         filter.connect(noiseGain);
         noiseGain.connect(this.context.destination);
         
         noise.start(now);
-        noise.stop(now + 0.05);
+        noise.stop(now + 0.07);
     }
 
     scheduleTypewriter(textLength, interval = 85) {
