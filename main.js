@@ -125,18 +125,7 @@ const App = {
 // Global Handlers (for HTML onclicks)
 function goTo(id) { App.goTo(id); }
 
-async function startQuest(era) {
-    // 1. Ensure audio is initialized and resumed first
-    if (App.audio) {
-        await App.audio.resume();
-    }
-    
-    App.currentEra = era;
-    App.currentStep = 0;
-    App.userScores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
-    App.goTo('screen-quest');
-    renderQuestion();
-}
+
 
 function renderQuestion() {
     if (App.audio) App.audio.resume(); // Ensure audio is active for every question
@@ -233,87 +222,93 @@ App.playFX = function(type) {
     }
 };
 
-/* ===================== AUDIO MANAGER (WEB AUDIO API) ===================== */
+/* ===================== AUDIO MANAGER (STRICT SYNC POOL) ===================== */
 class AudioManager {
     constructor() {
-        this.context = null;
-        this.buffers = {};
-        this.urls = {
-            type: 'sound/kakaist-typewriter-sound-effect-312919.mp3',
-            click: 'sound/dragon-studio-keyboard-typing-sound-effect-335503.mp3'
-        };
         this.initialized = false;
-        this.isLoading = false;
+        this.poolSize = 10;
+        this.typePool = [];
+        this.poolIndex = 0;
+        this.clickAudio = null;
+        this.isLoaded = false;
     }
 
     async init() {
-        if (this.initialized || this.isLoading) return;
-        this.isLoading = true;
+        if (this.isLoaded) return;
         
-        console.log("Audio: Initializing context...");
-        this.context = new (window.AudioContext || window.webkitAudioContext)();
+        console.log("[Audio] Strict Preloading Started...");
         
-        const load = async (name, url) => {
-            try {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                const arrayBuffer = await response.arrayBuffer();
-                this.buffers[name] = await this.context.decodeAudioData(arrayBuffer);
-                console.log(`Audio: Loaded ${name}`);
-            } catch (e) {
-                console.error(`Audio: Failed to load ${url}. 만약 로컬 파일을 직접 더블 클릭해 열었다면 보안 정책(CORS)으로 인해 오디오가 작동하지 않을 수 있습니다. 라이브 서버를 사용해 주세요.`, e);
-            }
-        };
+        // Pre-load typewriter pool
+        for (let i = 0; i < this.poolSize; i++) {
+            const audio = new Audio('sound/kakaist-typewriter-sound-effect-312919.mp3');
+            audio.volume = 0.5;
+            this.typePool.push(audio);
+        }
+        
+        this.clickAudio = new Audio('sound/dragon-studio-keyboard-typing-sound-effect-335503.mp3');
+        this.clickAudio.volume = 0.5;
 
-        await Promise.all([
-            load('type', this.urls.type),
-            load('click', this.urls.click)
-        ]);
+        // Simple promise to check if at least one is ready
+        this.typePool[0].oncanplaythrough = () => {
+            this.isLoaded = true;
+            this.initialized = true;
+            console.log("[Audio] System Ready (All assets cached)");
+        };
         
-        this.initialized = true;
-        this.isLoading = false;
-        console.log("Audio: System Ready");
+        // Force load
+        this.typePool[0].load();
+        this.clickAudio.load();
     }
 
     async resume() {
-        if (!this.context) {
-            await this.init();
-        }
-        if (this.context && this.context.state === 'suspended') {
-            await this.context.resume();
-            console.log("Audio: Context Resumed");
-        }
+        // Just a dummy for compatibility, init handles it
+        if (!this.isLoaded) await this.init();
     }
 
     play(name) {
-        if (!this.initialized || !this.buffers[name] || !this.context) return;
-        
-        const source = this.context.createBufferSource();
-        source.buffer = this.buffers[name];
-        const gainNode = this.context.createGain();
-        
+        if (!this.initialized) return;
+
         if (name === 'type') {
-            // Kill any lingering type sounds
-            if (this.currentTypeSource) {
-                try { this.currentTypeSource.stop(); } catch(e) {}
+            const audio = this.typePool[this.poolIndex];
+            audio.currentTime = 0; 
+            audio.play().catch(() => {});
+            
+            // Limit duration to 0.1s for crisp sync
+            setTimeout(() => {
+                audio.pause();
+                audio.currentTime = 0;
+            }, 100);
+
+            this.poolIndex = (this.poolIndex + 1) % this.poolSize;
+        } else if (name === 'click') {
+            if (this.clickAudio) {
+                this.clickAudio.currentTime = 0;
+                this.clickAudio.play().catch(() => {});
             }
-            this.currentTypeSource = source;
-            
-            const duration = 0.05; // Sharper and cleaner
-            source.playbackRate.value = 1.0 + (Math.random() * 0.1);
-            gainNode.gain.value = 0.6;
-            source.connect(gainNode);
-            gainNode.connect(this.context.destination);
-            
-            source.start(0, 0);
-            source.stop(this.context.currentTime + duration);
-        } else {
-            gainNode.gain.value = 0.5;
-            source.connect(gainNode);
-            gainNode.connect(this.context.destination);
-            source.start(0);
         }
     }
+}
+
+async function startQuest(era) {
+    App.currentEra = era;
+    App.currentStep = 0;
+    App.userScores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+
+    // Strict Wait for Audio Ready
+    if (App.audio) {
+        if (!App.audio.isLoaded) {
+            console.log("[Audio] Waiting for assets before start...");
+            await App.audio.init();
+            let timeout = 0;
+            while (!App.audio.isLoaded && timeout < 30) {
+                await new Promise(r => setTimeout(r, 100));
+                timeout++;
+            }
+        }
+    }
+    
+    App.goTo('screen-quest');
+    renderQuestion();
 }
 
 function handleAnswer(choice) {
