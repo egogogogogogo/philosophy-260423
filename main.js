@@ -123,45 +123,29 @@ class ProceduralAudioManager {
         if (this.context && this.context.state === 'suspended') await this.context.resume();
     }
 
-    // Synthesize a deep, premium mechanical keyboard "thock" sound
-    createClickNode(time, volume = 0.2) {
+    // Synthesize a clear, ethereal crystal glass tap sound
+    createClickNode(time, volume = 0.15) {
         if (!this.initialized) return;
 
         const now = time;
         
-        // Layer 1: The "Thump" (Low frequency sine for body)
-        const body = this.context.createOscillator();
-        const bodyGain = this.context.createGain();
-        body.type = 'sine';
-        body.frequency.setValueAtTime(120 + Math.random() * 20, now);
-        bodyGain.gain.setValueAtTime(0.001, now);
-        bodyGain.gain.exponentialRampToValueAtTime(volume * 0.8, now + 0.005);
-        bodyGain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-        body.connect(bodyGain);
-        bodyGain.connect(this.context.destination);
-        body.start(now);
-        body.stop(now + 0.1);
-
-        // Layer 2: The "Clack" (Mid-low filtered noise)
-        const noise = this.context.createBufferSource();
-        noise.buffer = this.noiseBuffer;
-        const filter = this.context.createBiquadFilter();
-        const noiseGain = this.context.createGain();
+        // Pure sine wave for the crystal ring
+        const osc = this.context.createOscillator();
+        const gain = this.context.createGain();
         
-        filter.type = 'bandpass';
-        filter.frequency.value = 600 + Math.random() * 100;
-        filter.Q.value = 3;
+        osc.type = 'sine';
+        // Random slight pitch variation for organic feel
+        osc.frequency.setValueAtTime(3200 + Math.random() * 800, now);
         
-        noiseGain.gain.setValueAtTime(0.001, now);
-        noiseGain.gain.exponentialRampToValueAtTime(volume * 0.4, now + 0.002);
-        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.exponentialRampToValueAtTime(volume, now + 0.002);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06); // Quick but resonant decay
         
-        noise.connect(filter);
-        filter.connect(noiseGain);
-        noiseGain.connect(this.context.destination);
+        osc.connect(gain);
+        gain.connect(this.context.destination);
         
-        noise.start(now);
-        noise.stop(now + 0.05);
+        osc.start(now);
+        osc.stop(now + 0.1);
     }
 
     scheduleTypewriter(textLength, interval = 85) {
