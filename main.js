@@ -1,4 +1,4 @@
-/* ===================== THE TIME-TRAVELER'S AGORA: PREMIUM ENGINE ===================== */
+/* ===================== THE TIME-TRAVELER'S AGORA: PREMIUM ENGINE (DEPLOY: 2026-05-12 14:52) ===================== */
 
 const App = {
     currentEra: 'ancient',
