@@ -38,20 +38,26 @@ const App = {
     },
 
     goTo(screenId) {
+        console.log("Transitioning to:", screenId);
         const screens = document.querySelectorAll('.screen');
+        const target = document.getElementById(screenId);
+        
+        if (!target) return;
+
+        // 1. Hide all active screens (without delay to prevent overlap)
         screens.forEach(s => { 
-            s.classList.remove('active'); 
-            setTimeout(() => s.style.display = 'none', 800);
+            if (s !== target) {
+                s.classList.remove('active'); 
+                s.style.display = 'none';
+            }
         });
         
-        const target = document.getElementById(screenId);
-        if (target) {
-            target.style.display = 'flex';
-            setTimeout(() => { 
-                target.classList.add('active'); 
-                window.scrollTo({ top: 0, behavior: 'smooth' }); 
-            }, 100);
-        }
+        // 2. Show target screen
+        target.style.display = 'flex';
+        setTimeout(() => { 
+            target.classList.add('active'); 
+            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+        }, 50);
     },
 
     async startQuest(era) {

@@ -20,21 +20,65 @@
         <!-- 1. LANDING SCREEN -->
         <section id="screen-landing" class="screen active">
             <div class="landing-content">
-                <div class="symbol-box">
-                    <div class="symbol-inner"></div>
+                <div class="hero-section">
+                    <div class="symbol-box">
+                        <div class="symbol-inner"></div>
+                    </div>
+                    <h1 class="title-font main-title">AGORA OF TIME</h1>
+                    <p class="subtitle title-font">THE HALL OF ANCIENT SAGES</p>
+                    <div class="divider-luxury"></div>
+                    <p class="description kr-serif">
+                        시공간을 초월하여 당신의 영혼과 공명하는 <br>
+                        단 한 명의 현자를 만날 준비가 되었습니까? <br>
+                        <span style="color: var(--gold); font-weight: 400;">현대적 삶의 나침반이 될 지적 여정을 지금 시작하세요.</span>
+                    </p>
+                    <div class="btn-group-centered" style="margin-bottom: 5rem;">
+                        <button class="btn btn-primary" onclick="startQuest('ancient')">여정 시작하기</button>
+                        <button class="btn btn-outline" onclick="openGallery()">현자의 전당</button>
+                    </div>
                 </div>
-                <h1 class="title-font main-title">AGORA OF TIME</h1>
-                <p class="subtitle title-font">THE HALL OF ANCIENT SAGES</p>
-                <div class="divider-luxury"></div>
-                <p class="description kr-serif">
-                    시공간을 초월하여 당신의 영혼과 공명하는 <br>
-                    단 한 명의 현자를 만날 준비가 되었습니까? <br>
-                    <span style="color: var(--gold); font-weight: 400;">현대적 삶의 나침반이 될 지적 여정을 지금 시작하세요.</span>
-                </p>
-                <div class="btn-group-centered">
-                    <button class="btn btn-primary" onclick="startQuest('ancient')">여정 시작하기</button>
-                    <button class="btn btn-outline" onclick="openGallery()">현자의 전당</button>
+
+                <!-- 6. ABOUT SECTION (Inside Landing) -->
+                <div id="section-about" class="about-luxury">
+                    <div style="max-width: 1000px; margin: 0 auto; text-align: center;">
+                        <h2 class="title-font" style="font-size: 2.5rem; color: var(--gold); margin-bottom: 5rem;">THE GUIDE TO WISDOM</h2>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; text-align: left;">
+                            <div>
+                                <h3 class="title-font" style="font-size: 1.2rem; margin-bottom: 2rem; color: var(--ivory);">시대적 통찰</h3>
+                                <p class="kr-serif" style="color: rgba(248, 244, 227, 0.5); line-height: 2.2;">
+                                    고대 아고라의 고요함부터 현대 실존주의의 치열함까지, <br>
+                                    인류 지성사의 흐름 속에서 당신의 기질이 가장 찬란하게 <br>
+                                    빛날 수 있는 시대를 정교하게 탐험합니다.
+                                </p>
+                            </div>
+                            <div>
+                                <h3 class="title-font" style="font-size: 1.2rem; margin-bottom: 2rem; color: var(--ivory);">실천적 지혜</h3>
+                                <p class="kr-serif" style="color: rgba(248, 244, 227, 0.5); line-height: 2.2;">
+                                    단순한 테스트를 넘어, 당신과 매칭된 현자의 사상을 통해 <br>
+                                    복잡한 현대적 삶의 문제들에 대한 본질적이고 <br>
+                                    철학적인 해답을 제안합니다.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- 7. FOOTER (Inside Landing) -->
+                <footer class="footer-luxury" style="width: 100%; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 5rem;">
+                    <div style="max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; padding: 5rem 0;">
+                        <div style="text-align: left;">
+                            <h4 class="title-font" style="color: var(--gold); margin-bottom: 1.5rem;">AGORA OF TIME</h4>
+                            <p class="kr-serif" style="font-size: 0.85rem; opacity: 0.6;">인류의 지혜와 당신의 영혼을 잇는 가장 우아한 통로</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="margin-bottom: 1.5rem;">
+                                <a href="privacy.html" style="color: var(--ivory); text-decoration: none; font-size: 0.85rem; margin-right: 2rem; opacity: 0.6;">개인정보처리방침</a>
+                                <a href="terms.html" style="color: var(--ivory); text-decoration: none; font-size: 0.85rem; opacity: 0.6;">이용약관</a>
+                            </div>
+                            <p style="opacity: 0.3; font-size: 0.75rem;">&copy; 2026 AGORA OF TIME. ALL RIGHTS RESERVED.</p>
+                        </div>
+                    </div>
+                </footer>
             </div>
         </section>
 
@@ -71,7 +115,7 @@
                     <div id="resultMBTI" class="modal-mbti-tag"></div>
                     <div class="divider-luxury"></div>
                     
-                    <div id="resultPortrait" style="width: 200px; height: 200px; margin: 3rem auto; border-radius: 50%; background-size: cover; border: 1px solid var(--gold);"></div>
+                    <div id="resultPortrait" style="width: 200px; height: 200px; margin: 3rem auto; border-radius: 50%; background-size: cover; border: 1px solid var(--gold); background-position: center;"></div>
                     
                     <p id="resultQuote" class="modal-quote-box" style="text-align: left; margin: 4rem 0;"></p>
                     
@@ -114,48 +158,6 @@
                 </div>
             </div>
         </section>
-
-        <!-- 6. ABOUT SECTION -->
-        <section id="section-about" class="about-luxury">
-            <div style="max-width: 1000px; margin: 0 auto; text-align: center;">
-                <h2 class="title-font" style="font-size: 2.5rem; color: var(--gold); margin-bottom: 5rem;">THE GUIDE TO WISDOM</h2>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; text-align: left;">
-                    <div>
-                        <h3 class="title-font" style="font-size: 1.2rem; margin-bottom: 2rem; color: var(--ivory);">시대적 통찰</h3>
-                        <p class="kr-serif" style="color: rgba(248, 244, 227, 0.5); line-height: 2.2;">
-                            고대 아고라의 고요함부터 현대 실존주의의 치열함까지, <br>
-                            인류 지성사의 흐름 속에서 당신의 기질이 가장 찬란하게 <br>
-                            빛날 수 있는 시대를 정교하게 탐험합니다.
-                        </p>
-                    </div>
-                    <div>
-                        <h3 class="title-font" style="font-size: 1.2rem; margin-bottom: 2rem; color: var(--ivory);">실천적 지혜</h3>
-                        <p class="kr-serif" style="color: rgba(248, 244, 227, 0.5); line-height: 2.2;">
-                            단순한 성향 테스트를 넘어, 당신과 매칭된 현자의 사상을 통해 <br>
-                            복잡한 현대적 삶의 문제들에 대한 본질적이고 <br>
-                            철학적인 해답을 제안합니다.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 7. FOOTER -->
-        <footer class="footer-luxury">
-            <div style="max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;">
-                <div>
-                    <h4 class="title-font">AGORA OF TIME</h4>
-                    <p class="kr-serif">인류의 지혜와 당신의 영혼을 잇는 가장 우아한 통로</p>
-                </div>
-                <div style="text-align: right;">
-                    <div style="margin-bottom: 2rem;">
-                        <a href="privacy.html" style="margin-right: 2rem;">개인정보처리방침</a>
-                        <a href="terms.html">이용약관</a>
-                    </div>
-                    <p style="opacity: 0.3;">&copy; 2026 AGORA OF TIME. ALL RIGHTS RESERVED.</p>
-                </div>
-            </div>
-        </footer>
     </div>
 
     <!-- LUXURY MODAL -->
