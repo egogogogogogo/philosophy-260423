@@ -15,15 +15,10 @@
     --transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-/* Entrance Animations */
+/* Animations */
 @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeInScale {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
 }
 
 @keyframes rotate {
@@ -40,6 +35,7 @@ body {
     font-family: var(--font-body); 
     overflow-x: hidden; 
     line-height: 1.6;
+    text-align: center;
 }
 
 #particles-js { position: fixed; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
@@ -47,7 +43,7 @@ body {
 .vignette {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: radial-gradient(circle at center, transparent 20%, rgba(0,0,0,0.85) 100%);
+    background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.85) 100%);
     z-index: 2;
     pointer-events: none;
 }
@@ -61,14 +57,13 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    text-align: center;
     padding: 2rem;
     opacity: 0;
     transition: opacity 1s ease;
-    position: relative;
+    text-align: center;
 }
 
-.screen.active { display: flex; opacity: 1; }
+.screen.active { display: flex !important; opacity: 1; }
 
 /* ===================== LANDING SCREEN ===================== */
 .landing-content {
@@ -76,8 +71,9 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    max-width: 800px;
+    max-width: 850px;
     width: 100%;
+    margin: 0 auto;
     animation: fadeInUp 1.2s ease;
     z-index: 10;
 }
@@ -85,7 +81,7 @@ body {
 .symbol-box {
     width: 80px;
     height: 80px;
-    margin: 0 auto 2rem;
+    margin: 0 auto 3rem;
     position: relative;
     border: 1px solid var(--primary-glow);
     transform: rotate(45deg);
@@ -95,57 +91,65 @@ body {
     position: absolute;
     top: 10px; left: 10px; right: 10px; bottom: 10px;
     border: 2px solid var(--primary);
-    animation: rotate 10s linear infinite;
+    animation: rotate 15s linear infinite;
 }
 
 .main-title {
-    font-size: 4rem;
-    letter-spacing: 12px;
+    font-family: var(--font-title);
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    letter-spacing: 15px;
     color: #fff;
-    margin-bottom: 0.5rem;
-    text-shadow: 0 0 20px rgba(255,255,255,0.1);
+    margin-bottom: 1rem;
+    text-align: center;
 }
 
 .subtitle {
+    font-family: var(--font-title);
     font-size: 1.2rem;
-    letter-spacing: 5px;
+    letter-spacing: 6px;
     color: var(--primary);
     margin-bottom: 2rem;
+    text-align: center;
 }
 
 .divider-gold {
-    width: 100px;
+    width: 120px;
     height: 1px;
     background: linear-gradient(to right, transparent, var(--primary), transparent);
-    margin: 2rem auto;
+    margin: 2.5rem auto;
 }
 
 .description {
     font-family: var(--font-kr);
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     color: var(--text-dim);
     line-height: 2;
-    margin-bottom: 3rem;
+    margin-bottom: 4rem;
+    text-align: center;
 }
 
 .highlight { color: #fff; font-weight: 500; }
 
 .btn-group-centered {
     display: flex;
-    gap: 1.5rem;
+    gap: 2rem;
     justify-content: center;
+    align-items: center;
+    width: 100%;
 }
 
 /* ===================== BUTTONS ===================== */
 .btn {
-    padding: 1.2rem 3rem;
+    padding: 1.3rem 3.5rem;
     border-radius: 50px;
     font-family: var(--font-title);
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     letter-spacing: 2px;
     cursor: pointer;
     transition: var(--transition);
     border: 1px solid transparent;
+    text-decoration: none;
+    display: inline-block;
 }
 
 .btn-primary {
@@ -155,12 +159,8 @@ body {
 
 .btn-primary:hover {
     background: #fff;
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-}
-
-.btn-glow {
-    box-shadow: 0 0 20px var(--primary-glow);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.4), 0 0 20px var(--primary-glow);
 }
 
 .btn-outline {
@@ -176,43 +176,15 @@ body {
 }
 
 /* ===================== HALL OF SAGES (GALLERY) ===================== */
-.hall-container { width: 100%; max-width: 1200px; }
-
-.hall-header { text-align: center; margin-bottom: 5rem; }
-
-.gallery-title { font-size: 3rem; letter-spacing: 8px; margin-bottom: 1rem; color: #fff; }
-.gallery-subtitle { font-family: var(--font-kr); color: var(--text-dim); letter-spacing: 2px; }
-
-.filter-group {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    margin-top: 3rem;
-}
-
-.tab-btn {
-    padding: 0.8rem 2rem;
-    background: var(--glass);
-    border: 1px solid var(--glass-border);
-    color: var(--text-dim);
-    border-radius: 5px;
-    cursor: pointer;
-    font-family: var(--font-title);
-    font-size: 0.8rem;
-    letter-spacing: 1px;
-    transition: var(--transition);
-}
-
-.tab-btn.active {
-    background: var(--primary);
-    color: #000;
-    border-color: var(--primary);
-}
+.hall-container { width: 100%; max-width: 1200px; padding: 2rem; }
+.gallery-title { font-size: 3.5rem; letter-spacing: 10px; margin-bottom: 1rem; color: #fff; }
+.filter-group { display: flex; gap: 1rem; justify-content: center; margin: 3rem 0; flex-wrap: wrap; }
 
 .hall-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2.5rem;
+    width: 100%;
 }
 
 .hall-card {
@@ -222,41 +194,19 @@ body {
     overflow: hidden;
     transition: var(--transition);
     cursor: pointer;
-    animation: fadeInUp 0.8s ease backwards;
+    text-align: center;
 }
 
-.hall-card:hover {
-    border-color: var(--primary);
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-}
+.hall-card:hover { border-color: var(--primary); transform: translateY(-10px); }
+.hall-card-img { height: 320px; background-size: cover; background-position: center; position: relative; }
+.card-mbti { position: absolute; bottom: 1rem; left: 1rem; padding: 0.3rem 0.8rem; background: rgba(0,0,0,0.8); color: var(--primary); font-weight: 700; font-size: 0.8rem; }
+.hall-card-info { padding: 1.5rem; }
 
-.hall-card-img {
-    height: 300px;
-    background-size: cover;
-    background-position: center;
-    position: relative;
-}
-
-.card-mbti {
-    position: absolute;
-    bottom: 1rem; left: 1rem;
-    padding: 0.3rem 0.8rem;
-    background: rgba(0,0,0,0.7);
-    color: var(--primary);
-    font-weight: 700;
-    font-size: 0.8rem;
-}
-
-.hall-card-info { padding: 1.5rem; text-align: center; }
-.hall-card-info h4 { font-family: var(--font-kr); font-size: 1.2rem; color: #fff; margin-bottom: 0.5rem; }
-.hall-card-info p { font-size: 0.85rem; color: var(--text-dim); }
-
-/* ===================== MODAL SYSTEM ===================== */
+/* ===================== MODAL ===================== */
 .modal {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.95);
+    background: rgba(0,0,0,0.98);
     z-index: 10000;
     display: none;
     align-items: center;
@@ -264,54 +214,27 @@ body {
     backdrop-filter: blur(20px);
 }
 
-.modal.active { display: flex; animation: fadeIn 0.3s ease; }
+.modal.active { display: flex; }
 
 .modal-content-premium {
     background: #0f0f12;
     border: 1px solid var(--glass-border);
-    width: 90%;
-    max-width: 900px;
+    width: 95%;
+    max-width: 1000px;
+    max-height: 90vh;
     border-radius: 30px;
     position: relative;
-    overflow: hidden;
+    overflow-y: auto;
 }
 
-.modal-close {
-    position: absolute;
-    top: 1.5rem; right: 1.5rem;
-    background: none; border: none;
-    color: #fff; font-size: 2rem; cursor: pointer;
-    z-index: 10;
-}
-
-.modal-body { display: grid; grid-template-columns: 350px 1fr; }
-
-.modal-portrait {
-    height: 500px;
-    background-size: cover;
-    background-position: center;
-}
-
-.modal-info { padding: 3rem; max-height: 600px; overflow-y: auto; }
-
-.modal-mbti { color: var(--primary); font-weight: 700; letter-spacing: 3px; margin-bottom: 1rem; }
-.modal-name { font-size: 2.5rem; color: #fff; margin-bottom: 1.5rem; }
-.modal-quote { font-family: var(--font-kr); font-style: italic; color: var(--text-dim); font-size: 1.1rem; line-height: 1.8; margin-bottom: 2.5rem; padding-left: 1.5rem; border-left: 2px solid var(--primary); }
-
-.detail-section { margin-bottom: 2rem; }
-.detail-section h4 { color: var(--primary); margin-bottom: 0.8rem; font-size: 0.9rem; letter-spacing: 1px; }
-.detail-section p { font-family: var(--font-kr); line-height: 1.8; color: #ccc; font-size: 0.95rem; }
+.modal-body { display: flex; flex-direction: row; }
+.modal-portrait { width: 40%; min-height: 500px; background-size: cover; background-position: center; }
+.modal-info { width: 60%; padding: 4rem; text-align: left; }
 
 /* ===================== RESPONSIVE ===================== */
 @media (max-width: 1024px) {
-    .hall-grid { grid-template-columns: repeat(2, 1fr); }
-    .modal-body { grid-template-columns: 1fr; }
-    .modal-portrait { height: 300px; }
-    .main-title { font-size: 2.5rem; }
-}
-
-@media (max-width: 768px) {
-    .hall-grid { grid-template-columns: 1fr; }
-    .btn-group-centered { flex-direction: column; width: 100%; }
-    .btn { width: 100%; }
+    .modal-body { flex-direction: column; }
+    .modal-portrait { width: 100%; height: 350px; }
+    .modal-info { width: 100%; padding: 2rem; }
+    .btn-group-centered { flex-direction: column; gap: 1rem; }
 }
