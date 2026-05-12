@@ -24,6 +24,18 @@ const App = {
         document.addEventListener('click', unlockAudio);
     },
 
+    playFX(type) {
+        if (this.audio) this.audio.play(type);
+    },
+
+    async startQuest(era) {
+        this.currentEra = era;
+        this.currentStep = 0;
+        this.userScores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+        this.goTo('screen-quest');
+        renderQuestion();
+    },
+
     initFX() {
         if (window.particlesJS) {
             particlesJS('particles-js', {
@@ -60,16 +72,9 @@ const App = {
     }
 };
 
-// Global Handlers
+// Global Handlers (Forwarding to App for convenience)
 function goTo(id) { App.goTo(id); }
-
-async function startQuest(era) {
-    App.currentEra = era;
-    App.currentStep = 0;
-    App.userScores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
-    App.goTo('screen-quest');
-    renderQuestion();
-}
+function startQuest(era) { App.startQuest(era); }
 
 function renderQuestion() {
     const eraData = QUEST_DATA[App.currentEra];
