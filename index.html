@@ -4,15 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AGORA OF TIME | 시간의 광장: 현자의 방</title>
-    <meta name="description" content="64인의 역사적 현자들과 당신의 영혼을 연결하는 지적 여정. 당신의 MBTI와 철학적 기질을 분석하여 현대적 삶의 나침반을 제안합니다.">
+    <meta name="description" content="64인의 역사적 현자들과 당신의 영혼을 연결하는 프리미엄 인문학 플랫폼.">
     <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+KR:wght@300;400;700&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7705975032260531" crossorigin="anonymous"></script>
 </head>
 <body>
-    <!-- Background Layers -->
     <div id="particles-js"></div>
     <div class="vignette"></div>
     
@@ -22,39 +17,36 @@
             <source src="assets/audio/ambient_main.mp3" type="audio/mpeg">
         </audio>
 
-        <!-- Landing Screen -->
+        <!-- 1. LANDING SCREEN -->
         <section id="screen-landing" class="screen active">
             <div class="landing-content">
                 <div class="symbol-box">
                     <div class="symbol-inner"></div>
                 </div>
                 <h1 class="title-font main-title">AGORA OF TIME</h1>
-                <p class="subtitle title-font">시간의 광장: 현자의 방</p>
-                <div class="divider-gold"></div>
-                <p class="description">
-                    수천 년의 역사를 가로질러 당신의 영혼과 공명하는 <br>
+                <p class="subtitle title-font">THE HALL OF ANCIENT SAGES</p>
+                <div class="divider-luxury"></div>
+                <p class="description kr-serif">
+                    시공간을 초월하여 당신의 영혼과 공명하는 <br>
                     단 한 명의 현자를 만날 준비가 되었습니까? <br>
-                    <span class="highlight">현대적 삶의 나침반이 될 지적 여정을 지금 시작하세요.</span>
+                    <span style="color: var(--gold); font-weight: 400;">현대적 삶의 나침반이 될 지적 여정을 지금 시작하세요.</span>
                 </p>
                 <div class="btn-group-centered">
-                    <button class="btn btn-primary btn-glow" onclick="startQuest('ancient')">여정 시작하기</button>
+                    <button class="btn btn-primary" onclick="startQuest('ancient')">여정 시작하기</button>
                     <button class="btn btn-outline" onclick="openGallery()">현자의 전당</button>
                 </div>
             </div>
         </section>
 
-        <!-- Quiz Screen -->
+        <!-- 2. QUIZ SCREEN -->
         <section id="screen-quest" class="screen">
             <div class="quiz-container">
-                <header class="quiz-header">
-                    <div id="stepLabel" class="step-counter">COORD: 01 / 12</div>
-                    <div class="progress-container">
-                        <div id="progressBar" class="progress-fill"></div>
-                    </div>
-                </header>
+                <p id="stepLabel" class="step-counter">COORD: 01 / 12</p>
+                <div class="progress-bar-luxury">
+                    <div id="progressBar" class="progress-fill"></div>
+                </div>
                 <div class="question-wrap">
-                    <p id="eraLabel" class="era-tag">ANCIENT AGORA</p>
-                    <h2 id="typewriterText" class="question-text"></h2>
+                    <h2 id="typewriterText" class="question-text kr-serif"></h2>
                     <div id="optionsWrap" class="options-container">
                         <!-- Options injected by JS -->
                     </div>
@@ -62,63 +54,51 @@
             </div>
         </section>
 
-        <!-- Loading Screen -->
+        <!-- 3. LOADING SCREEN -->
         <section id="screen-loading" class="screen">
-            <div class="loading-wrap">
-                <div class="loading-spinner"></div>
-                <p id="loadingLogs" class="loading-text">시공간 동기화 중...</p>
+            <div class="loading-wrap" style="text-align: center;">
+                <div class="loading-spinner" style="border: 1px solid var(--gold); width: 60px; height: 60px; border-radius: 50%; margin: 0 auto 2rem; border-top-color: transparent; animation: rotate 1s linear infinite;"></div>
+                <p id="loadingLogs" class="title-font" style="letter-spacing: 5px; color: var(--gold);">SYNCHRONIZING...</p>
             </div>
         </section>
 
-        <!-- Result Screen -->
+        <!-- 4. RESULT SCREEN -->
         <section id="screen-result" class="screen">
-            <div class="result-container">
-                <div class="result-card-premium">
-                    <div class="result-header">
-                        <p id="resultDesc" class="result-modifier"></p>
-                        <h2 id="resultName" class="phil-name-large"></h2>
-                        <div id="resultMBTI" class="mbti-badge-large"></div>
-                    </div>
+            <div class="result-container" style="max-width: 800px; width: 100%;">
+                <div class="result-card-luxury" style="border: 1px solid var(--glass-border); padding: 5rem; background: rgba(0,0,0,0.4); text-align: center;">
+                    <p id="resultDesc" class="section-label"></p>
+                    <h2 id="resultName" class="modal-name-title kr-serif" style="font-size: 4rem; margin-bottom: 1rem;"></h2>
+                    <div id="resultMBTI" class="modal-mbti-tag"></div>
+                    <div class="divider-luxury"></div>
                     
-                    <div id="resultPortrait" class="phil-portrait-premium"></div>
+                    <div id="resultPortrait" style="width: 200px; height: 200px; margin: 3rem auto; border-radius: 50%; background-size: cover; border: 1px solid var(--gold);"></div>
                     
-                    <p id="resultQuote" class="phil-quote-premium"></p>
+                    <p id="resultQuote" class="modal-quote-box" style="text-align: left; margin: 4rem 0;"></p>
                     
-                    <div class="content-grid">
-                        <div class="info-card">
-                            <h4 class="title-font">핵심 사상</h4>
-                            <p id="resultThought"></p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; text-align: left;">
+                        <div>
+                            <h4 class="section-label">핵심 사상</h4>
+                            <p id="resultThought" class="kr-serif" style="font-size: 0.95rem; opacity: 0.8;"></p>
                         </div>
-                        <div class="info-card">
-                            <h4 class="title-font">현자의 일화</h4>
-                            <p id="resultStory"></p>
+                        <div>
+                            <h4 class="section-label">알려지지 않은 이야기</h4>
+                            <p id="resultStory" class="kr-serif" style="font-size: 0.95rem; opacity: 0.8;"></p>
                         </div>
-                    </div>
-
-                    <div class="stats-card">
-                        <div class="stats-info">
-                            <span>전체 참여자 중 <strong id="matchRateText">--%</strong>가 당신과 같은 현자를 만났습니다.</span>
-                        </div>
-                        <div class="stats-bar-bg">
-                            <div id="matchRateBar" class="stats-bar-fill"></div>
-                        </div>
-                        <p class="stats-total">누적 기록소 데이터: <span id="totalParticipants">0</span>건</p>
                     </div>
 
-                    <div class="btn-group-centered">
-                        <button class="btn btn-primary" onclick="location.reload()">다시 여정 떠나기</button>
-                        <button class="btn btn-outline" onclick="shareResult()">지혜 공유하기</button>
+                    <div style="margin-top: 5rem; padding-top: 3rem; border-top: 1px solid rgba(255,255,255,0.05);">
+                        <button class="btn btn-primary" onclick="location.reload()">여정 다시 떠나기</button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Hall of Sages Gallery -->
+        <!-- 5. HALL OF SAGES SCREEN -->
         <section id="screen-hall" class="screen">
-            <div class="hall-container">
-                <header class="hall-header">
-                    <h2 class="title-font gallery-title">현자의 전당</h2>
-                    <p class="gallery-subtitle">인류 역사를 수놓은 64인의 영혼들</p>
+            <div class="hall-container" style="width: 100%; max-width: 1200px;">
+                <header style="text-align: center; margin-bottom: 8rem;">
+                    <h2 class="title-font" style="font-size: 4rem; letter-spacing: 15px;">HALL OF SAGES</h2>
+                    <div class="divider-luxury"></div>
                     <div class="filter-group">
                         <button class="tab-btn active" onclick="filterGallery('ancient', this)">ANCIENT</button>
                         <button class="tab-btn" onclick="filterGallery('medieval', this)">MEDIEVAL</button>
@@ -129,66 +109,75 @@
                 <div id="hall-grid" class="hall-grid">
                     <!-- Cards injected by JS -->
                 </div>
-                <div class="back-footer">
-                    <button class="btn btn-outline" onclick="goTo('screen-landing')">메인 광장으로 돌아가기</button>
+                <div style="margin-top: 8rem; text-align: center;">
+                    <button class="btn btn-outline" onclick="goTo('screen-landing')">RETURN TO PLAZA</button>
                 </div>
             </div>
         </section>
 
-        <!-- About Section (SEO & Depth) -->
-        <section id="section-about" class="about-section">
-            <div class="content-wrapper">
-                <h2 class="title-font section-title">지적 여정의 안내서</h2>
-                <div class="about-grid">
-                    <div class="about-card">
-                        <h3 class="title-font">시대적 통찰</h3>
-                        <p>고대 아고라부터 현대의 실존주의까지, 당신의 기질이 가장 빛날 수 있는 시대를 탐험합니다.</p>
+        <!-- 6. ABOUT SECTION -->
+        <section id="section-about" class="about-luxury">
+            <div style="max-width: 1000px; margin: 0 auto; text-align: center;">
+                <h2 class="title-font" style="font-size: 2.5rem; color: var(--gold); margin-bottom: 5rem;">THE GUIDE TO WISDOM</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; text-align: left;">
+                    <div>
+                        <h3 class="title-font" style="font-size: 1.2rem; margin-bottom: 2rem; color: var(--ivory);">시대적 통찰</h3>
+                        <p class="kr-serif" style="color: rgba(248, 244, 227, 0.5); line-height: 2.2;">
+                            고대 아고라의 고요함부터 현대 실존주의의 치열함까지, <br>
+                            인류 지성사의 흐름 속에서 당신의 기질이 가장 찬란하게 <br>
+                            빛날 수 있는 시대를 정교하게 탐험합니다.
+                        </p>
                     </div>
-                    <div class="about-card">
-                        <h3 class="title-font">실천적 지혜</h3>
-                        <p>단순한 테스트를 넘어, 매칭된 현자의 사상을 통해 현대적 삶의 해답을 제안합니다.</p>
+                    <div>
+                        <h3 class="title-font" style="font-size: 1.2rem; margin-bottom: 2rem; color: var(--ivory);">실천적 지혜</h3>
+                        <p class="kr-serif" style="color: rgba(248, 244, 227, 0.5); line-height: 2.2;">
+                            단순한 성향 테스트를 넘어, 당신과 매칭된 현자의 사상을 통해 <br>
+                            복잡한 현대적 삶의 문제들에 대한 본질적이고 <br>
+                            철학적인 해답을 제안합니다.
+                        </p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <footer class="site-footer">
-            <div class="footer-content">
-                <div class="footer-brand">
-                    <h3 class="title-font">AGORA OF TIME</h3>
-                    <p>인류의 지혜와 당신의 영혼을 잇는 통로</p>
+        <!-- 7. FOOTER -->
+        <footer class="footer-luxury">
+            <div style="max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;">
+                <div>
+                    <h4 class="title-font">AGORA OF TIME</h4>
+                    <p class="kr-serif">인류의 지혜와 당신의 영혼을 잇는 가장 우아한 통로</p>
                 </div>
-                <div class="footer-links">
-                    <a href="privacy.html">개인정보처리방침</a>
-                    <a href="terms.html">이용약관</a>
+                <div style="text-align: right;">
+                    <div style="margin-bottom: 2rem;">
+                        <a href="privacy.html" style="margin-right: 2rem;">개인정보처리방침</a>
+                        <a href="terms.html">이용약관</a>
+                    </div>
+                    <p style="opacity: 0.3;">&copy; 2026 AGORA OF TIME. ALL RIGHTS RESERVED.</p>
                 </div>
-            </div>
-            <div class="footer-bottom">
-                &copy; 2026 AGORA OF TIME. ALL RIGHTS RESERVED.
             </div>
         </footer>
     </div>
 
-    <!-- Modals -->
-    <div id="modal-profile" class="modal" onclick="closeProfile()">
-        <div class="modal-content-premium" onclick="event.stopPropagation()">
-            <button class="modal-close" onclick="closeProfile()">&times;</button>
-            <div class="modal-body">
-                <div id="profImg" class="modal-portrait"></div>
-                <div class="modal-info">
-                    <p id="profMBTI" class="modal-mbti"></p>
-                    <h2 id="profName" class="modal-name title-font"></h2>
-                    <p id="profQuote" class="modal-quote"></p>
-                    
-                    <div class="modal-details">
-                        <div class="detail-section">
-                            <h4 class="title-font">현자의 사상</h4>
-                            <p id="profThought"></p>
-                        </div>
-                        <div class="detail-section">
-                            <h4 class="title-font">알려지지 않은 이야기</h4>
-                            <p id="profStory"></p>
-                        </div>
+    <!-- LUXURY MODAL -->
+    <div id="modal-profile" class="modal-luxury" onclick="closeProfile()">
+        <div class="modal-inner" onclick="event.stopPropagation()">
+            <button class="modal-close-gold" onclick="closeProfile()">&times;</button>
+            <div class="modal-left">
+                <div id="profImg" class="modal-main-img" style="background-size: cover; background-position: center; width: 100%; height: 100%;"></div>
+            </div>
+            <div class="modal-right">
+                <p id="profMBTI" class="modal-mbti-tag"></p>
+                <h2 id="profName" class="modal-name-title kr-serif"></h2>
+                <div id="profQuote" class="modal-quote-box"></div>
+                
+                <div class="modal-content-details">
+                    <div class="detail-block">
+                        <h4 class="section-label">현자의 사상</h4>
+                        <p id="profThought" class="section-content"></p>
+                    </div>
+                    <div class="detail-block">
+                        <h4 class="section-label">알려지지 않은 이야기</h4>
+                        <p id="profStory" class="section-content"></p>
                     </div>
                 </div>
             </div>
@@ -197,5 +186,6 @@
 
     <script src="data.js"></script>
     <script src="main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 </body>
 </html>

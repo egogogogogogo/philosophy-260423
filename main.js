@@ -1,21 +1,19 @@
-/* ===================== THE TIME-TRAVELER'S AGORA: PREMIUM ENGINE (DEPLOY: 2026-05-12 14:52) ===================== */
+/* ===================== THE TIME-TRAVELER'S AGORA: LUXURY ENGINE ===================== */
 
 const App = {
     currentEra: 'ancient',
     currentStep: 0,
     userScores: { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 },
-    isTypewriting: false,
     typewriterTimeout: null,
     
     init() {
-        console.log("Agora App Initializing...");
+        console.log("Agora Luxury Engine Initializing...");
         this.bindEvents();
         this.initFX();
         this.goTo('screen-landing');
     },
 
     bindEvents() {
-        // Global Audio Unlock
         const unlockAudio = () => {
             const bgm = document.getElementById('bgm');
             if (bgm) bgm.play().catch(() => {});
@@ -28,41 +26,40 @@ const App = {
         if (window.particlesJS) {
             particlesJS('particles-js', {
                 "particles": {
-                    "number": { "value": 40, "density": { "enable": true, "value_area": 800 } },
-                    "color": { "value": "#c9a050" },
-                    "opacity": { "value": 0.3, "random": true },
-                    "size": { "value": 2, "random": true },
-                    "line_linked": { "enable": true, "distance": 150, "color": "#c9a050", "opacity": 0.1, "width": 1 },
-                    "move": { "enable": true, "speed": 0.3, "direction": "none", "random": true, "straight": false, "out_mode": "out" }
+                    "number": { "value": 30, "density": { "enable": true, "value_area": 800 } },
+                    "color": { "value": "#d4af37" },
+                    "opacity": { "value": 0.2, "random": true },
+                    "size": { "value": 1.5, "random": true },
+                    "line_linked": { "enable": false },
+                    "move": { "enable": true, "speed": 0.5, "direction": "none", "random": true, "straight": false, "out_mode": "out" }
                 }
             });
         }
     },
 
     goTo(screenId) {
-        console.log("Navigating to:", screenId);
         const screens = document.querySelectorAll('.screen');
         screens.forEach(s => { 
             s.classList.remove('active'); 
-            s.style.display = 'none'; 
+            setTimeout(() => s.style.display = 'none', 800);
         });
+        
         const target = document.getElementById(screenId);
         if (target) {
             target.style.display = 'flex';
             setTimeout(() => { 
                 target.classList.add('active'); 
                 window.scrollTo({ top: 0, behavior: 'smooth' }); 
-            }, 50);
+            }, 100);
         }
     },
 
     async startQuest(era) {
-        console.log("Starting Quest in era:", era);
         this.currentEra = era || 'ancient';
         this.currentStep = 0;
         this.userScores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
         this.goTo('screen-quest');
-        renderQuestion();
+        setTimeout(() => renderQuestion(), 1000);
     }
 };
 
@@ -71,7 +68,7 @@ function goTo(id) { App.goTo(id); }
 function startQuest(era) { App.startQuest(era); }
 function openGallery() { 
     App.goTo('screen-hall'); 
-    renderGallery('ancient');
+    setTimeout(() => renderGallery('ancient'), 1000);
 }
 
 function renderQuestion() {
@@ -90,14 +87,15 @@ function renderQuestion() {
         const opts = [{ text: data.a1, val: 'a1' }, { text: data.a2, val: 'a2' }];
         opts.forEach((opt, idx) => {
             const btn = document.createElement('button');
-            btn.className = 'btn btn-outline';
-            btn.style.width = '100%';
-            btn.style.textAlign = 'left';
-            btn.style.padding = '1.5rem 2rem';
+            btn.className = 'option-btn';
             btn.textContent = opt.text;
+            btn.style.opacity = '0';
             btn.onclick = () => handleAnswer(opt.val);
             optionsWrap.appendChild(btn);
-            setTimeout(() => btn.style.opacity = '1', idx * 200);
+            setTimeout(() => {
+                btn.style.opacity = '1';
+                btn.style.transform = 'translateY(0)';
+            }, idx * 300);
         });
     });
 }
@@ -110,7 +108,7 @@ function typewrite(el, text, callback) {
         if (i < text.length) {
             el.textContent += text[i];
             i++;
-            App.typewriterTimeout = setTimeout(next, 50);
+            App.typewriterTimeout = setTimeout(next, 70);
         } else if (callback) callback();
     }
     next();
@@ -140,7 +138,7 @@ function processResult() {
             if (score > max) { max = score; match = p; }
         });
         showResult(match, mbti);
-    }, 4000);
+    }, 4500);
 }
 
 function showResult(phil, mbti) {
@@ -149,8 +147,8 @@ function showResult(phil, mbti) {
     document.getElementById('resultQuote').textContent = `"${phil.quote}"`;
     document.getElementById('resultDesc').textContent = phil.modifier;
     document.getElementById('resultPortrait').style.backgroundImage = `url('${phil.portrait}')`;
-    document.getElementById('resultThought').textContent = phil.thought || '사상을 분석 중입니다.';
-    document.getElementById('resultStory').textContent = phil.story || '이야기를 불러오는 중입니다.';
+    document.getElementById('resultThought').textContent = phil.thought;
+    document.getElementById('resultStory').textContent = phil.story;
     App.goTo('screen-result');
 }
 
@@ -170,7 +168,16 @@ function renderGallery(era) {
     filtered.forEach((p, idx) => {
         const card = document.createElement('div');
         card.className = 'hall-card';
-        card.innerHTML = `<div class="hall-card-img" style="background-image: url('${p.portrait}')"><div class="card-mbti">${p.mbti}</div></div><div class="hall-card-info"><h4>${p.name}</h4><p>${p.modifier}</p></div>`;
+        card.innerHTML = `
+            <div class="card-frame">
+                <img src="${p.portrait}" class="card-img" alt="${p.name}">
+            </div>
+            <div class="hall-card-info">
+                <p class="modal-mbti-tag" style="font-size: 0.6rem; margin-bottom: 0.5rem;">${p.mbti}</p>
+                <h4 class="kr-serif" style="font-size: 1.1rem; color: var(--ivory);">${p.name}</h4>
+                <p class="kr-serif" style="font-size: 0.75rem; color: var(--gold); opacity: 0.8;">${p.modifier}</p>
+            </div>
+        `;
         card.onclick = () => openProfile(p.id);
         grid.appendChild(card);
     });
@@ -182,21 +189,25 @@ function openProfile(id) {
     document.getElementById('profImg').style.backgroundImage = `url('${p.portrait}')`;
     document.getElementById('profName').textContent = p.name;
     document.getElementById('profMBTI').textContent = p.mbti;
-    document.getElementById('profQuote').textContent = p.quote;
+    document.getElementById('profQuote').textContent = `"${p.quote}"`;
     document.getElementById('profThought').textContent = p.thought;
     document.getElementById('profStory').textContent = p.story;
     const modal = document.getElementById('modal-profile');
-    if (modal) { modal.style.display = 'flex'; setTimeout(() => modal.classList.add('active'), 10); }
+    if (modal) { 
+        modal.style.display = 'flex'; 
+        setTimeout(() => modal.classList.add('active'), 10); 
+    }
 }
 
 function closeProfile() {
     const modal = document.getElementById('modal-profile');
-    if (modal) { modal.classList.remove('active'); setTimeout(() => modal.style.display = 'none', 300); }
+    if (modal) { 
+        modal.classList.remove('active'); 
+        setTimeout(() => modal.style.display = 'none', 800); 
+    }
 }
 
-function shareResult() { alert("복사되었습니다."); }
-
-// Final Initialization Guarantee
+// Initialization
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => App.init());
 } else {
