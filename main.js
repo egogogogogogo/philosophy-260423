@@ -279,7 +279,7 @@ function filterGallery(era, btn) {
 }
 
 function renderGallery(era) {
-    const grid = document.getElementById('hallGrid');
+    const grid = document.getElementById('hall-grid');
     if (!grid) return;
     
     grid.innerHTML = '';
