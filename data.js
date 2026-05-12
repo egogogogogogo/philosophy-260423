@@ -56,22 +56,22 @@ const PHILS_DATA = [
     { id: 'bentham', mbti: 'ESFJ', name: '제레미 벤담', era: 'modern_early', quote: '"최대 행복을 위하여."', modifier: '공리의 설계자', achievements: '공리주의 철학 정립, 사회 개혁과 법 제도 개선 제안', traits: '공동체의 조화와 구성원 전체의 행복을 추구하는 실무가', portrait: 'assets/portraits/bentham.png' },
 
     // MODERN LATE (16)
-    { id: 'nietzsche', mbti: 'INTJ', name: '니체', era: 'modern_late', quote: '"신은 죽었다."', modifier: '망치의 철학자', portrait: 'assets/portraits/nietzsche.png' },
-    { id: 'camus', mbti: 'ISFP', name: '카뮈', era: 'modern_late', quote: '"부조리 속에서 반항하라."', modifier: '부조리의 반항아', portrait: 'assets/portraits/camus.png' },
-    { id: 'kierkegaard', mbti: 'INFP', name: '키에르케고르', era: 'modern_late', quote: '"단독자로 서라."', modifier: '주체적 진리의 구도자', portrait: 'assets/portraits/kierkegaard.png' },
-    { id: 'schopenhauer', mbti: 'INFJ', name: '쇼펜하우어', era: 'modern_late', quote: '"삶은 고통이다."', modifier: '의지의 염세주의자', portrait: 'assets/portraits/schopenhauer.png' },
-    { id: 'sartre', mbti: 'ENTP', name: '사르트르', era: 'modern_late', quote: '"실존은 앞선다."', modifier: '자유의 사도', portrait: 'assets/portraits/sartre.png' },
-    { id: 'heidegger', mbti: 'INTP', name: '하이데거', era: 'modern_late', quote: '"존재를 들으라."', modifier: '존재의 탐구자', portrait: 'assets/portraits/heidegger.png' },
-    { id: 'foucault', mbti: 'ENTP', name: '푸코', era: 'modern_late', quote: '"지식은 권력이다."', modifier: '광기의 역사학자', portrait: 'assets/portraits/foucault.png' },
-    { id: 'hannah_arendt', mbti: 'ENTJ', name: '한나 아렌트', era: 'modern_late', quote: '"악의 평범성."', modifier: '정치적 주체의 발견자', portrait: 'assets/portraits/arendt.png' },
-    { id: 'beauvoir', mbti: 'INFJ', name: '보부아르', era: 'modern_late', quote: '"여성은 만들어지는 것이다."', modifier: '제2의 성의 탐험가', portrait: 'assets/portraits/beauvoir.png' },
-    { id: 'wittgenstein', mbti: 'INTJ', name: '비트겐슈타인', era: 'modern_late', quote: '"침묵하라."', modifier: '언어의 문법학자', portrait: 'assets/portraits/wittgenstein.png' },
-    { id: 'marx', mbti: 'INTJ', name: '마르크스', era: 'modern_late', quote: '"세계를 변혁하라."', modifier: '변혁의 선언자', portrait: 'assets/portraits/marx.png' },
-    { id: 'fromm', mbti: 'ENFJ', name: '에리히 프롬', era: 'modern_late', quote: '"사랑은 기술이다."', modifier: '사랑의 탐구자', portrait: 'assets/portraits/fromm.png' },
-    { id: 'derrida', mbti: 'INFP', name: '데리다', era: 'modern_late', quote: '"해체는 정의다."', modifier: '해체의 거장', portrait: 'assets/portraits/derrida.png' },
-    { id: 'popper', mbti: 'ESTJ', name: '칼 포퍼', era: 'modern_late', quote: '"열린 사회를 지키라."', modifier: '비판적 합리주의자', portrait: 'assets/portraits/popper.png' },
-    { id: 'zizek', mbti: 'ENTP', name: '슬라보예 지젝', era: 'modern_late', quote: '"이데올로기는 안경이다."', modifier: '도발적 사유자', portrait: 'assets/portraits/zizek.png' },
-    { id: 'rawls', mbti: 'ISTJ', name: '존 롤스', era: 'modern_late', quote: '"정의는 공정함이다."', modifier: '공정의 설계자', portrait: 'assets/portraits/rawls.png' }
+    { id: 'nietzsche', mbti: 'INTJ', name: '니체', era: 'modern_late', quote: '"신은 죽었다."', modifier: '망치의 철학자', achievements: '허무주의 극복과 초인(Übermensch) 사상 제시, 관점주의적 인식론 확립', traits: '기존 가치에 대한 파괴적 혁신, 운명애(Amor Fati)를 통한 삶의 긍정', portrait: 'assets/portraits/nietzsche.png' },
+    { id: 'camus', mbti: 'ISFP', name: '카뮈', era: 'modern_late', quote: '"부조리 속에서 반항하라."', modifier: '부조리의 반항아', achievements: '부조리 철학의 정립, 노벨 문학상 수상(이방인, 페스트)', traits: '현실의 부조리에 대한 정직한 직시, 연대와 반항을 통한 인간 존엄 실현', portrait: 'assets/portraits/camus.png' },
+    { id: 'kierkegaard', mbti: 'INFP', name: '키에르케고르', era: 'modern_late', quote: '"단독자로 서라."', modifier: '주체적 진리의 구도자', achievements: '실존주의 철학의 선구적 개척, 주체적 진리와 신앙의 단계 제시', traits: '내면의 고독과 불안을 통한 진리 탐구, 보편성 너머의 단독자적 결단', portrait: 'assets/portraits/kierkegaard.png' },
+    { id: 'schopenhauer', mbti: 'INFJ', name: '쇼펜하우어', era: 'modern_late', quote: '"삶은 고통이다."', modifier: '의지의 염세주의자', achievements: '의지와 표상으로서의 세계 정립, 동양 철학과 서양 철학의 조화 시도', traits: '삶의 본질적 고통에 대한 깊은 통찰, 예술과 자비를 통한 해탈 추구', portrait: 'assets/portraits/schopenhauer.png' },
+    { id: 'sartre', mbti: 'ENTP', name: '사르트르', era: 'modern_late', quote: '"실존은 앞선다."', modifier: '자유의 사도', achievements: '무신론적 실존주의 집대성, 앙가주망(사회 참여)의 철학적 토대 마련', traits: '절대적 자유에 따른 무거운 책임 강조, 지식인의 실천적 행동 중시', portrait: 'assets/portraits/sartre.png' },
+    { id: 'heidegger', mbti: 'INTP', name: '하이데거', era: 'modern_late', quote: '"존재를 들으라."', modifier: '존재의 탐구자', achievements: '존재와 시간 저술, 형이상학의 해체와 존재론적 전환 주도', traits: '일상성 속에 잊힌 존재의 의미 추적, 죽음을 향한 존재로서의 결단', portrait: 'assets/portraits/heidegger.png' },
+    { id: 'foucault', mbti: 'ENTP', name: '푸코', era: 'modern_late', quote: '"지식은 권력이다."', modifier: '광기의 역사학자', achievements: '권력과 지식의 관계 분석(에피스테메), 사회적 배제의 역사 고찰', traits: '보이지 않는 지배 구조에 대한 날카로운 비판, 주체 형성의 역사성 탐구', portrait: 'assets/portraits/foucault.png' },
+    { id: 'hannah_arendt', mbti: 'ENTJ', name: '한나 아렌트', era: 'modern_late', quote: '"악의 평범성."', modifier: '정치적 주체의 발견자', achievements: '전체주의의 기원 분석, 활동적 삶(Vita Activa)과 공론장 개념 확립', traits: '생각하지 않는 악에 대한 경고, 정치적 행동을 통한 자유의 실현', portrait: 'assets/portraits/arendt.png' },
+    { id: 'beauvoir', mbti: 'INFJ', name: '보부아르', era: 'modern_late', quote: '"여성은 만들어지는 것이다."', modifier: '제2의 성의 탐험가', achievements: '제2의 성 저술을 통한 현대 여성주의 확립, 실존주의 윤리학 전개', traits: '부여된 역할 거부와 주체적 자아 확립, 타인과의 윤리적 연대 강조', portrait: 'assets/portraits/beauvoir.png' },
+    { id: 'wittgenstein', mbti: 'INTJ', name: '비트겐슈타인', era: 'modern_late', quote: '"침묵하라."', modifier: '언어의 문법학자', achievements: '논리철학논고 및 철학적 탐구 저술, 현대 분석철학의 흐름 주도', traits: '언어의 한계에 대한 엄밀한 고찰, 삶의 양식으로서의 언어 게임 통찰', portrait: 'assets/portraits/wittgenstein.png' },
+    { id: 'marx', mbti: 'INTJ', name: '마르크스', era: 'modern_late', quote: '"세계를 변혁하라."', modifier: '변혁의 선언자', achievements: '자본론 저술 및 사적 유물론 확립, 자본주의 구조 비판과 변혁론 제시', traits: '경제적 구조에 의한 사회 변동 통찰, 이론과 실천의 일치(Praxis) 강조', portrait: 'assets/portraits/marx.png' },
+    { id: 'fromm', mbti: 'ENFJ', name: '에리히 프롬', era: 'modern_late', quote: '"사랑은 기술이다."', modifier: '사랑의 탐구자', achievements: '자유로부터의 도피 저술, 정신분석학과 사회학의 결합 시도', traits: '현대인의 소외 극복과 능동적 사랑 강조, 소유에서 존재로의 삶 지향', portrait: 'assets/portraits/fromm.png' },
+    { id: 'derrida', mbti: 'INFP', name: '데리다', era: 'modern_late', quote: '"해체는 정의다."', modifier: '해체의 거장', achievements: '해체주의 철학의 창시, 로고스 중심주의 비판과 차연(Différance) 개념 제시', traits: '고정된 의미 체계의 전복과 다원성 존중, 타자에 대한 무한한 환대', portrait: 'assets/portraits/derrida.png' },
+    { id: 'popper', mbti: 'ESTJ', name: '칼 포퍼', era: 'modern_late', quote: '"열린 사회를 지키라."', modifier: '비판적 합리주의자', achievements: '반증 가능성 원리 제창, 전체주의에 대항하는 열린 사회의 철학 정립', traits: '독단적 진리 거부와 비판적 토론 중시, 점진적 사회 공학의 실천', portrait: 'assets/portraits/popper.png' },
+    { id: 'zizek', mbti: 'ENTP', name: '슬라보예 지젝', era: 'modern_late', quote: '"이데올로기는 안경이다."', modifier: '도발적 사유자', achievements: '라캉 정신분석학과 헤겔 철학의 결합, 현대 대중문화의 이데올로기 비평', traits: '전복적 유머를 통한 사회 구조 비판, 상징적 질서 너머의 실재 탐구', portrait: 'assets/portraits/zizek.png' },
+    { id: 'rawls', mbti: 'ISTJ', name: '존 롤스', era: 'modern_late', quote: '"정의는 공정함이다."', modifier: '공정의 설계자', achievements: '정의론 저술, 무지의 베일과 공정으로서의 정의 개념 확립', traits: '합리적 절차를 통한 사회적 합의 추구, 최소 수혜자를 위한 정의 강조', portrait: 'assets/portraits/rawls.png' }
 ];
 
 const QUEST_DATA = {
