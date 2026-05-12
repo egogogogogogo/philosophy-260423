@@ -2,76 +2,524 @@
 
 const PHILS_DATA = [
     // ANCIENT (16)
-    { id: 'socrates', mbti: 'ENTP', name: '소크라테스', era: 'ancient', quote: '"너 자신을 알라."', modifier: '무지의 깨달음', achievements: '산파술을 통한 진리 탐구, 서양 철학의 기초 확립', traits: '끊임없는 질문과 비판적 사고, 행동하는 지성', portrait: 'assets/portraits/socrates.png' },
-    { id: 'plato', mbti: 'INFJ', name: '플라톤', era: 'ancient', quote: '"이데아를 보라."', modifier: '이상주의의 아버지', achievements: '아카데메이아 설립, 국가론 저술, 형이상학 체계 구축', traits: '영원한 본질 추구, 완벽한 질서와 도덕 강조', portrait: 'assets/portraits/plato.png' },
-    { id: 'aristotle', mbti: 'ENTJ', name: '아리스토텔레스', era: 'ancient', quote: '"행복은 활동 속에 있다."', modifier: '지성의 거인', achievements: '논리학 체계화, 자연과학 및 정치학의 토대 마련', traits: '현실적 관찰과 분석, 체계적인 질서 추구', portrait: 'assets/portraits/aristotle.png' },
-    { id: 'heraclitus', mbti: 'INTJ', name: '헤라클레이토스', era: 'ancient', quote: '"만물은 흐른다."', modifier: '변화의 현자', achievements: '생성 철학의 시초, 로고스 개념 확립', traits: '변화의 본질 통찰, 냉철한 직관과 사유', portrait: 'assets/portraits/heraclitus.png' },
-    { id: 'laozi', mbti: 'INFP', name: '노자', era: 'ancient', quote: '"무위자연."', modifier: '순리의 스승', achievements: '도덕경 저술, 도가 철학의 창시', traits: '자연스러운 삶 추구, 인위적 강제 거부', portrait: 'assets/portraits/laozi.png' },
-    { id: 'confucius', mbti: 'ISTJ', name: '공자', era: 'ancient', quote: '"배우고 때로 익히면 즐겁지 아니한가."', modifier: '조화의 성인', achievements: '유교 사상 확립, 교육의 보급 및 사회 윤리 정립', traits: '예우와 도덕 중시, 실천적 윤리 실현', portrait: 'assets/portraits/confucius.png' },
-    { id: 'diogenes', mbti: 'ISTP', name: '디오게네스', era: 'ancient', quote: '"햇빛을 가리지 마시오."', modifier: '견유학파의 기인', achievements: '기성 관습의 파괴, 극단적 자활과 자유 실천', traits: '솔직하고 거침없는 행동, 소박함 속에 찾은 진리', portrait: 'assets/portraits/diogenes.png' },
-    { id: 'epicurus', mbti: 'ISFP', name: '에피쿠로스', era: 'ancient', quote: '"우정과 고요함."', modifier: '평온의 추구자', achievements: '쾌락주의 철학 정립, 아타락시아 개념 제시', traits: '소박한 삶의 기쁨, 고통 없는 육체와 평온한 정신', portrait: 'assets/portraits/epicurus.png' },
-    { id: 'marcus_aurelius', mbti: 'INFJ', name: '마르쿠스 아우렐리우스', era: 'ancient', quote: '"평온을 유지하라."', modifier: '명상하는 황제', achievements: '명상록 저술, 스토아 철학의 완성', traits: '철저한 자기 절제, 우주의 질서에 대한 수용', portrait: 'assets/portraits/marcus_aurelius.png' },
-    { id: 'zhuangzi', mbti: 'INTP', name: '장자', era: 'ancient', quote: '"나비가 나인가, 내가 나비인가."', modifier: '절대 자유의 사유자', achievements: '제물론과 소요유의 사상 전개, 도가 철학의 심화', traits: '세속적 가치를 초월한 절대적 자유와 유희 추구', portrait: 'assets/portraits/zhuangzi.png' },
-    { id: 'protagoras', mbti: 'ENFP', name: '프로타고라스', era: 'ancient', quote: '"인간은 만물의 척도다."', modifier: '상대주의의 선구자', achievements: '소피스트 학파의 창시, 지식의 상대성 주장', traits: '주관적 진리와 유연한 사고, 설득의 달인', portrait: 'assets/portraits/protagoras.png' },
-    { id: 'aristippus', mbti: 'ESFP', name: '아리스티포스', era: 'ancient', quote: '"현재의 쾌락을 즐기라."', modifier: '향락의 현자', achievements: '키레네 학파 창시, 쾌락주의 윤리학의 기초 마련', traits: '현재의 즐거움에 집중하는 긍정적이고 개방적인 태도', portrait: 'assets/portraits/aristippus.png' },
-    { id: 'mozi', mbti: 'ISFJ', name: '묵자', era: 'ancient', quote: '"겸애교상리."', modifier: '보편적 사랑의 실천가', achievements: '묵가 학파 창시, 차별 없는 사랑과 평화주의 제창', traits: '헌신적인 이타주의와 실천적 정의감', portrait: 'assets/portraits/mozi.png' },
-    { id: 'mencius', mbti: 'ENFJ', name: '맹자', era: 'ancient', quote: '"인의의 수호자."', modifier: '인의의 수호자', achievements: '성선설 주장, 유교의 도덕 정치를 체계화', traits: '인간의 선함을 믿는 열정적인 교육자와 조언자', portrait: 'assets/portraits/mencius.png' },
-    { id: 'hanfeizi', mbti: 'ESTJ', name: '한비자', era: 'ancient', quote: '"법은 엄격해야 한다."', modifier: '질서의 설계자', achievements: '법가 사상 집대성, 제왕학의 기틀 마련', traits: '객관적 규칙과 시스템을 중시하는 엄격한 관리자', portrait: 'assets/portraits/hanfeizi.png' },
-    { id: 'epictetus', mbti: 'ESFJ', name: '에픽테토스', era: 'ancient', quote: '"네가 통제할 수 있는 것에 집중하라."', modifier: '실천적 스토아 학자', achievements: '스토아 윤리학의 실천적 전개, 노예에서 철학자가 된 극복의 아이콘', traits: '책임감 있고 타인을 배려하는 강인한 정신력', portrait: 'assets/portraits/epictetus.png' },
+    { 
+        id: 'socrates', mbti: 'ENTP', name: '소크라테스', era: 'ancient', quote: '"너 자신을 알라."', modifier: '무지의 깨달음', 
+        achievements: '산파술을 통한 진리 탐구, 서양 철학의 기초 확립', 
+        traits: '끊임없는 질문과 비판적 사고, 행동하는 지성', 
+        thought: '지혜의 시작은 자신의 무지를 깨닫는 것(무지의 지)이며, 끊임없는 대화를 통해 진리에 도달할 수 있다고 믿었습니다.',
+        story: '델포이 신전에서 "가장 지혜로운 자"라는 신탁을 받았을 때, 그는 자신의 무지를 알기 때문에 지혜로운 것이라고 해석하며 아테네 시민들의 무지를 일깨우러 다녔습니다.',
+        portrait: 'assets/portraits/socrates.png' 
+    },
+    { 
+        id: 'plato', mbti: 'INFJ', name: '플라톤', era: 'ancient', quote: '"이데아를 보라."', modifier: '이상주의의 아버지', 
+        achievements: '아카데메이아 설립, 국가론 저술, 형이상학 체계 구축', 
+        traits: '영원한 본질 추구, 완벽한 질서와 도덕 강조', 
+        thought: '우리가 눈으로 보는 현상 세계는 그림자일 뿐이며, 변하지 않는 영원한 본질인 "이데아"의 세계가 실재한다고 주장했습니다.',
+        story: '시칠리아의 폭군 디오니시오스를 철인 정치로 개화시키려다 노예로 팔려갈 뻔한 위기를 겪었지만, 친구들의 도움으로 풀려나 아카데메이아를 설립했습니다.',
+        portrait: 'assets/portraits/plato.png' 
+    },
+    { 
+        id: 'aristotle', mbti: 'ENTJ', name: '아리스토텔레스', era: 'ancient', quote: '"행복은 활동 속에 있다."', modifier: '지성의 거인', 
+        achievements: '논리학 체계화, 자연과학 및 정치학의 토대 마련', 
+        traits: '현실적 관찰과 분석, 체계적인 질서 추구', 
+        thought: '현실 세계의 개별 사물 속에 형상이 존재한다고 보았으며, 인간의 궁극적 목표는 이성적 활동을 통한 "행복(에우다이모니아)"에 있다고 보았습니다.',
+        story: '알렉산더 대왕의 스승으로 유명하며, 그가 죽은 뒤 아테네에 반마케도니아 감정이 거세지자 "아테네인이 철학에 두 번 죄를 짓게 하지 않겠다"며 망명길에 올랐습니다.',
+        portrait: 'assets/portraits/aristotle.png' 
+    },
+    { 
+        id: 'heraclitus', mbti: 'INTJ', name: '헤라클레이토스', era: 'ancient', quote: '"만물은 흐른다."', modifier: '변화의 현자', 
+        achievements: '생성 철학의 시초, 로고스 개념 확립', 
+        traits: '변화의 본질 통찰, 냉철한 직관과 사유', 
+        thought: '세상의 본질을 "불"과 "변화"로 보았으며, 대립하는 것들 사이의 투쟁과 조화 속에서 만물을 다스리는 법칙인 "로고스"를 강조했습니다.',
+        story: '"같은 강물에 두 번 발을 담글 수 없다"는 명언을 남겼으며, 사람들과 어울리기보다 산에서 풀을 뜯어 먹으며 지내는 고립된 삶을 선택했습니다.',
+        portrait: 'assets/portraits/heraclitus.png' 
+    },
+    { 
+        id: 'laozi', mbti: 'INFP', name: '노자', era: 'ancient', quote: '"무위자연."', modifier: '순리의 스승', 
+        achievements: '도덕경 저술, 도가 철학의 창시', 
+        traits: '자연스러운 삶 추구, 인위적 강제 거부', 
+        thought: '인위적인 도덕이나 법치보다는 우주의 근본 원리인 "도(道)"에 따라 자연스럽게 사는 "무위(無爲)"의 삶을 지향했습니다.',
+        story: '주나라의 도서관 관리자로 일하다 세상의 타락에 실망해 소를 타고 서쪽으로 떠나던 중, 함곡관의 관문지기 윤희의 간곡한 부탁으로 도덕경 5천 자를 남겼다고 합니다.',
+        portrait: 'assets/portraits/laozi.png' 
+    },
+    { 
+        id: 'confucius', mbti: 'ISTJ', name: '공자', era: 'ancient', quote: '"배우고 때로 익히면 즐겁지 아니한가."', modifier: '조화의 성인', 
+        achievements: '유교 사상 확립, 교육의 보급 및 사회 윤리 정립', 
+        traits: '예우와 도덕 중시, 실천적 윤리 실현', 
+        thought: '인(仁)과 예(禮)를 바탕으로 한 도덕적 수양을 통해 대동사회를 이룩하고자 했으며, 군자의 도리를 강조했습니다.',
+        story: '자신의 이상을 실현해 줄 군주를 찾아 14년간 여러 나라를 떠돌았으나(천하주유), 결국 고향으로 돌아와 제자 양성과 고전 정리에 전념했습니다.',
+        portrait: 'assets/portraits/confucius.png' 
+    },
+    { 
+        id: 'diogenes', mbti: 'ISTP', name: '디오게네스', era: 'ancient', quote: '"햇빛을 가리지 마시오."', modifier: '견유학파의 기인', 
+        achievements: '기성 관습의 파괴, 극단적 자활과 자유 실천', 
+        traits: '솔직하고 거침없는 행동, 소박함 속에 찾은 진리', 
+        thought: '세속적인 가치와 관습을 거부하고, 개처럼 자연스럽고 솔직하게 사는 것이 진정한 자유라고 믿었습니다.',
+        story: '대낮에 등불을 켜고 다니며 "참된 인간을 찾고 있다"고 외치거나, 알렉산더 대왕이 소원을 묻자 "햇빛을 가리지 말고 비켜달라"고 말한 일화로 유명합니다.',
+        portrait: 'assets/portraits/diogenes.png' 
+    },
+    { 
+        id: 'epicurus', mbti: 'ISFP', name: '에피쿠로스', era: 'ancient', quote: '"우정과 고요함."', modifier: '평온의 추구자', 
+        achievements: '쾌락주의 철학 정립, 아타락시아 개념 제시', 
+        traits: '소박한 삶의 기쁨, 고통 없는 육체와 평온한 정신', 
+        thought: '진정한 즐거움은 육체적 고통이 없고 정신적인 불안이 없는 상태인 "아타락시아"에 있다고 보았습니다.',
+        story: '"정원"이라는 공동체를 만들어 노예와 여성도 차별 없이 받아들였으며, 소박한 빵과 물, 그리고 친구들과의 대화를 최고의 즐거움으로 여겼습니다.',
+        portrait: 'assets/portraits/epicurus.png' 
+    },
+    { 
+        id: 'marcus_aurelius', mbti: 'INFJ', name: '마르쿠스 아우렐리우스', era: 'ancient', quote: '"평온을 유지하라."', modifier: '명상하는 황제', 
+        achievements: '명상록 저술, 스토아 철학의 완성', 
+        traits: '철저한 자기 절제, 우주의 질서에 대한 수용', 
+        thought: '자신의 내면을 우주적 이성과 일치시키고, 외부의 시련에도 흔들리지 않는 평정심과 의무감을 강조했습니다.',
+        story: '로마 제국의 황제로서 끊임없는 전쟁과 전염병 속에서도 밤마다 자신을 다스리는 글을 남겼는데, 이것이 바로 인류의 고전인 "명상록"입니다.',
+        portrait: 'assets/portraits/marcus_aurelius.png' 
+    },
+    { 
+        id: 'zhuangzi', mbti: 'INTP', name: '장자', era: 'ancient', quote: '"나비가 나인가, 내가 나비인가."', modifier: '절대 자유의 사유자', 
+        achievements: '제물론과 소요유의 사상 전개, 도가 철학의 심화', 
+        traits: '세속적 가치를 초월한 절대적 자유와 유희 추구', 
+        thought: '만물의 차별을 없애는 제물(齊物)과 시비 장단을 잊고 절대적인 자유 속에서 노니는 소요유(逍遙遊)를 지향했습니다.',
+        story: '꿈속에서 나비가 되어 날아다니다 깨어난 뒤, 내가 나비의 꿈을 꾸는 것인지 나비가 나의 꿈을 꾸는 것인지 묻는 "호접몽" 이야기로 유명합니다.',
+        portrait: 'assets/portraits/zhuangzi.png' 
+    },
+    { 
+        id: 'protagoras', mbti: 'ENFP', name: '프로타고라스', era: 'ancient', quote: '"인간은 만물의 척도다."', modifier: '상대주의의 선구자', 
+        achievements: '소피스트 학파의 창시, 지식의 상대성 주장', 
+        traits: '주관적 진리와 유연한 사고, 설득의 달인', 
+        thought: '모든 진리는 상대적이며, 각 개인의 경험과 관점이 지식의 기준이 된다고 주장했습니다.',
+        story: '자신의 제자 에우아틀로스와 수강료 지불을 두고 벌인 "논리의 역설" 재판 이야기는 지금까지도 법학적, 논리적 난제로 회자됩니다.',
+        portrait: 'assets/portraits/protagoras.png' 
+    },
+    { 
+        id: 'aristippus', mbti: 'ESFP', name: '아리스티포스', era: 'ancient', quote: '"현재의 쾌락을 즐기라."', modifier: '향락의 현자', 
+        achievements: '키레네 학파 창시, 쾌락주의 윤리학의 기초 마련', 
+        traits: '현재의 즐거움에 집중하는 긍정적이고 개방적인 태도', 
+        thought: '미래의 불확실한 즐거움보다 현재 느끼는 감각적인 기쁨이 인생에서 가장 가치 있다고 보았습니다.',
+        story: '소크라테스의 제자였으나 스승의 검소함 대신 화려한 의복과 향락을 즐겼으며, "내가 쾌락을 소유하는 것이지 쾌락이 나를 소유하는 것이 아니다"라고 말했습니다.',
+        portrait: 'assets/portraits/aristippus.png' 
+    },
+    { 
+        id: 'mozi', mbti: 'ISFJ', name: '묵자', era: 'ancient', quote: '"겸애교상리."', modifier: '보편적 사랑의 실천가', 
+        achievements: '묵가 학파 창시, 차별 없는 사랑과 평화주의 제창', 
+        traits: '헌신적인 이타주의와 실천적 정의감', 
+        thought: '나의 가족뿐만 아니라 타인의 가족도 똑같이 사랑하라는 "겸애(兼愛)"와, 전쟁을 반대하는 "비공(非攻)"을 실천했습니다.',
+        story: '전쟁을 막기 위해 수천 리 길을 걸어가 성 방어 기술을 직접 전수하는 등, 자신의 신념을 위해 헌신적으로 행동하는 기술자 집단의 리더였습니다.',
+        portrait: 'assets/portraits/mozi.png' 
+    },
+    { 
+        id: 'mencius', mbti: 'ENFJ', name: '맹자', era: 'ancient', quote: '"인의의 수호자."', modifier: '인의의 수호자', 
+        achievements: '성선설 주장, 유교의 도덕 정치를 체계화', 
+        traits: '인간의 선함을 믿는 열정적인 교육자와 조언자', 
+        thought: '인간의 본성은 선하다는 성선설(性善說)을 바탕으로, 왕이 백성을 사랑으로 다스리는 왕도(王道) 정치를 주장했습니다.',
+        story: '자식 교육을 위해 세 번 이사한 어머니의 이야기 "맹모삼천지교"로 유명하며, 불의한 군주를 갈아치울 수 있다는 "역성혁명"의 씨앗을 뿌리기도 했습니다.',
+        portrait: 'assets/portraits/mencius.png' 
+    },
+    { 
+        id: 'hanfeizi', mbti: 'ESTJ', name: '한비자', era: 'ancient', quote: '"법은 엄격해야 한다."', modifier: '질서의 설계자', 
+        achievements: '법가 사상 집대성, 제왕학의 기틀 마련', 
+        traits: '객관적 규칙과 시스템을 중시하는 엄격한 관리자', 
+        thought: '인간의 이기적인 본성을 다스리기 위해선 명확한 법(法)과 엄격한 상벌(術)이 사회 유지의 핵심이라고 보았습니다.',
+        story: '말을 심하게 더듬었지만 문장력은 천하제일이었으며, 그의 책을 읽은 진시황이 "이 사람을 만날 수 있다면 죽어도 여한이 없겠다"고 감탄할 정도였습니다.',
+        portrait: 'assets/portraits/hanfeizi.png' 
+    },
+    { 
+        id: 'epictetus', mbti: 'ESFJ', name: '에픽테토스', era: 'ancient', quote: '"네가 통제할 수 있는 것에 집중하라."', modifier: '실천적 스토아 학자', 
+        achievements: '스토아 윤리학의 실천적 전개, 노예에서 철학자가 된 극복의 아이콘', 
+        traits: '책임감 있고 타인을 배려하는 강인한 정신력', 
+        thought: '세상 일은 내가 통제할 수 있는 것(자신의 마음)과 없는 것(외부 환경)으로 나뉘며, 오직 전자에만 집중할 때 진정한 자유를 얻는다고 가르쳤습니다.',
+        story: '절름발이 노예였지만 주인보다 더 자유롭고 강인한 정신력을 가졌으며, 그가 사용하던 소박한 진흙 등불은 그가 죽은 뒤 거액에 팔릴 정도로 존경받았습니다.',
+        portrait: 'assets/portraits/epictetus.png' 
+    },
 
     // MEDIEVAL (16)
-    { id: 'augustine', mbti: 'ISFJ', name: '아우구스티누스', era: 'medieval', quote: '"내 영혼의 고백."', modifier: '은총의 박사', achievements: '고백록 저술, 기독교 신학의 철학적 토대 구축', traits: '내면의 성찰과 신념에 대한 흔들림 없는 헌신', portrait: 'assets/portraits/augustine.png' },
-    { id: 'aquinas', mbti: 'ISTJ', name: '토마스 아퀴나스', era: 'medieval', quote: '"이성과 신앙은 둘 다 진리다."', modifier: '스콜라의 집대성자', achievements: '신학대전 저술, 이성과 신앙의 조화 실현', traits: '철저한 논리와 체계를 중시하는 신중한 학자', portrait: 'assets/portraits/aquinas.png' },
-    { id: 'anselm', mbti: 'INFJ', name: '안셀무스', era: 'medieval', quote: '"이해하기 위해 믿는다."', modifier: '안토니아의 거인', achievements: '본체론적 신 존재 증명, 스콜라 철학의 아버지', traits: '깊은 통찰력과 이상적인 가치를 추구하는 사유자', portrait: 'assets/portraits/anselm.png' },
-    { id: 'erasmus', mbti: 'ENFP', name: '에라스무스', era: 'medieval', quote: '"스스로 생각하라."', modifier: '인문주의의 거장', achievements: '우상예찬 저술, 종교개혁의 지적 토양 마련', traits: '권위에 저항하는 자유롭고 유연한 지성', portrait: 'assets/portraits/erasmus.png' },
-    { id: 'ockham', mbti: 'INTP', name: '오컴', era: 'medieval', quote: '"단순한 것이 진리다."', modifier: '면도날의 사유자', achievements: '유명론 제창, 오컴의 면도날 법칙 확립', traits: '군더더기 없는 논리와 본질을 꿰뚫는 분석가', portrait: 'assets/portraits/ockham.png' },
-    { id: 'abelard', mbti: 'ENFJ', name: '아벨라르', era: 'medieval', quote: '"의심은 질문을 낳는다."', modifier: '지적 열정의 신학자', achievements: '변증법적 신학 방법론 제시, 지적 용기와 신념의 상징', traits: '논쟁을 즐기며 사람들을 이끄는 카리스마 넘치는 리더', portrait: 'assets/portraits/abelard.png' },
-    { id: 'machiavelli', mbti: 'ENTJ', name: '마키아벨리', era: 'medieval', quote: '"목적이 수단을 정당화한다."', modifier: '냉철한 군주론자', achievements: '정치학의 독립 선언, 군주론을 통한 현실 정치 분석', traits: '목표 달성을 위한 전략적 사고와 실행력', portrait: 'assets/portraits/machiavelli.png' },
-    { id: 'avicenna', mbti: 'INTJ', name: '아비센나', era: 'medieval', quote: '"지식은 영혼의 빛이다."', modifier: '중세의 백과사전', achievements: '의학 정전 저술, 이슬람 철학의 전성기 주도', traits: '광범위한 지식을 체계화하는 냉철한 지성', portrait: 'assets/portraits/avicenna.png' },
-    { id: 'francis', mbti: 'ISFP', name: '프란치스코', era: 'medieval', quote: '"평화의 도구가 되게 하소서."', modifier: '자연의 성자', achievements: '청빈과 자연 사랑의 실천, 평화와 조화의 메시지 전파', traits: '세상의 고통에 공감하며 조용히 실천하는 예술가', portrait: 'assets/portraits/francis.png' },
-    { id: 'eckhart', mbti: 'INFP', name: '에크하르트', era: 'medieval', quote: '"신은 내 안에 있다."', modifier: '내면의 신비주의자', achievements: '영성 신학의 대가, 인간 영혼의 본질 탐구', traits: '깊은 내면의 가치와 이상을 소중히 여기는 몽상가', portrait: 'assets/portraits/eckhart.png' },
-    { id: 'more', mbti: 'ESTJ', name: '토머스 모어', era: 'medieval', quote: '"유토피아를 꿈꾸라."', modifier: '신념의 정치가', achievements: '유토피아 저술, 신념을 지키기 위한 고귀한 희생', traits: '도덕적 원칙과 질서를 중시하는 책임감 있는 지도자', portrait: 'assets/portraits/more.png' },
-    { id: 'bruno', mbti: 'ENTP', name: '지오르다노 브루노', era: 'medieval', quote: '"우주는 무한하다."', modifier: '불굴의 우주론자', achievements: '무한 우주설 제창, 권위에 굴하지 않는 자유로운 사유', traits: '새로운 가능성에 열광하며 기존 질서에 도전하는 혁신가', portrait: 'assets/portraits/bruno.png' },
-    { id: 'hildegard', mbti: 'ESFJ', name: '힐데가르트', era: 'medieval', quote: '"생명의 광채를 보라."', modifier: '빛의 예언자', achievements: '의학, 음악, 신학 등 다방면의 천재성 발휘, 여성의 지성 입증', traits: '주변 사람들을 돌보고 사회에 기여하는 따뜻한 조력자', portrait: 'assets/portraits/hildegard.png' },
-    { id: 'da_vinci', mbti: 'ISTP', name: '레오나르도 다 빈치', era: 'medieval', quote: '"아는 것이 사랑의 시작이다."', modifier: '만능의 천재', achievements: '르네상스 예술과 과학의 융합, 인류사 최고의 다재다능함', traits: '관찰과 실험을 즐기는 호기심 많은 탐험가', portrait: 'assets/portraits/da_vinci.png' },
-    { id: 'borgia', mbti: 'ESTP', name: '체사레 보르자', era: 'medieval', quote: '"모 아니면 도."', modifier: '행동하는 야망가', achievements: '이탈리아 통일의 시도, 현실 정치의 과감한 실행', traits: '순간의 기회를 포착하는 민첩함과 과감한 추진력', portrait: 'assets/portraits/borgia.png' },
-    { id: 'petrarch', mbti: 'ESFP', name: '페트라르카', era: 'medieval', quote: '"인간의 고통을 노래하라."', modifier: '서정적 인문주의자', achievements: '인문주의의 아버지, 칸초니에레를 통한 인간 감성 해방', traits: '삶의 아름다움과 감정을 풍부하게 표현하는 예술가', portrait: 'assets/portraits/petrarch.png' },
+    { 
+        id: 'augustine', mbti: 'ISFJ', name: '아우구스티누스', era: 'medieval', quote: '"내 영혼의 고백."', modifier: '은총의 박사', 
+        achievements: '고백록 저술, 기독교 신학의 철학적 토대 구축', 
+        traits: '내면의 성찰과 신념에 대한 흔들림 없는 헌신', 
+        thought: '인간의 이성은 한계가 있으며, 오직 신의 은총과 신앙을 통해서만 진정한 평안과 진리에 도달할 수 있다고 보았습니다.',
+        story: '방탕한 젊은 시절을 보냈으나 어머니 모니카의 기도로 회심한 뒤, 자신의 과오와 신앙의 여정을 담은 "고백록"을 남겨 기독교 역사에 거대한 족적을 남겼습니다.',
+        portrait: 'assets/portraits/augustine.png' 
+    },
+    { 
+        id: 'aquinas', mbti: 'ISTJ', name: '토마스 아퀴나스', era: 'medieval', quote: '"이성과 신앙은 둘 다 진리다."', modifier: '스콜라의 집대성자', 
+        achievements: '신학대전 저술, 이성과 신앙의 조화 실현', 
+        traits: '철저한 논리와 체계를 중시하는 신중한 학자', 
+        thought: '신앙과 이성은 서로 충돌하지 않으며, 이성을 통해 신의 존재를 증명하고 세상을 이해하는 것이 가능하다고 믿었습니다.',
+        story: '집안의 반대를 무릅쓰고 도미니코 수도회에 들어갔으며, 너무 덩치가 크고 말이 없어 동료들에게 "벙어리 황소"라 불렸지만 결국 스승 알베르투스로부터 "온 세상을 울릴 황소"라는 찬사를 받았습니다.',
+        portrait: 'assets/portraits/aquinas.png' 
+    },
+    { 
+        id: 'anselm', mbti: 'INFJ', name: '안셀무스', era: 'medieval', quote: '"이해하기 위해 믿는다."', modifier: '안토니아의 거인', 
+        achievements: '본체론적 신 존재 증명, 스콜라 철학의 아버지', 
+        traits: '깊은 통찰력과 이상적인 가치를 추구하는 사유자', 
+        thought: '신의 존재는 이성적인 개념 정의만으로도 논리적으로 증명될 수 있다고 보았으며, 신앙을 바탕으로 지적인 탐구를 강조했습니다.',
+        story: '베크 수도원의 원장이자 캔터베리 대주교로서 신권과 속권의 조화를 위해 노력했으며, 지독한 가난 속에서도 학문 연구를 멈추지 않았습니다.',
+        portrait: 'assets/portraits/anselm.png' 
+    },
+    { 
+        id: 'erasmus', mbti: 'ENFP', name: '에라스무스', era: 'medieval', quote: '"스스로 생각하라."', modifier: '인문주의의 거장', 
+        achievements: '우상예찬 저술, 종교개혁의 지적 토양 마련', 
+        traits: '권위에 저항하는 자유롭고 유연한 지성', 
+        thought: '교회의 독단보다는 인간의 자율성과 성경의 본래 가르침으로 돌아가는 인문주의적 가치를 중시했습니다.',
+        story: '"우상예찬"을 통해 당시 교회의 부패와 위선을 재치 있게 풍자했으며, 종교개혁자 루터와 교황청 사이에서 어느 쪽에도 치우치지 않는 지적 독립성을 지켰습니다.',
+        portrait: 'assets/portraits/erasmus.png' 
+    },
+    { 
+        id: 'ockham', mbti: 'INTP', name: '오컴', era: 'medieval', quote: '"단순한 것이 진리다."', modifier: '면도날의 사유자', 
+        achievements: '유명론 제창, 오컴의 면도날 법칙 확립', 
+        traits: '군더더기 없는 논리와 본질을 꿰뚫는 분석가', 
+        thought: '필요 이상으로 많은 가정을 두지 말라는 "경제성의 원리(오컴의 면도날)"를 통해 복잡한 형이상학을 비판했습니다.',
+        story: '프란치스코 수도회 소속이었으나 교황의 절대 권력에 반대하여 망명했고, "당신은 나를 칼로 보호하십시오, 나는 당신을 펜으로 보호하겠습니다"라며 황제와 연대했습니다.',
+        portrait: 'assets/portraits/ockham.png' 
+    },
+    { 
+        id: 'abelard', mbti: 'ENFJ', name: '아벨라르', era: 'medieval', quote: '"의심은 질문을 낳는다."', modifier: '지적 열정의 신학자', 
+        achievements: '변증법적 신학 방법론 제시, 지적 용기와 신념의 상징', 
+        traits: '논쟁을 즐기며 사람들을 이끄는 카리스마 넘치는 리더', 
+        thought: '의심을 통해 질문하고, 질문을 통해 진리를 찾는 변증법적 방법론을 신학 연구에 도입했습니다.',
+        story: '제자 헬로이즈와의 비극적이고 숭고한 사랑 이야기는 중세판 로미오와 줄리엣으로 불리며, 수많은 서신을 통해 지적이고 열정적인 교감을 나누었습니다.',
+        portrait: 'assets/portraits/abelard.png' 
+    },
+    { 
+        id: 'machiavelli', mbti: 'ENTJ', name: '마키아벨리', era: 'medieval', quote: '"목적이 수단을 정당화한다."', modifier: '냉철한 군주론자', 
+        achievements: '정치학의 독립 선언, 군주론을 통한 현실 정치 분석', 
+        traits: '목표 달성을 위한 전략적 사고와 실행력', 
+        thought: '정치는 도덕과 분리된 현실의 영역이며, 군주는 국가를 지키기 위해 때로는 사자의 용맹함과 여우의 간교함을 갖춰야 한다고 주장했습니다.',
+        story: '메디치 가문의 복귀로 실각하고 고문을 당하는 시련을 겪으면서도, 조국 이탈리아의 통일과 강성함을 위해 공직 경험을 바탕으로 "군주론"을 집필했습니다.',
+        portrait: 'assets/portraits/machiavelli.png' 
+    },
+    { 
+        id: 'avicenna', mbti: 'INTJ', name: '아비센나', era: 'medieval', quote: '"지식은 영혼의 빛이다."', modifier: '중세의 백과사전', 
+        achievements: '의학 정전 저술, 이슬람 철학의 전성기 주도', 
+        traits: '광범위한 지식을 체계화하는 냉철한 지성', 
+        thought: '아리스토텔레스 철학과 이슬람 신앙을 조화시켰으며, 의학뿐만 아니라 형이상학에서도 독창적인 존재론을 정립했습니다.',
+        story: '10살 때 이미 코란을 암기하고 18살에 모든 지식을 마스터했다는 전설적인 천재로, 그가 쓴 "의학 정전"은 17세기까지 유럽 대학의 교재로 사용되었습니다.',
+        portrait: 'assets/portraits/avicenna.png' 
+    },
+    { 
+        id: 'francis', mbti: 'ISFP', name: '프란치스코', era: 'medieval', quote: '"평화의 도구가 되게 하소서."', modifier: '자연의 성자', 
+        achievements: '청빈과 자연 사랑의 실천, 평화와 조화의 메시지 전파', 
+        traits: '세상의 고통에 공감하며 조용히 실천하는 예술가', 
+        thought: '모든 생명체를 형제자매로 여기는 보편적 사랑과 소유하지 않는 자발적 가난을 통해 신의 평화를 실천하고자 했습니다.',
+        story: '부유한 상인의 아들이었으나 모든 재산을 가난한 이들에게 나눠주고 누더기 옷을 입었으며, 새들에게 설교를 하거나 늑대를 설득해 마을 사람들과 화해시켰다는 일화가 전해집니다.',
+        portrait: 'assets/portraits/francis.png' 
+    },
+    { 
+        id: 'eckhart', mbti: 'INFP', name: '에크하르트', era: 'medieval', quote: '"신은 내 안에 있다."', modifier: '내면의 신비주의자', 
+        achievements: '영성 신학의 대가, 인간 영혼의 본질 탐구', 
+        traits: '깊은 내면의 가치와 이상을 소중히 여기는 몽상가', 
+        thought: '인간의 영혼 깊숙한 곳에 신과 만나는 지점이 있으며, 자아를 비우고 버릴 때 비로소 신이 우리 안에 탄생한다고 보았습니다.',
+        story: '당시 교단으로부터 이단 혐의로 조사를 받았으나, "나는 진리를 말했을 뿐이며, 그것을 듣는 이의 마음이 준비되지 않았을 뿐이다"라며 당당히 맞섰습니다.',
+        portrait: 'assets/portraits/eckhart.png' 
+    },
+    { 
+        id: 'more', mbti: 'ESTJ', name: '토머스 모어', era: 'medieval', quote: '"유토피아를 꿈꾸라."', modifier: '신념의 정치가', 
+        achievements: '유토피아 저술, 신념을 지키기 위한 고귀한 희생', 
+        traits: '도덕적 원칙과 질서를 중시하는 책임감 있는 지도자', 
+        thought: '사유 재산이 없고 모두가 평등하게 일하며 교육받는 이상적인 사회인 "유토피아"를 통해 현실의 부조리를 비판했습니다.',
+        story: '영국의 대법관까지 올랐으나 국왕 헨리 8세의 이혼과 수장령에 반대하다가 반역죄로 처형되었으며, 처형대 위에서도 "나는 왕의 충직한 신하이기 전에 신의 하인이다"라는 유언을 남겼습니다.',
+        portrait: 'assets/portraits/more.png' 
+    },
+    { 
+        id: 'bruno', mbti: 'ENTP', name: '지오르다노 브루노', era: 'medieval', quote: '"우주는 무한하다."', modifier: '불굴의 우주론자', 
+        achievements: '무한 우주설 제창, 권위에 굴하지 않는 자유로운 사유', 
+        traits: '새로운 가능성에 열광하며 기존 질서에 도전하는 혁신가', 
+        thought: '지구는 중심이 아니며 우주는 무한하고 수많은 태양계가 존재한다고 주장하여 당시의 천동설 세계관을 뒤흔들었습니다.',
+        story: '이단으로 몰려 8년간 감옥에 갇혀 있으면서도 자신의 주장을 굽히지 않았으며, 화형 선고를 받자 "판결을 내리는 당신들이 받는 두려움이 나보다 더 클 것이다"라는 명언을 남겼습니다.',
+        portrait: 'assets/portraits/bruno.png' 
+    },
+    { 
+        id: 'hildegard', mbti: 'ESFJ', name: '힐데가르트', era: 'medieval', quote: '"생명의 광채를 보라."', modifier: '빛의 예언자', 
+        achievements: '의학, 음악, 신학 등 다방면의 천재성 발휘, 여성의 지성 입증', 
+        traits: '주변 사람들을 돌보고 사회에 기여하는 따뜻한 조력자', 
+        thought: '자연과 인간, 그리고 신이 조화를 이루는 "생명력(Viriditas)"을 중시했으며, 이를 통해 치유와 예술적 영감을 얻었습니다.',
+        story: '중세의 여성이었음에도 불구하고 환시를 통해 얻은 지식을 바탕으로 수많은 곡을 쓰고 의학서를 집필했으며, 교황과 황제들에게 당당히 조언을 아끼지 않았습니다.',
+        portrait: 'assets/portraits/hildegard.png' 
+    },
+    { 
+        id: 'da_vinci', mbti: 'ISTP', name: '레오나르도 다 빈치', era: 'medieval', quote: '"아는 것이 사랑의 시작이다."', modifier: '만능의 천재', 
+        achievements: '르네상스 예술과 과학의 융합, 인류사 최고의 다재다능함', 
+        traits: '관찰과 실험을 즐기는 호기심 많은 탐험가', 
+        thought: '직접적인 관찰과 실험이야말로 진리에 도달하는 유일한 길이며, 자연의 모든 현상 속에서 수학적 질서와 미적 가치를 발견하려 했습니다.',
+        story: '왼손잡이에 거꾸로 글을 쓰는 습관이 있었으며, 해부학을 위해 시신을 직접 해부하고 비행기나 잠수함 같은 시대를 앞서간 발명품들을 설계도로 남겼습니다.',
+        portrait: 'assets/portraits/da_vinci.png' 
+    },
+    { 
+        id: 'borgia', mbti: 'ESTP', name: '체사레 보르자', era: 'medieval', quote: '"모 아니면 도."', modifier: '행동하는 야망가', 
+        achievements: '이탈리아 통일의 시도, 현실 정치의 과감한 실행', 
+        traits: '순간의 기회를 포착하는 민첩함과 과감한 추진력', 
+        thought: '강력한 권력과 철저한 계산을 통해 혼란한 시대를 안정시켜야 한다고 믿었으며, 마키아벨리 "군주론"의 실제 모델이 되었습니다.',
+        story: '교황의 아들로 태어나 군주로서 잔인할 정도로 단호한 결단력을 보였으나, 아버지의 죽음 이후 모든 권력을 잃고 전장에서 최후를 맞이한 파란만장한 삶을 살았습니다.',
+        portrait: 'assets/portraits/borgia.png' 
+    },
+    { 
+        id: 'petrarch', mbti: 'ESFP', name: '페트라르카', era: 'medieval', quote: '"인간의 고통을 노래하라."', modifier: '서정적 인문주의자', 
+        achievements: '인문주의의 아버지, 칸초니에레를 통한 인간 감성 해방', 
+        traits: '삶의 아름다움과 감정을 풍부하게 표현하는 예술가', 
+        thought: '신 중심의 중세에서 벗어나 인간의 고뇌와 사랑, 그리고 고대 그리스 로마의 고전적 가치를 되살리는 것이 중요하다고 믿었습니다.',
+        story: '단 한 번 본 여인 라우라를 향한 평생의 사랑을 시로 남겼으며, 알프스 산맥의 몽방투 산을 오르며 자연의 아름다움과 인간 내면의 풍경을 동시에 발견한 최초의 근대인으로 불립니다.',
+        portrait: 'assets/portraits/petrarch.png' 
+    },
 
     // MODERN EARLY (16)
-    { id: 'descartes', mbti: 'INTP', name: '데카르트', era: 'modern_early', quote: '"나는 생각한다, 고로 나는 존재한다."', modifier: '근대 철학의 아버지', achievements: '해석기하학 창시, 방법적 회의를 통한 근대 이성론의 토대 마련', traits: '논리적 분석과 근본적 원리를 중시하는 독립적 사유자', portrait: 'assets/portraits/descartes.png' },
-    { id: 'spinoza', mbti: 'INFJ', name: '스피노자', era: 'modern_early', quote: '"신은 곧 자연이다."', modifier: '범신론의 사유자', achievements: '에티카 저술, 결정론적 세계관과 지적인 신애(神愛) 제시', traits: '세상의 질서를 직관적으로 통찰하고 내면의 평화를 추구하는 이상주의자', portrait: 'assets/portraits/spinoza.png' },
-    { id: 'kant', mbti: 'ISTJ', name: '칸트', era: 'modern_early', quote: '"정언명령을 따르라."', modifier: '도덕의 수호자', achievements: '비판 철학 체계 수립, 인식론과 윤리학의 코페르니쿠스적 전환', traits: '철저한 규율과 의무를 중시하는 성실하고 논리적인 학자', portrait: 'assets/portraits/kant.png' },
-    { id: 'hume', mbti: 'ESTP', name: '흄', era: 'modern_early', quote: '"이성은 감정의 노예."', modifier: '경험론의 대가', achievements: '경험주의와 회의주의의 극치, 인성론 저술', traits: '관습과 경험을 중시하며 현재에 집중하는 현실적인 분석가', portrait: 'assets/portraits/hume.png' },
-    { id: 'rousseau', mbti: 'ENFP', name: '루소', era: 'modern_early', quote: '"자연으로 돌아가라."', modifier: '고귀한 야만인의 대변인', achievements: '사회계약론 저술, 근대 민주주의와 교육학의 새로운 방향 제시', traits: '자유로운 영혼과 열정적인 감수성을 가진 혁명적 웅변가', portrait: 'assets/portraits/rousseau.png' },
-    { id: 'hobbes', mbti: 'ESTJ', name: '홉스', era: 'modern_early', quote: '"만인의 만인에 대한 투쟁."', modifier: '계약론의 실재주의자', achievements: '리바이어던 저술, 근대 정치 철학의 사회계약설 기초 확립', traits: '사회적 질서와 강력한 시스템을 중시하는 현실적인 전략가', portrait: 'assets/portraits/hobbes.png' },
-    { id: 'locke', mbti: 'ISTP', name: '존 로크', era: 'modern_early', quote: '"인간의 마음은 백지다."', modifier: '자유주의의 시조', achievements: '통치론 저술, 대의 민주주의와 자연권 사상의 확립', traits: '실용적인 경험과 개인의 자유를 존중하는 냉철한 관찰자', portrait: 'assets/portraits/locke.png' },
-    { id: 'voltaire', mbti: 'ENTP', name: '볼테르', era: 'modern_early', quote: '"관용을 지키라."', modifier: '관용의 지성', achievements: '계몽주의 사상의 보급, 표현의 자유와 관용의 가치 전파', traits: '재치 있고 날카로운 비판 정신을 가진 지적 선구자', portrait: 'assets/portraits/voltaire.png' },
-    { id: 'leibniz', mbti: 'INTJ', name: '라이프니츠', era: 'modern_early', quote: '"우주는 최선이다."', modifier: '보편의 천재', achievements: '미적분학 발견, 단자론을 통한 우주 질서 설명', traits: '세상의 모든 현상을 논리적 체계로 이해하려는 완벽주의자', portrait: 'assets/portraits/leibniz.png' },
-    { id: 'berkeley', mbti: 'INFJ', name: '버클리', era: 'modern_early', quote: '"존재는 지각됨이다."', modifier: '관념의 관조자', achievements: '주관적 관념론의 정립, 경험주의의 형이상학적 전개', traits: '현상의 이면과 정신적 본질을 깊이 있게 통찰하는 사유자', portrait: 'assets/portraits/berkeley.png' },
-    { id: 'hegel', mbti: 'ENTJ', name: '헤겔', era: 'modern_early', quote: '"이성적인 것은 현실적이다."', modifier: '변증법의 거장', achievements: '절대정신과 변증법적 역사 철학의 완성', traits: '거대한 역사의 흐름을 통제하고 이해하려는 강력한 지성', portrait: 'assets/portraits/hegel.png' },
-    { id: 'wollstonecraft', mbti: 'ENFJ', name: '울스턴크래프트', era: 'modern_early', quote: '"인간은 평등하다."', modifier: '여성 권리의 선구자', achievements: '여성의 권리 옹호 저술, 현대 여성주의의 초석 마련', traits: '사회적 정의와 평등을 위해 헌신하는 열정적인 웅변가', portrait: 'assets/portraits/wollstonecraft.png' },
-    { id: 'reid', mbti: 'ISFJ', name: '토머스 리드', era: 'modern_early', quote: '"상식은 철학의 기초다."', modifier: '상식의 수호자', achievements: '상식 학파의 창시, 극단적 회의주의에 대한 논리적 반박', traits: '전통과 보편적 가치를 지키려는 신중하고 성실한 수호자', portrait: 'assets/portraits/reid.png' },
-    { id: 'adam_smith', mbti: 'ISFP', name: '애덤 스미스', era: 'modern_early', quote: '"도덕적 공감이 중요하다."', modifier: '보이지 않는 손', achievements: '국부론 저술, 근대 경제학 체계 확립과 도덕 감정론 전개', traits: '타인의 감정에 공감하며 자유로운 개인의 선택을 존중하는 관찰자', portrait: 'assets/portraits/adam_smith.png' },
-    { id: 'diderot', mbti: 'ESFP', name: '디드로', era: 'modern_early', quote: '"지식은 공유되어야 한다."', modifier: '백과의 지식인', achievements: '백과전서 편집 및 발간 주도, 지식의 대중화와 계몽 실천', traits: '다양한 분야에 호기심이 많고 에너지가 넘치는 활동가', portrait: 'assets/portraits/diderot.png' },
-    { id: 'bentham', mbti: 'ESFJ', name: '제레미 벤담', era: 'modern_early', quote: '"최대 행복을 위하여."', modifier: '공리의 설계자', achievements: '공리주의 철학 정립, 사회 개혁과 법 제도 개선 제안', traits: '공동체의 조화와 구성원 전체의 행복을 추구하는 실무가', portrait: 'assets/portraits/bentham.png' },
+    { 
+        id: 'descartes', mbti: 'INTP', name: '데카르트', era: 'modern_early', quote: '"나는 생각한다, 고로 나는 존재한다."', modifier: '근대 철학의 아버지', 
+        achievements: '해석기하학 창시, 방법적 회의를 통한 근대 이성론의 토대 마련', 
+        traits: '논리적 분석과 근본적 원리를 중시하는 독립적 사유자', 
+        thought: '확실한 지식을 찾기 위해 모든 것을 의심해 보았고, 그 결과 의심하는 주체인 나의 존재만은 부정할 수 없다는 진리를 정립했습니다.',
+        story: '침대에 누워 천장에 붙은 파리의 움직임을 보고 좌표계를 떠올려 해석기하학을 창시했으며, 추위를 싫어해 늘 따뜻한 화로 옆에서 사유하는 것을 즐겼습니다.',
+        portrait: 'assets/portraits/descartes.png' 
+    },
+    { 
+        id: 'spinoza', mbti: 'INFJ', name: '스피노자', era: 'modern_early', quote: '"신은 곧 자연이다."', modifier: '범신론의 사유자', 
+        achievements: '에티카 저술, 결정론적 세계관과 지적인 신애(神애) 제시', 
+        traits: '세상의 질서를 직관적으로 통찰하고 내면의 평화를 추구하는 이상주의자', 
+        thought: '신과 자연은 하나이며, 세상의 모든 일은 필연적인 법칙에 따라 일어난다는 범신론을 통해 인간의 정서를 다스리는 길을 제시했습니다.',
+        story: '유대교 공동체에서 이단으로 파문당했으나 굴하지 않고 안경 렌즈를 깎으며 생계를 유지했으며, 권력자가 제안한 대학교수직도 사유의 자유를 위해 거절했습니다.',
+        portrait: 'assets/portraits/spinoza.png' 
+    },
+    { 
+        id: 'kant', mbti: 'ISTJ', name: '칸트', era: 'modern_early', quote: '"정언명령을 따르라."', modifier: '도덕의 수호자', 
+        achievements: '비판 철학 체계 수립, 인식론과 윤리학의 코페르니쿠스적 전환', 
+        traits: '철저한 규율과 의무를 중시하는 성실하고 논리적인 학자', 
+        thought: '인간의 인식 한계를 규정하는 동시에, 결과보다 동기를 중시하고 보편적 도덕 법칙에 따라 행동할 것을 강조했습니다.',
+        story: '매일 오후 3시 30분에 똑같은 산책을 하는 것으로 유명하여, 이웃들이 그를 보고 시계를 맞췄을 정도로 철저한 규칙적인 삶을 살았습니다.',
+        portrait: 'assets/portraits/kant.png' 
+    },
+    { 
+        id: 'hume', mbti: 'ESTP', name: '흄', era: 'modern_early', quote: '"이성은 감정의 노예."', modifier: '경험론의 대가', 
+        achievements: '경험주의와 회의주의의 극치, 인성론 저술', 
+        traits: '관습과 경험을 중시하며 현재에 집중하는 현실적인 분석가', 
+        thought: '지식의 유일한 원천은 감각적 경험이며, 인과관계는 단지 과거 경험에 의한 심리적 습관에 불과하다고 보았습니다.',
+        story: '매우 쾌활하고 사교적인 성격으로 프랑스 사교계에서 인기가 높았으나, 종교적 회의론 때문에 대학교수 임용에 번번이 실패하는 불운을 겪기도 했습니다.',
+        portrait: 'assets/portraits/hume.png' 
+    },
+    { 
+        id: 'rousseau', mbti: 'ENFP', name: '루소', era: 'modern_early', quote: '"자연으로 돌아가라."', modifier: '고귀한 야만인의 대변인', 
+        achievements: '사회계약론 저술, 근대 민주주의와 교육학의 새로운 방향 제시', 
+        traits: '자유로운 영혼과 열정적인 감수성을 가진 혁명적 웅변가', 
+        thought: '문명은 인간을 타락시켰으므로 순수한 자연 상태의 자유를 회복해야 하며, 모든 권력은 인민의 공공의지(General Will)에서 나와야 한다고 믿었습니다.',
+        story: '자신의 아이들을 모두 고아원에 맡긴 이율배반적인 삶을 살았으나, 그가 쓴 "에밀"은 당시 교육학에 혁명을 일으키며 수많은 사람들을 감동시켰습니다.',
+        portrait: 'assets/portraits/rousseau.png' 
+    },
+    { 
+        id: 'hobbes', mbti: 'ESTJ', name: '홉스', era: 'modern_early', quote: '"만인의 만인에 대한 투쟁."', modifier: '계약론의 실재주의자', 
+        achievements: '리바이어던 저술, 근대 정치 철학의 사회계약설 기초 확립', 
+        traits: '사회적 질서와 강력한 시스템을 중시하는 현실적인 전략가', 
+        thought: '자연 상태의 인간은 비참한 전쟁 상태에 있으므로, 평화와 안전을 위해 강력한 군주(리바이어던)에게 권리를 양도하는 계약을 맺어야 한다고 보았습니다.',
+        story: '영국 내전의 공포를 직접 목격하며 평화에 집착하게 되었고, "나는 공포와 함께 태어난 쌍둥이다"라는 말을 남길 정도로 안정적인 질서를 갈망했습니다.',
+        portrait: 'assets/portraits/hobbes.png' 
+    },
+    { 
+        id: 'locke', mbti: 'ISTP', name: '존 로크', era: 'modern_early', quote: '"인간의 마음은 백지다."', modifier: '자유주의의 시조', 
+        achievements: '통치론 저술, 대의 민주주의와 자연권 사상의 확립', 
+        traits: '실용적인 경험과 개인의 자유를 존중하는 냉철한 관찰자', 
+        thought: '인간은 태어날 때 아무런 관념이 없는 백지 상태이며, 생명, 자유, 재산에 대한 권리는 국가도 침해할 수 없는 신성한 것이라고 주장했습니다.',
+        story: '의사이기도 했던 그는 명예혁명의 지적 지주가 되었으며, 그의 사상은 훗날 미국의 독립선언문에 직접적인 영감을 주었습니다.',
+        portrait: 'assets/portraits/locke.png' 
+    },
+    { 
+        id: 'voltaire', mbti: 'ENTP', name: '볼테르', era: 'modern_early', quote: '"관용을 지키라."', modifier: '관용의 지성', 
+        achievements: '계몽주의 사상의 보급, 표현의 자유와 관용의 가치 전파', 
+        traits: '재치 있고 날카로운 비판 정신을 가진 지적 선구자', 
+        thought: '이성적 사고와 종교적 관용을 통해 무지와 미신을 타파해야 한다고 믿었으며, 표현의 자유를 최우선 가치로 여겼습니다.',
+        story: '"나는 당신의 말에 동의하지 않지만, 당신이 그 말을 할 권리를 위해 목숨을 걸고 싸우겠다"는 정신으로 권력과 투쟁하며 전 유럽의 지식인들을 이끌었습니다.',
+        portrait: 'assets/portraits/voltaire.png' 
+    },
+    { 
+        id: 'leibniz', mbti: 'INTJ', name: '라이프니츠', era: 'modern_early', quote: '"우주는 최선이다."', modifier: '보편의 천재', 
+        achievements: '미적분학 발견, 단자론을 통한 우주 질서 설명', 
+        traits: '세상의 모든 현상을 논리적 체계로 이해하려는 완벽주의자', 
+        thought: '세상은 더 이상 쪼갤 수 없는 실체인 "단자(Monad)"로 이루어져 있으며, 신이 만든 이 세상이 가능한 모든 세계 중 최선의 상태라고 낙관했습니다.',
+        story: '뉴턴과 미적분학의 최초 발견을 두고 평생 논쟁을 벌였으며, 2진법을 고안하여 훗날 컴퓨터 과학의 이론적 토대를 닦은 미래학자적 면모를 보였습니다.',
+        portrait: 'assets/portraits/leibniz.png' 
+    },
+    { 
+        id: 'berkeley', mbti: 'INFJ', name: '버클리', era: 'modern_early', quote: '"존재는 지각됨이다."', modifier: '관념의 관조자', 
+        achievements: '주관적 관념론의 정립, 경험주의의 형이상학적 전개', 
+        traits: '현상의 이면과 정신적 본질을 깊이 있게 통찰하는 사유자', 
+        thought: '물질적 실체란 존재하지 않으며, 오직 지각하는 정신과 지각되는 관념만이 실재한다고 극단적인 관념론을 펼쳤습니다.',
+        story: '미국에 이상적인 교육 공동체를 세우려 노력했으며, 오늘날 미국의 캘리포니아 대학교 버클리 캠퍼스는 그의 이름을 따서 지어진 것입니다.',
+        portrait: 'assets/portraits/berkeley.png' 
+    },
+    { 
+        id: 'hegel', mbti: 'ENTJ', name: '헤겔', era: 'modern_early', quote: '"이성적인 것은 현실적이다."', modifier: '변증법의 거장', 
+        achievements: '절대정신과 변증법적 역사 철학의 완성', 
+        traits: '거대한 역사의 흐름을 통제하고 이해하려는 강력한 지성', 
+        thought: '역사는 절대정신이 정-반-합의 변증법적 과정을 통해 스스로를 실현해 가는 과정이며, 국가야말로 이성이 구현된 최고의 형태라고 보았습니다.',
+        story: '나폴레옹이 예나에 입성하는 모습을 보고 "백마 탄 세계 정신을 보았다"고 감탄했으며, 방대하고 난해한 철학 체계로 독일 관념론의 정점에 섰습니다.',
+        portrait: 'assets/portraits/hegel.png' 
+    },
+    { 
+        id: 'wollstonecraft', mbti: 'ENFJ', name: '울스턴크래프트', era: 'modern_early', quote: '"인간은 평등하다."', modifier: '여성 권리의 선구자', 
+        achievements: '여성의 권리 옹호 저술, 현대 여성주의의 초석 마련', 
+        traits: '사회적 정의와 평등을 위해 헌신하는 열정적인 웅변가', 
+        thought: '여성도 남성과 동등한 이성적 능력을 갖추었으므로 교육을 통해 동등한 권리와 기회를 가져야 한다고 역설했습니다.',
+        story: '가난과 고난 속에서도 독학으로 작가가 되었으며, 그녀의 딸은 "프랑켄슈타인"을 쓴 메리 셸리로 모녀가 대를 이어 인류의 지성사에 기여했습니다.',
+        portrait: 'assets/portraits/wollstonecraft.png' 
+    },
+    { 
+        id: 'reid', mbti: 'ISFJ', name: '토머스 리드', era: 'modern_early', quote: '"상식은 철학의 기초다."', modifier: '상식의 수호자', 
+        achievements: '상식 학파의 창시, 극단적 회의주의에 대한 논리적 반박', 
+        traits: '전통과 보편적 가치를 지키려는 신중하고 성실한 수호자', 
+        thought: '철학적 논리보다 인간이 태어날 때부터 갖는 보편적인 믿음인 "상식(Common Sense)"이 지식의 가장 확실한 토대라고 주장했습니다.',
+        story: '당시 흄의 회의주의가 일상의 믿음을 파괴한다고 생각하여 이를 논박하기 위해 평생을 바쳤으며, 그의 사상은 미국 건국 초기 교육에 큰 영향을 주었습니다.',
+        portrait: 'assets/portraits/reid.png' 
+    },
+    { 
+        id: 'adam_smith', mbti: 'ISFP', name: '애덤 스미스', era: 'modern_early', quote: '"도덕적 공감이 중요하다."', modifier: '보이지 않는 손', 
+        achievements: '국부론 저술, 근대 경제학 체계 확립과 도덕 감정론 전개', 
+        traits: '타인의 감정에 공감하며 자유로운 개인의 선택을 존중하는 관찰자', 
+        thought: '개인의 자유로운 경제 활동이 "보이지 않는 손"에 의해 사회 전체의 이익으로 이어진다고 보았으나, 그 바탕에는 도덕적 공감이 있어야 함을 강조했습니다.',
+        story: '매우 내성적이고 건망증이 심해 혼잣말을 하며 걷거나 찻잔에 설탕 대신 소금을 넣는 기행을 일삼았지만, 누구보다 세심하게 사회 현상을 관찰한 학자였습니다.',
+        portrait: 'assets/portraits/adam_smith.png' 
+    },
+    { 
+        id: 'diderot', mbti: 'ESFP', name: '디드로', era: 'modern_early', quote: '"지식은 공유되어야 한다."', modifier: '백과의 지식인', 
+        achievements: '백과전서 편집 및 발간 주도, 지식의 대중화와 계몽 실천', 
+        traits: '다양한 분야에 호기심이 많고 에너지가 넘치는 활동가', 
+        thought: '모든 분야의 지식을 집대성하여 일반 시민들에게 알림으로써 편견과 무지를 타파하고 사회를 변화시키고자 했습니다.',
+        story: '20년 넘게 "백과전서" 편찬에 매달려 권력의 탄압과 금서 조치를 견뎌냈으며, 한때 러시아 여제 예카테리나 2세의 후원을 받을 정도로 명성이 높았습니다.',
+        portrait: 'assets/portraits/diderot.png' 
+    },
+    { 
+        id: 'bentham', mbti: 'ESFJ', name: '제레미 벤담', era: 'modern_early', quote: '"최대 행복을 위하여."', modifier: '공리의 설계자', 
+        achievements: '공리주의 철학 정립, 사회 개혁과 법 제도 개선 제안', 
+        traits: '공동체의 조화와 구성원 전체의 행복을 추구하는 실무가', 
+        thought: '도덕과 입법의 기준은 "최대 다수의 최대 행복"이어야 하며, 모든 고통과 쾌락은 수치로 계산될 수 있다고 믿었습니다.',
+        story: '유언에 따라 자신의 시신을 해부용으로 기증한 뒤 박제하여 런던 유니버시티 칼리지에 전시하게 했으며, 오늘날까지도 "오토-아이콘"이라 불리며 방문객들을 맞이하고 있습니다.',
+        portrait: 'assets/portraits/bentham.png' 
+    },
 
     // MODERN LATE (16)
-    { id: 'nietzsche', mbti: 'INTJ', name: '니체', era: 'modern_late', quote: '"신은 죽었다."', modifier: '망치의 철학자', achievements: '허무주의 극복과 초인(Übermensch) 사상 제시, 관점주의적 인식론 확립', traits: '기존 가치에 대한 파괴적 혁신, 운명애(Amor Fati)를 통한 삶의 긍정', portrait: 'assets/portraits/nietzsche.png' },
-    { id: 'camus', mbti: 'ISFP', name: '카뮈', era: 'modern_late', quote: '"부조리 속에서 반항하라."', modifier: '부조리의 반항아', achievements: '부조리 철학의 정립, 노벨 문학상 수상(이방인, 페스트)', traits: '현실의 부조리에 대한 정직한 직시, 연대와 반항을 통한 인간 존엄 실현', portrait: 'assets/portraits/camus.png' },
-    { id: 'kierkegaard', mbti: 'INFP', name: '키에르케고르', era: 'modern_late', quote: '"단독자로 서라."', modifier: '주체적 진리의 구도자', achievements: '실존주의 철학의 선구적 개척, 주체적 진리와 신앙의 단계 제시', traits: '내면의 고독과 불안을 통한 진리 탐구, 보편성 너머의 단독자적 결단', portrait: 'assets/portraits/kierkegaard.png' },
-    { id: 'schopenhauer', mbti: 'INFJ', name: '쇼펜하우어', era: 'modern_late', quote: '"삶은 고통이다."', modifier: '의지의 염세주의자', achievements: '의지와 표상으로서의 세계 정립, 동양 철학과 서양 철학의 조화 시도', traits: '삶의 본질적 고통에 대한 깊은 통찰, 예술과 자비를 통한 해탈 추구', portrait: 'assets/portraits/schopenhauer.png' },
-    { id: 'sartre', mbti: 'ENTP', name: '사르트르', era: 'modern_late', quote: '"실존은 앞선다."', modifier: '자유의 사도', achievements: '무신론적 실존주의 집대성, 앙가주망(사회 참여)의 철학적 토대 마련', traits: '절대적 자유에 따른 무거운 책임 강조, 지식인의 실천적 행동 중시', portrait: 'assets/portraits/sartre.png' },
-    { id: 'heidegger', mbti: 'INTP', name: '하이데거', era: 'modern_late', quote: '"존재를 들으라."', modifier: '존재의 탐구자', achievements: '존재와 시간 저술, 형이상학의 해체와 존재론적 전환 주도', traits: '일상성 속에 잊힌 존재의 의미 추적, 죽음을 향한 존재로서의 결단', portrait: 'assets/portraits/heidegger.png' },
-    { id: 'foucault', mbti: 'ENTP', name: '푸코', era: 'modern_late', quote: '"지식은 권력이다."', modifier: '광기의 역사학자', achievements: '권력과 지식의 관계 분석(에피스테메), 사회적 배제의 역사 고찰', traits: '보이지 않는 지배 구조에 대한 날카로운 비판, 주체 형성의 역사성 탐구', portrait: 'assets/portraits/foucault.png' },
-    { id: 'hannah_arendt', mbti: 'ENTJ', name: '한나 아렌트', era: 'modern_late', quote: '"악의 평범성."', modifier: '정치적 주체의 발견자', achievements: '전체주의의 기원 분석, 활동적 삶(Vita Activa)과 공론장 개념 확립', traits: '생각하지 않는 악에 대한 경고, 정치적 행동을 통한 자유의 실현', portrait: 'assets/portraits/arendt.png' },
-    { id: 'beauvoir', mbti: 'INFJ', name: '보부아르', era: 'modern_late', quote: '"여성은 만들어지는 것이다."', modifier: '제2의 성의 탐험가', achievements: '제2의 성 저술을 통한 현대 여성주의 확립, 실존주의 윤리학 전개', traits: '부여된 역할 거부와 주체적 자아 확립, 타인과의 윤리적 연대 강조', portrait: 'assets/portraits/beauvoir.png' },
-    { id: 'wittgenstein', mbti: 'INTJ', name: '비트겐슈타인', era: 'modern_late', quote: '"침묵하라."', modifier: '언어의 문법학자', achievements: '논리철학논고 및 철학적 탐구 저술, 현대 분석철학의 흐름 주도', traits: '언어의 한계에 대한 엄밀한 고찰, 삶의 양식으로서의 언어 게임 통찰', portrait: 'assets/portraits/wittgenstein.png' },
-    { id: 'marx', mbti: 'INTJ', name: '마르크스', era: 'modern_late', quote: '"세계를 변혁하라."', modifier: '변혁의 선언자', achievements: '자본론 저술 및 사적 유물론 확립, 자본주의 구조 비판과 변혁론 제시', traits: '경제적 구조에 의한 사회 변동 통찰, 이론과 실천의 일치(Praxis) 강조', portrait: 'assets/portraits/marx.png' },
-    { id: 'fromm', mbti: 'ENFJ', name: '에리히 프롬', era: 'modern_late', quote: '"사랑은 기술이다."', modifier: '사랑의 탐구자', achievements: '자유로부터의 도피 저술, 정신분석학과 사회학의 결합 시도', traits: '현대인의 소외 극복과 능동적 사랑 강조, 소유에서 존재로의 삶 지향', portrait: 'assets/portraits/fromm.png' },
-    { id: 'derrida', mbti: 'INFP', name: '데리다', era: 'modern_late', quote: '"해체는 정의다."', modifier: '해체의 거장', achievements: '해체주의 철학의 창시, 로고스 중심주의 비판과 차연(Différance) 개념 제시', traits: '고정된 의미 체계의 전복과 다원성 존중, 타자에 대한 무한한 환대', portrait: 'assets/portraits/derrida.png' },
-    { id: 'popper', mbti: 'ESTJ', name: '칼 포퍼', era: 'modern_late', quote: '"열린 사회를 지키라."', modifier: '비판적 합리주의자', achievements: '반증 가능성 원리 제창, 전체주의에 대항하는 열린 사회의 철학 정립', traits: '독단적 진리 거부와 비판적 토론 중시, 점진적 사회 공학의 실천', portrait: 'assets/portraits/popper.png' },
-    { id: 'zizek', mbti: 'ENTP', name: '슬라보예 지젝', era: 'modern_late', quote: '"이데올로기는 안경이다."', modifier: '도발적 사유자', achievements: '라캉 정신분석학과 헤겔 철학의 결합, 현대 대중문화의 이데올로기 비평', traits: '전복적 유머를 통한 사회 구조 비판, 상징적 질서 너머의 실재 탐구', portrait: 'assets/portraits/zizek.png' },
-    { id: 'rawls', mbti: 'ISTJ', name: '존 롤스', era: 'modern_late', quote: '"정의는 공정함이다."', modifier: '공정의 설계자', achievements: '정의론 저술, 무지의 베일과 공정으로서의 정의 개념 확립', traits: '합리적 절차를 통한 사회적 합의 추구, 최소 수혜자를 위한 정의 강조', portrait: 'assets/portraits/rawls.png' }
+    { 
+        id: 'nietzsche', mbti: 'INTJ', name: '니체', era: 'modern_late', quote: '"신은 죽었다."', modifier: '망치의 철학자', 
+        achievements: '허무주의 극복과 초인(Übermensch) 사상 제시, 관점주의적 인식론 확립', 
+        traits: '기존 가치에 대한 파괴적 혁신, 운명애(Amor Fati)를 통한 삶의 긍정', 
+        thought: '전통적인 종교와 도덕이 무너진 시대에, 스스로 가치를 창조하고 삶의 고통을 긍정하는 "초인"의 길을 제시했습니다.',
+        story: '매우 예민하고 병약한 신체를 가졌으나 정신력만은 누구보다 강인했으며, 토리노의 광장에서 채찍질 당하는 말을 껴안고 오열하다 쓰러진 뒤 정신적 침묵에 빠졌습니다.',
+        portrait: 'assets/portraits/nietzsche.png' 
+    },
+    { 
+        id: 'camus', mbti: 'ISFP', name: '카뮈', era: 'modern_late', quote: '"부조리 속에서 반항하라."', modifier: '부조리의 반항아', 
+        achievements: '부조리 철학의 정립, 노벨 문학상 수상(이방인, 페스트)', 
+        traits: '현실의 부조리에 대한 정직한 직시, 연대와 반항을 통한 인간 존엄 실현', 
+        thought: '인생의 의미가 없다는 "부조리"를 회피하지 말고, 그 부조리에 당당히 맞서 싸울 때 인간은 진정한 존엄을 얻는다고 역설했습니다.',
+        story: '가난한 이민자의 아들로 태어나 축구 선수를 꿈꾸었으나 결핵으로 좌절된 뒤 작가가 되었으며, 불의의 자동차 사고로 생을 마감하기 직전까지 인간의 고귀함을 노래했습니다.',
+        portrait: 'assets/portraits/camus.png' 
+    },
+    { 
+        id: 'kierkegaard', mbti: 'INFP', name: '키에르케고르', era: 'modern_late', quote: '"단독자로 서라."', modifier: '주체적 진리의 구도자', 
+        achievements: '실존주의 철학의 선구적 개척, 주체적 진리와 신앙의 단계 제시', 
+        traits: '내면의 고독과 불안을 통한 진리 탐구, 보편성 너머의 단독자적 결단', 
+        thought: '군중 속에 묻힌 자아가 아닌, 신 앞에 홀로 선 "단독자"로서의 실존적 결단과 주체적 진리 탐구를 강조했습니다.',
+        story: '약혼녀 레기네 올센과의 파혼이라는 개인적 아픔을 철학적 승화로 연결시켰으며, 평생을 고독한 사유자로서 기존 교회의 형식주의에 맞서 싸웠습니다.',
+        portrait: 'assets/portraits/kierkegaard.png' 
+    },
+    { 
+        id: 'schopenhauer', mbti: 'INFJ', name: '쇼펜하우어', era: 'modern_late', quote: '"삶은 고통이다."', modifier: '의지의 염세주의자', 
+        achievements: '의지와 표상으로서의 세계 정립, 동양 철학과 서양 철학의 조화 시도', 
+        traits: '삶의 본질적 고통에 대한 깊은 통찰, 예술과 자비를 통한 해탈 추구', 
+        thought: '세상의 본질은 맹목적인 "삶에 대한 의지"이며, 이 끝없는 욕망이 고통을 낳으므로 예술적 관조와 금욕적 자비를 통해 해탈해야 한다고 보았습니다.',
+        story: '인간관계의 어려움을 고슴도치의 딜레마로 비유했으며, 푸들 강아지를 유일한 친구로 삼아 지냈지만 그의 날카로운 통찰은 훗날 수많은 예술가들에게 영감을 주었습니다.',
+        portrait: 'assets/portraits/schopenhauer.png' 
+    },
+    { 
+        id: 'sartre', mbti: 'ENTP', name: '사르트르', era: 'modern_late', quote: '"실존은 앞선다."', modifier: '자유의 사도', 
+        achievements: '무신론적 실존주의 집대성, 앙가주망(사회 참여)의 철학적 토대 마련', 
+        traits: '절대적 자유에 따른 무거운 책임 강조, 지식인의 실천적 행동 중시', 
+        thought: '인간은 정해진 본성 없이 세상에 던져진 존재이므로, 매 순간 스스로를 선택하고 창조해 나가야 하는 "자유로운 존재"임을 강조했습니다.',
+        story: '노벨 문학상 수상을 "권력으로부터의 자유"를 이유로 거절했으며, 평생의 반려자 시몬 드 보부아르와 "계약 결혼"이라는 파격적인 삶을 실천했습니다.',
+        portrait: 'assets/portraits/sartre.png' 
+    },
+    { 
+        id: 'heidegger', mbti: 'INTP', name: '하이데거', era: 'modern_late', quote: '"존재를 들으라."', modifier: '존재의 탐구자', 
+        achievements: '존재와 시간 저술, 형이상학의 해체와 존재론적 전환 주도', 
+        traits: '일상성 속에 잊힌 존재의 의미 추적, 죽음을 향한 존재로서의 결단', 
+        thought: '우리는 일상 속에 매몰되어 존재의 의미를 잊고 살지만, "죽음을 향한 존재"임을 자각할 때 비로소 진정한 자아를 찾을 수 있다고 보았습니다.',
+        story: '독일 남서부 산속의 오두막(Hütte)에서 고립된 채 사유하는 것을 즐겼으며, "언어는 존재의 집이다"라는 유명한 명언을 통해 언어와 존재의 관계를 깊이 탐구했습니다.',
+        portrait: 'assets/portraits/heidegger.png' 
+    },
+    { 
+        id: 'foucault', mbti: 'ENTP', name: '푸코', era: 'modern_late', quote: '"지식은 권력이다."', modifier: '광기의 역사학자', 
+        achievements: '권력과 지식의 관계 분석(에피스테메), 사회적 배제의 역사 고찰', 
+        traits: '보이지 않는 지배 구조에 대한 날카로운 비판, 주체 형성의 역사성 탐구', 
+        thought: '권력은 억압하는 것이 아니라 지식을 생산하며, 병원, 감옥, 학교 같은 제도적 장치를 통해 인간을 길들이고 지배한다고 분석했습니다.',
+        story: '평생을 비주류와 소외된 자들의 역사(광기, 성, 감옥)를 파헤치는 데 바쳤으며, 68혁명 당시 학생들과 함께 거리에서 시위를 벌인 실천적 지식인이었습니다.',
+        portrait: 'assets/portraits/foucault.png' 
+    },
+    { 
+        id: 'hannah_arendt', mbti: 'ENTJ', name: '한나 아렌트', era: 'modern_late', quote: '"악의 평범성."', modifier: '정치적 주체의 발견자', 
+        achievements: '전체주의의 기원 분석, 활동적 삶(Vita Activa)과 공론장 개념 확립', 
+        traits: '생각하지 않는 악에 대한 경고, 정치적 행동을 통한 자유의 실현', 
+        thought: '거대한 악은 특별한 괴물이 저지르는 것이 아니라, 생각하기를 멈춘 평범한 사람들의 "사유 불능"에서 비롯된다고 통찰했습니다.',
+        story: '나치 전범 아이히만의 재판을 참관하며 "악의 평범성" 개념을 정립했으나, 당시 유대인 사회로부터 엄청난 비난을 받으면서도 지적 정직성을 지켰습니다.',
+        portrait: 'assets/portraits/arendt.png' 
+    },
+    { 
+        id: 'beauvoir', mbti: 'INFJ', name: '보부아르', era: 'modern_late', quote: '"여성은 만들어지는 것이다."', modifier: '제2의 성의 탐험가', 
+        achievements: '제2의 성 저술을 통한 현대 여성주의 확립, 실존주의 윤리학 전개', 
+        traits: '부여된 역할 거부와 주체적 자아 확립, 타인과의 윤리적 연대 강조', 
+        thought: '여성은 생물학적으로 결정되는 것이 아니라 사회적 관습에 의해 "타자"로 길러지는 것이며, 주체적인 자유를 회복해야 한다고 주장했습니다.',
+        story: '사르트르와의 지적 동반자 관계 속에서도 자신만의 독창적인 철학 세계를 구축했으며, 수천 명의 여성이 모인 집회에서 선두에 서서 권익 신장을 외쳤습니다.',
+        portrait: 'assets/portraits/beauvoir.png' 
+    },
+    { 
+        id: 'wittgenstein', mbti: 'INTJ', name: '비트겐슈타인', era: 'modern_late', quote: '"침묵하라."', modifier: '언어의 문법학자', 
+        achievements: '논리철학논고 및 철학적 탐구 저술, 현대 분석철학의 흐름 주도', 
+        traits: '언어의 한계에 대한 엄밀한 고찰, 삶의 양식으로서의 언어 게임 통찰', 
+        thought: '철학적 문제들은 언어의 오용에서 비롯되며, 말할 수 없는 것에 대해서는 침묵해야 한다는 논리적 엄밀함을 강조했습니다.',
+        story: '오스트리아의 엄청난 재벌가 아들이었으나 모든 유산을 포기하고 시골 초등학교 교사나 정원사로 일하며 소박하게 살았고, 친구들에게 "내가 아주 행복한 삶을 살았다고 전해주게"라는 유언을 남겼습니다.',
+        portrait: 'assets/portraits/wittgenstein.png' 
+    },
+    { 
+        id: 'marx', mbti: 'INTJ', name: '마르크스', era: 'modern_late', quote: '"세계를 변혁하라."', modifier: '변혁의 선언자', 
+        achievements: '자본론 저술 및 사적 유물론 확립, 자본주의 구조 비판과 변혁론 제시', 
+        traits: '경제적 구조에 의한 사회 변동 통찰, 이론과 실천의 일치(Praxis) 강조', 
+        thought: '역사는 계급 투쟁의 과정이며, 노동자들이 스스로의 권리를 자각하고 세상을 바꾸는 실천(Praxis)을 통해 평등한 사회를 구현해야 한다고 믿었습니다.',
+        story: '평생을 지독한 가난과 권력의 추방 속에서 살았으나, 런던 대영박물관 도서실에서 십수 년간 방대한 자료를 연구하여 불후의 명저 "자본론"을 완성했습니다.',
+        portrait: 'assets/portraits/marx.png' 
+    },
+    { 
+        id: 'fromm', mbti: 'ENFJ', name: '에리히 프롬', era: 'modern_late', quote: '"사랑은 기술이다."', modifier: '사랑의 탐구자', 
+        achievements: '자유로부터의 도피 저술, 정신분석학과 사회학의 결합 시도', 
+        traits: '현대인의 소외 극복과 능동적 사랑 강조, 소유에서 존재로의 삶 지향', 
+        thought: '현대인의 불안은 소유 지향적 삶에서 비롯되며, 타인과 세상을 향한 능동적인 "존재 지향적 사랑"을 통해서만 진정한 자유를 얻을 수 있다고 보았습니다.',
+        story: '나치 독일을 피해 미국으로 망명한 뒤 현대 사회의 병리 현상을 날카롭게 분석했으며, "사랑은 감정이 아니라 배우고 익혀야 할 기술이다"라는 메시지로 전 세계인을 감동시켰습니다.',
+        portrait: 'assets/portraits/fromm.png' 
+    },
+    { 
+        id: 'derrida', mbti: 'INFP', name: '데리다', era: 'modern_late', quote: '"해체는 정의다."', modifier: '해체의 거장', 
+        achievements: '해체주의 철학의 창시, 로고스 중심주의 비판과 차연(Différance) 개념 제시', 
+        traits: '고정된 의미 체계의 전복과 다원성 존중, 타자에 대한 무한한 환대', 
+        thought: '텍스트의 의미는 고정되어 있지 않고 끊임없이 지연되며(차연), 서구 철학의 고착된 이분법적 구조를 깨뜨려 타자의 목소리를 듣고자 했습니다.',
+        story: '알제리 출신의 유대인으로서 겪은 소수자의 경험을 철학적 자양분으로 삼았으며, "해체는 파괴가 아니라 더 넓은 이해를 위한 문을 여는 작업이다"라고 말했습니다.',
+        portrait: 'assets/portraits/derrida.png' 
+    },
+    { 
+        id: 'popper', mbti: 'ESTJ', name: '칼 포퍼', era: 'modern_late', quote: '"열린 사회를 지키라."', modifier: '비판적 합리주의자', 
+        achievements: '반증 가능성 원리 제창, 전체주의에 대항하는 열린 사회의 철학 정립', 
+        traits: '독단적 진리 거부와 비판적 토론 중시, 점진적 사회 공학의 실천', 
+        thought: '지식은 영원한 진리가 아니라 비판과 반증을 통해 끊임없이 개선되어야 하며, 이를 보장하는 "열린 사회"만이 민주주의를 지킬 수 있다고 보았습니다.',
+        story: '2차 세계대전의 참상을 목격하며 전체주의를 비판하는 "열린 사회와 그 적들"을 썼으며, 아인슈타인과의 지적 교류를 통해 과학적 사고의 본질을 정립했습니다.',
+        portrait: 'assets/portraits/popper.png' 
+    },
+    { 
+        id: 'zizek', mbti: 'ENTP', name: '슬라보예 지젝', era: 'modern_late', quote: '"이데올로기는 안경이다."', modifier: '도발적 사유자', 
+        achievements: '라캉 정신분석학과 헤겔 철학의 결합, 현대 대중문화의 이데올로기 비평', 
+        traits: '전복적 유머를 통한 사회 구조 비판, 상징적 질서 너머의 실재 탐구', 
+        thought: '이데올로기는 우리 눈앞에 씌워진 안경과 같아서, 대중문화와 일상 속에 숨겨진 지배 구조를 비판적으로 읽어내야 한다고 주장했습니다.',
+        story: '슬로베니아 대통령 선거에 출마하기도 했던 괴짜 철학자로, 영화 "매트릭스"나 "조커" 같은 대중 매체를 철학적으로 해석하는 독특하고 열정적인 강연으로 유명합니다.',
+        portrait: 'assets/portraits/zizek.png' 
+    },
+    { 
+        id: 'rawls', mbti: 'ISTJ', name: '존 롤스', era: 'modern_late', quote: '"정의는 공정함이다."', modifier: '공정의 설계자', 
+        achievements: '정의론 저술, 무지의 베일과 공정으로서의 정의 개념 확립', 
+        traits: '합리적 절차를 통한 사회적 합의 추구, 최소 수혜자를 위한 정의 강조', 
+        thought: '내가 어떤 계층으로 태어날지 모르는 "무지의 베일" 상태에서 합의할 수 있는 규칙이 진정한 정의이며, 사회적 약자를 배려하는 공정한 분배를 강조했습니다.',
+        story: '평생을 오직 하나의 주제인 "정의" 연구에만 바친 겸손한 학자로, 그의 저서 "정의론"은 현대 정치 철학의 지형도를 바꾼 위대한 고전으로 평가받습니다.',
+        portrait: 'assets/portraits/rawls.png' 
+    }
 ];
 
 const QUEST_DATA = {
@@ -98,37 +546,37 @@ const QUEST_DATA = {
         { q: '"신의 법과 세속의 법이 충돌한다면?"', a1: '영원한 신의 법을 따른다', a2: '현실의 정당한 법을 따른다', weight: { a1: { J: 2, N: 1 }, a2: { P: 2, S: 1 } } },
         { q: '"죽음 이후의 삶은?"', a1: '천상의 복락 혹은 심판', a2: '자연의 에너지로 회귀', weight: { a1: { N: 2, F: 1 }, a2: { S: 2, T: 1 } } },
         { q: '"전통과 독창성 중 무엇이 중요합니까?"', a1: '오랜 세월 검증된 교회의 전통', a2: '개인의 주관적 영성 체험', weight: { a1: { S: 2, J: 1 }, a2: { N: 2, P: 1 } } },
-        { q: '"인간의 본질은?"', a1: '은총이 필요한 죄인', a2: '이성을 갖춘 선한 가능성', weight: { a1: { I: 2, F: 1 }, a2: { E: 2, T: 1 } } },
-        { q: '"토론을 즐기십니까?"', a1: '아니오, 신비한 침묵을 선호합니다', a2: '예, 엄밀한 논리 싸움을 즐깁니다', weight: { a1: { I: 2, N: 1 }, a2: { E: 2, S: 1 } } },
-        { q: '"사랑(Agape)은?"', a1: '신성한 의무다', a2: '영원한 갈망이다', weight: { a1: { J: 2, T: 1 }, a2: { P: 2, F: 1 } } },
-        { q: '"삶의 동력은?"', a1: '변치 않는 신앙', a2: '지적인 탐구', weight: { a1: { F: 2, J: 1 }, a2: { T: 2, P: 1 } } }
+        { q: '"인간의 본질은 무엇입니까?"', a1: '타락한 죄인이자 구원의 대상', a2: '신의 형상을 닮은 이성적 존재', weight: { a1: { I: 2, F: 1 }, a2: { E: 2, T: 1 } } },
+        { q: '"가난과 부유함 중 어느 길을 걷겠습니까?"', a1: '청빈함 속의 영적 평화', a2: '풍요로움 속의 지적 탐구', weight: { a1: { P: 2, F: 1 }, a2: { J: 2, T: 1 } } },
+        { q: '"사랑이란 무엇입니까?"', a1: '조건 없는 희생과 자비(Agapé)', a2: '지적인 이해와 조화', weight: { a1: { F: 2, N: 1 }, a2: { T: 2, S: 1 } } },
+        { q: '"세상의 끝은 어떠할까요?"', a1: '신의 심판과 새로운 시작', a2: '인류 문명의 지속적인 발전', weight: { a1: { J: 2, I: 1 }, a2: { P: 2, E: 1 } } }
     ],
     modern_early: [
-        { q: '"모든 것을 의심해보십시오. 확실한 것은 무엇입니까?"', a1: '생각하는 나의 존재', a2: '객관적인 수학적 질서', weight: { a1: { I: 2, N: 1 }, a2: { E: 2, S: 1 } } },
-        { q: '"지식의 근원은 무엇입니까?"', a1: '타고난 이성적 관념', a2: '경험을 통한 습득', weight: { a1: { N: 2, J: 1 }, a2: { S: 2, P: 1 } } },
-        { q: '"자연은 당신에게 어떤 의미입니까?"', a1: '신의 경이로운 섭리', a2: '정교하게 돌아가는 기계', weight: { a1: { F: 2, J: 1 }, a2: { T: 2, P: 1 } } },
-        { q: '"국가는 왜 존재해야 합니까?"', a1: '강력한 힘으로 질서를 잡기 위해', a2: '개인의 자유를 계약으로 보장하기 위해', weight: { a1: { T: 2, J: 1 }, a2: { F: 2, P: 1 } } },
-        { q: '"자유의지는 존재합니까?"', a1: '우리는 전적으로 자유롭다', a2: '물리적 인과법칙에 결정되어 있다', weight: { a1: { E: 2, J: 1 }, I: 2, P: 1 } },
-        { q: '"실험을 반복하시겠습니까?"', a1: '예, 귀납적 사실이 중요하다', a2: '아니오, 연역적 사유가 중요하다', weight: { a1: { E: 2, S: 1 }, a2: { I: 2, N: 1 } } },
-        { q: '"도덕의 기준은?"', a1: '누구에게나 예외 없는 의무', a2: '최대 다수의 최대 행복', weight: { a1: { J: 2, T: 1 }, a2: { P: 2, F: 1 } } },
-        { q: '"신은 어떤 존재입니까?"', a1: '우주를 설계한 정교한 건축가', a2: '나의 고통을 아는 인격적 존재', weight: { a1: { T: 2, N: 1 }, a2: { F: 2, S: 1 } } },
-        { q: '"감정은 이성에게 무엇입니까?"', a1: '다스리고 통제해야 할 대상', a2: '이성을 움직이게 하는 실제 주인', weight: { a1: { J: 2, T: 1 }, a2: { P: 2, F: 1 } } },
-        { q: '"과학의 발전에 대해?"', a1: '인류를 낙원에서 인도할 빛', a2: '도구적 이성의 타락일 뿐', weight: { a1: { N: 2, E: 1 }, a2: { S: 2, I: 1 } } },
-        { q: '"진리를 찾는 신뢰할 만한 방법은?"', a1: '수학적 연역법', a2: '관찰에 근거한 귀납법', weight: { a1: { J: 2, N: 1 }, a2: { P: 2, S: 1 } } },
-        { q: '"미래의 세계는?"', a1: '투명한 이성의 시대', a2: '억압 없는 자유의 시대', weight: { a1: { T: 2, J: 1 }, a2: { F: 2, P: 1 } } }
+        { q: '"지식의 근원은 무엇입니까?"', a1: '타고난 이성적 사유', a2: '오감을 통한 직접적 경험', weight: { a1: { T: 2, N: 1 }, a2: { S: 2, F: 1 } } },
+        { q: '"국가는 왜 존재합니까?"', a1: '개인의 자유와 재산을 지키기 위해', a2: '사회 질서와 안정을 유지하기 위해', weight: { a1: { P: 2, I: 1 }, a2: { J: 2, E: 1 } } },
+        { q: '"도덕적 행동의 기준은?"', a1: '절대적인 의무와 법칙', a2: '가장 많은 사람의 행복', weight: { a1: { J: 2, T: 1 }, a2: { P: 2, F: 1 } } },
+        { q: '"세상은 기계적인 법칙으로 움직입니까?"', a1: '그렇다, 수학적으로 계산 가능하다', a2: '아니다, 생명과 정신의 신비가 있다', weight: { a1: { S: 2, T: 1 }, a2: { N: 2, F: 1 } } },
+        { q: '"인간은 본래 자유롭습니까?"', a1: '자유롭게 태어났으나 억압받고 있다', a2: '질서 속에서만 진정한 자유가 있다', weight: { a1: { N: 2, P: 1 }, a2: { S: 2, J: 1 } } },
+        { q: '"종교에 대해 어떻게 생각합니까?"', a1: '이성적으로 이해 가능한 범위 내에서 수용', a2: '개인의 감정과 신념의 영역', weight: { a1: { T: 2, J: 1 }, a2: { F: 2, P: 1 } } },
+        { q: '"역사는 어떻게 진보합니까?"', a1: '지식과 과학의 축적을 통해', a2: '모순과 갈등의 변증법적 해결을 통해', weight: { a1: { S: 2, T: 1 }, a2: { N: 2, E: 1 } } },
+        { q: '"타인과의 관계에서 중요한 것은?"', a1: '각자의 권리를 존중하는 계약', a2: '서로의 감정에 공감하는 도덕심', weight: { a1: { T: 2, I: 1 }, a2: { F: 2, E: 1 } } },
+        { q: '"부의 축적은 정당합니까?"', a1: '개인의 노력과 자유에 따른 정당한 결과', a2: '사회적 분배와 공공의 이익이 우선', weight: { a1: { S: 2, J: 1 }, a2: { N: 2, P: 1 } } },
+        { q: '"인생의 목적은?"', a1: '진리를 깨닫는 지적인 삶', a2: '공동체에 기여하는 실천적인 삶', weight: { a1: { I: 2, N: 1 }, a2: { E: 2, S: 1 } } },
+        { q: '"의심에 대해 어떻게 생각합니까?"', a1: '확실한 진리에 도달하기 위한 필수 과정', a2: '인간 인식의 한계를 보여주는 겸손의 신호', weight: { a1: { T: 2, N: 1 }, a2: { F: 2, I: 1 } } },
+        { q: '"미래에 대해 당신은?"', a1: '인간 이성으로 설계 가능한 낙관적 세계', a2: '예측 불가능한 우연이 지배하는 세계', weight: { a1: { J: 2, E: 1 }, a2: { P: 2, I: 1 } } }
     ],
     modern_late: [
-        { q: '"신은 죽었습니다. 이제 무엇을 따르겠습니까?"', a1: '과거를 파괴하고 나만의 가치 창조', a2: '전통의 미덕을 지키며 질서 유지', weight: { a1: { N: 2, P: 1 }, a2: { S: 2, J: 1 } } },
-        { q: '"부조리한 우주를 보며 어떤 기분이 듭니까?"', a1: '허무를 직시하고 당당히 반항한다', a2: '보이지 않는 거대한 의지가 있다고 믿는다', weight: { a1: { N: 2, T: 1 }, a2: { S: 2, F: 1 } } },
-        { q: '"어떤 인간이 되고 싶습니까?"', a1: '한계를 극복하는 강인한 초인', a2: '고통받는 자를 돌보는 연민의 인간', weight: { a1: { E: 2, T: 1 }, a2: { I: 2, F: 1 } } },
-        { q: '"현대 문명에서 가장 두려운 것은?"', a1: '시스템의 부속품이 되는 것', a2: '군중 속에서 나를 잃어버리는 것', weight: { a1: { I: 2, N: 1 }, a2: { E: 2, S: 1 } } },
-        { q: '"삶의 본질은?"', a1: '본질은 고통이며 쾌락은 잠시뿐이다', a2: '나 자신이 긍정한다면 충분히 즐겁다', weight: { a1: { I: 2, T: 1 }, a2: { E: 2, F: 1 } } },
-        { q: '"당신을 정의하는 것은?"', a1: '주어진 상황과 타고난 기질', a2: '내가 매 순간 내리는 자유로운 선택', weight: { a1: { S: 2, J: 1 }, a2: { N: 2, P: 1 } } },
-        { q: '"언어는 진리의 집입니까, 감옥입니까?"', a1: '진리를 가두는 한계일 뿐이다', a2: '진리를 드러내는 유일한 통로다', weight: { a1: { I: 2, N: 1 }, a2: { E: 2, S: 1 } } },
-        { q: '"타인은 당신에게?"', a1: '나의 자유를 감시하는 지옥이다', a2: '함께 책임져야 할 동반자', weight: { a1: { T: 2, I: 1 }, a2: { F: 2, E: 1 } } },
-        { q: '"죽음은?"', a1: '실존을 깨우는 비장하고 엄숙한 공포', a2: '부질없지만 담담히 받아들임', weight: { a1: { J: 2, N: 1 }, a2: { P: 2, S: 1 } } },
-        { q: '"기계가 인간을 대체한다면?"', a1: '인간의 존엄은 대체 불가능하다', a2: '시스템과 진화하며 적응하하겠다', weight: { a1: { F: 2, I: 1 }, a2: { T: 2, E: 1 } } },
-        { q: '"무엇이 당신을 움직입니까?"', a1: '권력과 승리의 의지', a2: '조용한 관조와 해탈', weight: { a1: { E: 2, T: 1 }, a2: { I: 2, F: 1 } } },
-        { q: '"어떤 세계를 창조하시겠습니까?"', a1: '영원히 되풀이되어도 당당한 세계', a2: '찰나의 유일한 가치가 빛나는 세계', weight: { a1: { J: 2, N: 1 }, a2: { P: 2, S: 1 } } }
+        { q: '"삶에 의미가 있다고 생각합니까?"', a1: '없다, 부조리함을 받아들이고 반항해야 한다', a2: '있다, 스스로 가치를 창조하고 실천해야 한다', weight: { a1: { P: 2, I: 1 }, a2: { J: 2, E: 1 } } },
+        { q: '"당신을 정의하는 것은 무엇입니까?"', a1: '나의 선택과 행동들(실존)', a2: '나를 둘러싼 사회적 구조와 환경', weight: { a1: { N: 2, I: 1 }, a2: { S: 2, E: 1 } } },
+        { q: '"죽음을 생각할 때 어떤 기분이 듭니까?"', a1: '허무하지만 현재의 삶을 자각하게 한다', a2: '두렵지만 주어진 운명을 사랑해야 한다', weight: { a1: { T: 2, N: 1 }, a2: { F: 2, S: 1 } } },
+        { q: '"권력은 어디에 존재합니까?"', a1: '보이지 않는 일상의 지식과 제도 속에', a2: '경제적 구조와 지배 계급의 손에', weight: { a1: { N: 2, T: 1 }, a2: { S: 2, J: 1 } } },
+        { q: '"언어란 무엇입니까?"', a1: '세계를 비추는 논리적 거울', a2: '삶의 양식이자 소통의 게임', weight: { a1: { T: 2, J: 1 }, a2: { F: 2, P: 1 } } },
+        { q: '"정의로운 사회를 위해 필요한 것은?"', a1: '가장 약한 자를 배려하는 공정한 절차', a2: '기존의 틀을 깨뜨리는 전복적인 혁명', weight: { a1: { J: 2, S: 1 }, a2: { P: 2, N: 1 } } },
+        { q: '"불안에 대해 어떻게 생각합니까?"', a1: '자유를 증명하는 인간의 본질적인 감정', a2: '사회적 소외와 억압에서 오는 병리적 현상', weight: { a1: { I: 2, F: 1 }, a2: { E: 2, T: 1 } } },
+        { q: '"진리는 하나입니까?"', a1: '관점에 따라 무수히 많은 진리가 존재한다', a2: '비판적 토론을 통해 합의해 가는 과정이다', weight: { a1: { P: 2, N: 1 }, a2: { J: 2, S: 1 } } },
+        { q: '"타인을 어떻게 대해야 합니까?"', a1: '나의 자아와 충돌하는 낯선 존재로', a2: '함께 연대하고 책임져야 할 동반자로', weight: { a1: { I: 2, T: 1 }, a2: { E: 2, F: 1 } } },
+        { q: '"현대 기술 문명에 대해?"', a1: '인간의 존재를 위협하는 위험한 도구', a2: '새로운 가능성을 열어주는 해방의 수단', weight: { a1: { N: 2, S: 1 }, a2: { S: 2, J: 1 } } },
+        { q: '"사랑이란 무엇입니까?"', a1: '고립된 자아를 깨는 고통스러운 투쟁', a2: '나를 완성해 가는 능동적인 기술', weight: { a1: { T: 2, I: 1 }, a2: { F: 2, E: 1 } } },
+        { q: '"당신은 어떤 미래를 꿈꿉니까?"', a1: '고정된 틀이 없는 해체된 자유의 세계', a2: '합리적인 대화로 소통하는 열린 사회', weight: { a1: { P: 2, N: 1 }, a2: { J: 2, E: 1 } } }
     ]
 };

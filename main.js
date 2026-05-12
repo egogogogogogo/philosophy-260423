@@ -220,6 +220,19 @@ function showResult(phil, mbti) {
     document.getElementById('resultQuote').textContent = phil.quote;
     document.getElementById('resultDesc').textContent = phil.modifier;
     document.getElementById('resultPortrait').style.backgroundImage = `url('${phil.portrait}')`;
+    
+    // Detailed Result Content
+    const detailBox = document.getElementById('resultDetailBox');
+    if (detailBox) {
+        if (phil.thought || phil.story) {
+            detailBox.style.display = 'block';
+            document.getElementById('resultThought').textContent = phil.thought || '정보 업데이트 중...';
+            document.getElementById('resultStory').textContent = phil.story || '정보 업데이트 중...';
+        } else {
+            detailBox.style.display = 'none';
+        }
+    }
+
     updateRealStatistics(phil.id);
     App.goTo('screen-result');
 }
@@ -247,6 +260,113 @@ function updateLoadingLogs() {
             i++;
         } else clearInterval(interval);
     }, 1200);
+}
+
+/* ===================== GALLERY & PROFILE MODAL LOGIC ===================== */
+function openGallery() {
+    App.goTo('screen-hall');
+    filterGallery('ancient', document.querySelector('.tab-btn'));
+}
+
+function filterGallery(era, btn) {
+    // Update tabs
+    const tabs = document.querySelectorAll('.tab-btn');
+    tabs.forEach(t => t.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+
+    // Filter and Render
+    renderGallery(era);
+}
+
+function renderGallery(era) {
+    const grid = document.getElementById('hallGrid');
+    if (!grid) return;
+    
+    grid.innerHTML = '';
+    const filtered = PHILS_DATA.filter(p => p.era === era);
+    
+    filtered.forEach((p, idx) => {
+        const card = document.createElement('div');
+        card.className = 'hall-card';
+        card.innerHTML = `
+            <div class="hall-card-img" style="background-image: url('${p.portrait}')">
+                <div class="card-mbti">${p.mbti}</div>
+            </div>
+            <div class="hall-card-info">
+                <h4>${p.name}</h4>
+                <p>${p.modifier}</p>
+            </div>
+        `;
+        card.onclick = () => openProfile(p.id);
+        grid.appendChild(card);
+        setTimeout(() => card.classList.add('show'), idx * 50);
+    });
+}
+
+function openProfile(id) {
+    const p = PHILS_DATA.find(item => item.id === id);
+    if (!p) return;
+
+    document.getElementById('profImg').style.backgroundImage = `url('${p.portrait}')`;
+    document.getElementById('profName').textContent = p.name;
+    document.getElementById('profMBTI').textContent = p.mbti;
+    document.getElementById('profQuote').textContent = p.quote;
+    document.getElementById('profAchievements').textContent = p.achievements;
+    document.getElementById('profTraits').textContent = p.traits;
+    
+    // Add new fields if they exist
+    const storyBox = document.getElementById('profStoryBox');
+    if (storyBox) {
+        if (p.thought || p.story) {
+            storyBox.style.display = 'block';
+            document.getElementById('profThought').textContent = p.thought || '정보 업데이트 중...';
+            document.getElementById('profStory').textContent = p.story || '정보 업데이트 중...';
+        } else {
+            storyBox.style.display = 'none';
+        }
+    }
+
+    const modal = document.getElementById('modal-profile');
+    if (modal) {
+        modal.style.display = 'flex';
+        setTimeout(() => modal.classList.add('active'), 10);
+    }
+}
+
+function closeProfile() {
+    const modal = document.getElementById('modal-profile');
+    if (modal) {
+        modal.classList.remove('active');
+        setTimeout(() => modal.style.display = 'none', 300);
+    }
+}
+
+function shareResult() {
+    const mbti = document.getElementById('resultMBTI').textContent;
+    const name = document.getElementById('resultName').textContent;
+    const text = `[시간의 광장] 나의 영혼과 닮은 현자는 '${name}' (${mbti}) 입니다. 당신의 운명을 확인해 보세요!`;
+    const url = window.location.href;
+
+    if (navigator.share) {
+        navigator.share({ title: '시간의 광장', text: text, url: url });
+    } else {
+        const temp = document.createElement('textarea');
+        temp.value = `${text} ${url}`;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand('copy');
+        document.body.removeChild(temp);
+        showToast('결과가 클립보드에 복사되었습니다.');
+    }
+}
+
+function showToast(msg) {
+    const toast = document.getElementById('toast');
+    if (toast) {
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
+    }
 }
 
 // Start App
